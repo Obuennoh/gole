@@ -28,8 +28,8 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Cinquenta acessórios para combinar até três itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
-- Nove personalidades: debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica e pirata, além do modo **Aleatória**.
-- 504 frases próprias, distribuídas pelos seis estados do pet e pelas respostas após beber; sem repetição imediata.
+- Dez personalidades: brava, debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica e pirata, além do modo **Aleatória**.
+- 560 frases próprias, distribuídas pelos seis estados do pet e pelas respostas após beber; sem repetição imediata.
 - Escolha em **Personalizar → Personalidade**, veja a prévia e clique em **Salvar personalização**.
 - Elogios variados após beber, sem mencionar volume e sem repetição consecutiva.
 - Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.

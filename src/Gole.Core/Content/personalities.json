@@ -691,5 +691,82 @@
       "A bandeira da alegria voltou pro topo do mastro.",
       "Rota de cuidado retomada. Vamos navegar com mais atenção."
     ]
+  },
+  {
+    "id": 10,
+    "name": "Brava",
+    "description": "Broncas bem-humoradas, pouca paciência e palavrões quando a sede aperta.",
+    "reminders": [
+      [
+        "Tô feliz, sim. Não espalha que eu tenho uma reputação a manter.",
+        "Água em dia. É assim que se faz, caramba!",
+        "Hoje você tá colaborando. Meu mau humor até tirou uma folga.",
+        "Meu sorriso tá autorizado enquanto essa garrafa continuar por perto.",
+        "Muito bem. Você lembrou sem eu precisar virar uma sirene.",
+        "Tô cheio e satisfeito. Aproveita esse raro momento de paz.",
+        "Esse cuidado tá aprovado. Mantém o ritmo que eu mantenho o sorriso.",
+        "Tá vendo essa felicidade? Foi você que provocou. Continue."
+      ],
+      [
+        "Ainda tô tranquilo. Não testa o limite dessa tranquilidade.",
+        "Já deixa a água perto. Eu não quero desculpa depois.",
+        "Tô de olho nesse copo. Não transforma ele em enfeite.",
+        "Passando pra lembrar antes que eu precise engrossar a voz.",
+        "Sua garrafa fica na mesa. Seu esquecimento pode ficar longe dela.",
+        "Por enquanto é um lembrete educado. Aproveita e se organiza.",
+        "Separa um instante pra água. Sua agenda não manda em tudo.",
+        "Eu sei que você me viu. Guarda esse próximo gole na cabeça."
+      ],
+      [
+        "Fechei a cara. Agora fecha essa distração e olha pra sua água.",
+        "A paciência tá baixando junto com meu nível. Bora resolver.",
+        "Você tem tempo pra outra aba, mas não pra um gole? Ah, para.",
+        "Não vou ficar sorrindo enquanto essa garrafa pega poeira.",
+        "Minha sobrancelha já tá cobrando uma atitude sua.",
+        "Tá ocupado? Faz uma pausa curta e pega a água, criatura.",
+        "Eu tô falando com você mesmo. O copo. Agora.",
+        "Chega de empurrar esse gole com a barriga. Levanta daí."
+      ],
+      [
+        "Tô triste e irritado. Conseguiu o combo, parabéns. Vai beber água.",
+        "Meu sorriso foi embora e eu sei exatamente quem esqueceu o copo.",
+        "Olha meu estado! Não custa dar atenção pra sua própria água.",
+        "Você me largou murchando. Bora consertar essa palhaçada.",
+        "Eu pedi um gole, não uma negociação que dura o dia inteiro.",
+        "A cara tá péssima e a paciência também. Pega essa garrafa.",
+        "Vai deixar pra depois de novo? Pelo amor do copo, reage.",
+        "Tô fazendo bico com toda a razão. Uma pausa pra água, por favor."
+      ],
+      [
+        "Tô chorando de raiva dessa secura. Vai beber água, porra!",
+        "Olha essas lágrimas! É a última reserva que eu tinha, caramba.",
+        "Chega de me enrolar. Levanta e busca essa água!",
+        "Minha paciência evaporou primeiro. O resto tá indo atrás.",
+        "Eu vou ter que desenhar um copo na sua tela inteira? Bebe água!",
+        "Caralho, você esqueceu de novo! Dá uma pausa e pega a garrafa.",
+        "Tô quase virando farelo e você ignorando o aviso. Resolve isso!",
+        "Essa choradeira tem endereço certo: sua garrafa abandonada."
+      ],
+      [
+        "Morri de sede e continuo puto. Um gole pra desfazer essa desgraça!",
+        "Até meu fantasma tá mandando você beber água, porra.",
+        "Virei um pet seco com muita coisa pra reclamar. Pega o copo!",
+        "Parou tudo. Seu parceiro virou poeira. Hora de beber água.",
+        "Belo trabalho: me transformou em decoração de deserto. Reage!",
+        "Meu último desejo era simples: você usando a própria garrafa.",
+        "Não precisa de discurso no velório. Precisa levantar e beber, caramba.",
+        "Nem morto eu vou sossegar enquanto você não pegar essa água."
+      ]
+    ],
+    "reactions": [
+      "Finalmente! Eu sabia que essa garrafa tinha alguma utilidade.",
+      "Aí, porra! Agora sim dá gosto de ser seu pet.",
+      "Boa! Vou guardar a bronca até o próximo esquecimento.",
+      "Tá aprovado. Meu sorriso voltou, mas eu continuo de olho.",
+      "Pronto, paz restaurada. Viu como você consegue?",
+      "Muito bem, criatura! Era esse cuidado que eu tava cobrando.",
+      "Eu reclamo porque me importo. Mandou bem dessa vez!",
+      "Olha só quem resolveu colaborar! Toca aqui e mantém esse ritmo."
+    ]
   }
 ]

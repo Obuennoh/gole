@@ -12,7 +12,7 @@ flowchart LR
     DesktopTests[Testes STA sem janelas] --> Desktop
 ```
 
-**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 12 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
+**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 13 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
 
 **Infrastructure** implementa `JsonStateStore`. A gravação usa arquivo temporário, flush e substituição atômica. O carregamento tenta o arquivo principal e depois a cópia anterior. Após recuperar um principal corrompido, o primeiro salvamento preserva o backup válido. Falhas de gravação são retornadas à interface; um schema futuro é rejeitado para evitar sobrescrita de dados incompatíveis.
 
@@ -81,7 +81,7 @@ A visão geral lista registros de todos os dias, ordenados do mais recente para 
 
 ### Personalidades e falas
 
-`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam nove estilos; o ID zero mantém o modo aleatório. Cada estilo contém oito frases para cada expressão e oito respostas após beber, totalizando 504 mensagens distintas. Não há personalidades regionais.
+`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam dez estilos; o ID zero mantém o modo aleatório. Cada estilo contém oito frases para cada expressão e oito respostas após beber, totalizando 560 mensagens distintas. Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
 
 `ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
 
