@@ -1,11 +1,10 @@
 Gole para Windows x64, com instalação por usuário e runtime .NET incluído.
 
-- Atalhos para **1 gole (~25 ml), 100 ml, 200 ml e 500 ml**, além de quantidade personalizada de 25 a 1.000 ml. O gole é uma estimativa usada pelo aplicativo.
-- Som curto de água nas falas e lembretes, ativado por padrão e desligável em **Lembretes**. O áudio funciona offline.
-- Prévia do nível antes de confirmar. Cada 200 ml repõem 100% do pet, somando à água restante até o limite de 100%.
-- Atualização automática sem conta ou conexão com o GitHub: verifica ao abrir, baixa em segundo plano e instala ao sair pelo menu.
-- Preferências, visual e histórico preservados. Registros podem ser desfeitos por 20 segundos.
-- Garrafinhas personalizáveis, três acessórios simultâneos e seis expressões progressivas.
+- Configure os ml de cada gole em **Lembretes → Quantidade por gole**. O padrão é 200 ml.
+- O botão **Já bebi um gole** registra a quantidade salva em um clique, enche o pet e reinicia o intervalo. Não há seletor de quantidade no menu.
+- Preferências, visual e histórico preservados; alterar o volume afeta apenas os próximos registros.
+- Som curto de água nas falas e lembretes, ativado por padrão e desligável em **Lembretes**.
+- Atualização automática sem conta, com download direto em segundo plano e instalação ao sair pelo menu.
 
 Para instalar, baixe **Gole-Setup.exe**. Quem usa uma versão antiga que pede conexão com o GitHub deve instalar esta versão uma vez para migrar o atualizador. Depois, as atualizações são automáticas.
 

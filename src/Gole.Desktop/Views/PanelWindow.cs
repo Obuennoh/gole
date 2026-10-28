@@ -27,7 +27,7 @@ namespace Gole.Desktop
         ProgressBar progress;
         Bottle live, preview;
         Button undo, saveVisual;
-        TextBox nameBox, goalBox, intervalBox;
+        TextBox nameBox, goalBox, intervalBox, servingBox;
         Slider sizeSlider;
         CheckBox motionBox;
         string draftName, draftColor;
@@ -206,11 +206,10 @@ namespace Gole.Desktop
             consumption.Children.Add(progressLabel);
             progress = new ProgressBar { Height = 9, Maximum = 1, Foreground = Theme.Teal, Background = Theme.B("#E7EEF0"), BorderThickness = new Thickness(0), Margin = new Thickness(0, 12, 0, 24) };
             consumption.Children.Add(progress);
-            consumption.Children.Add(Theme.Button("✓  Já bebi", delegate
+            consumption.Children.Add(Theme.Button("✓  Já bebi um gole", delegate
             {
                 pet.Drink();
             }, true));
-            consumption.Children.Add(Theme.Text("Escolha a quantidade que bebeu", 11, Theme.Muted));
             undo = Theme.Button("Desfazer registro", pet.Undo, false);
             undo.Margin = new Thickness(0, 8, 0, 0);
             consumption.Children.Add(undo);
@@ -520,7 +519,7 @@ namespace Gole.Desktop
             row.Children.Add(intervalBox);
             row.Children.Add(Theme.Text("minutos", 14, Theme.Muted));
             timings.Children.Add(row);
-            timings.Children.Add(Theme.Text("Esse é o tempo para o pet passar de cheio a vazio.", 12, Theme.Muted));
+            timings.Children.Add(Theme.Text("O pet passa de cheio a vazio nesse tempo.", 12, Theme.Muted));
             var presets = new WrapPanel { Margin = new Thickness(0, 8, 0, 0) };
             foreach (int value in new[] { 15, 30, 45, 60 })
             {
@@ -531,6 +530,14 @@ namespace Gole.Desktop
                 }, false));
             }
             timings.Children.Add(presets);
+            Label(timings, "Quantidade por gole");
+            var servingRow = new WrapPanel();
+            servingBox = new TextBox { Text = data.ServingMl.ToString(), Width = 120, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) };
+            System.Windows.Automation.AutomationProperties.SetName(servingBox, "Quantidade por gole em ml");
+            servingRow.Children.Add(servingBox);
+            servingRow.Children.Add(Theme.Text("ml", 14, Theme.Muted));
+            timings.Children.Add(servingRow);
+            timings.Children.Add(Theme.Text("Cada clique em Já bebi um gole registra essa quantidade e enche o pet.", 12, Theme.Muted));
             Label(timings, "Meta diária de água");
             var goalRow = new WrapPanel();
             goalBox = new TextBox { Text = data.Goal.ToString(), Width = 120, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) };
@@ -548,7 +555,7 @@ namespace Gole.Desktop
             timings.Children.Add(settingsMessage);
             timings.Children.Add(Theme.Button("Salvar lembretes", delegate
             {
-                int interval, goal;
+                int interval, goal, serving;
                 if (!int.TryParse(intervalBox.Text, out interval) || interval < 5 || interval > 180)
                 {
                     settingsMessage.Text = "Defina um intervalo entre 5 e 180 minutos.";
@@ -559,9 +566,15 @@ namespace Gole.Desktop
                     settingsMessage.Text = "Defina uma meta entre 250 e 6.000 ml.";
                     return;
                 }
+                if (!int.TryParse(servingBox.Text, out serving) || serving < HydrationState.MinimumServingMl || serving > HydrationState.MaximumServingMl)
+                {
+                    settingsMessage.Text = "Defina uma quantidade por gole entre 1 e 6.000 ml.";
+                    return;
+                }
                 if (interval != data.Interval)
                     pet.ConfigureInterval(interval);
                 data.Goal = goal;
+                data.ServingMl = serving;
                 data.SpeechSound = sound.IsChecked == true;
                 data.Notifications = notify.IsChecked == true;
                 pet.Save();

@@ -9,44 +9,26 @@ public sealed class StateStoreTests : IDisposable
     private static readonly DateTime Now = new(2026, 10, 27, 12, 0, 0, DateTimeKind.Utc);
     private JsonStateStore Store() => new(directory);
 
-    [Fact]
-    public void Updating_the_old_preset_preserves_historical_volumes_and_timing()
+    [Theory]
+    [InlineData(25)]
+    [InlineData(125)]
+    [InlineData(250)]
+    [InlineData(500)]
+    public void Existing_volumes_survive_updates_and_new_records_use_the_default_serving(int historicalMl)
     {
         var state = HydrationState.Fresh(Now);
         state.Version = 6;
-        state.Drink(Now, 250);
+        state.Sips.Add(new Sip { Utc = Now.Ticks, Ml = historicalMl });
         Assert.True(Store().Save(state));
         var loaded = Store().Load(Now.AddMinutes(3)).State;
-        Assert.Equal(200, loaded.LastAmountMl);
-        Assert.Equal(250, loaded.Today(Now));
+        Assert.Equal(historicalMl, loaded.Today(Now));
         Assert.Equal(state.NextReminder, loaded.NextReminder);
         Assert.Equal(.9, loaded.Level(Now.AddMinutes(3)), 8);
-    }
-
-    [Fact]
-    public void Small_sip_and_last_selected_amount_survive_reopening()
-    {
-        var state = HydrationState.Fresh(Now);
-        var time = Now.AddHours(1);
-        state.Drink(time, HydrationState.SmallSipMl);
-        Assert.True(Store().Save(state));
-        var loaded = Store().Load(time).State;
-        Assert.Equal(25, loaded.Today(time));
-        Assert.Equal(25, loaded.LastAmountMl);
-        Assert.Equal(.125, loaded.Level(time), 8);
-    }
-
-    [Fact]
-    public void Partial_level_and_last_amount_survive_reopening()
-    {
-        var state = HydrationState.Fresh(Now);
-        var time = Now.AddHours(1);
-        state.Drink(time, 125);
-        Assert.True(Store().Save(state));
-        var loaded = Store().Load(time.AddMinutes(3)).State;
-        Assert.Equal(.525, loaded.Level(time.AddMinutes(3)), 8);
-        Assert.Equal(125, loaded.LastAmountMl);
-        Assert.Equal(125, loaded.Today(time));
+        loaded.Drink(Now.AddMinutes(3));
+        Assert.Equal(historicalMl + 200, loaded.Today(Now));
+        Assert.Equal(1, loaded.Level(Now.AddMinutes(3)));
+        Assert.True(Store().Save(loaded));
+        Assert.Equal(historicalMl + 200, Store().Load(Now.AddMinutes(3)).State.Today(Now));
     }
 
     [Fact]
@@ -55,7 +37,7 @@ public sealed class StateStoreTests : IDisposable
         var state = HydrationState.Fresh(Now);
         state.Version = 3;
         state.Accessories = [26, 27];
-        state.Drink(Now, 500);
+        state.Sips.Add(new Sip { Utc = Now.Ticks, Ml = 500 });
         Assert.True(Store().Save(state));
         var loaded = Store().Load(Now.AddMinutes(15)).State;
         Assert.Equal(HydrationState.CurrentVersion, loaded.Version);
@@ -79,6 +61,7 @@ public sealed class StateStoreTests : IDisposable
     public void Save_and_load_preserve_records_appearance_and_deadline()
     {
         var state = HydrationState.Fresh(Now);
+        state.ServingMl = 375;
         state.Drink(Now);
         state.Name = "Água da Lu";
         state.Vessel = 5;
@@ -99,7 +82,8 @@ public sealed class StateStoreTests : IDisposable
         Assert.Equal(state.Color, loaded.Color);
         Assert.Equal(5, loaded.Vessel);
         Assert.Equal(new[] { 3, 21, 11 }, loaded.Accessories);
-        Assert.Equal(200, loaded.Today(Now));
+        Assert.Equal(375, loaded.Today(Now));
+        Assert.Equal(375, loaded.ServingMl);
         Assert.Equal(state.NextReminder, loaded.NextReminder);
         Assert.Equal(state.NextPhrase, loaded.NextPhrase);
         Assert.Equal(45, loaded.Interval);
@@ -144,6 +128,7 @@ public sealed class StateStoreTests : IDisposable
         Assert.Equal(new[] { 3 }, state.Accessories);
         Assert.Equal(2000, state.Goal);
         Assert.Equal("Lulu", state.Name);
+        Assert.Equal(200, state.ServingMl);
         Assert.True(state.SpeechSound);
     }
 

@@ -36,10 +36,6 @@ namespace Gole.Desktop
         }
         readonly HydrationSession session;
         readonly IWaterSound waterSound;
-        internal Func<int?> SelectDrinkAmount
-        {
-            get; set;
-        }
         internal DesktopUpdateService Updates
         {
             get;
@@ -65,7 +61,6 @@ namespace Gole.Desktop
             Updates = updates;
             drinkReactions = new DrinkReactions(random);
             this.session = session;
-            SelectDrinkAmount = ShowDrinkDialog;
             Store = store;
             Title = "Gole · seu pet de água";
             Width = 276;
@@ -242,23 +237,10 @@ namespace Gole.Desktop
             if (Data.SpeechSound)
                 waterSound.Play();
         }
-        int? ShowDrinkDialog()
-        {
-            var dialog = new DrinkWindow(Data);
-            if (panel?.IsVisible == true)
-            {
-                dialog.Owner = panel;
-                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            }
-            return dialog.ShowDialog() == true ? dialog.AmountMl : null;
-        }
         public void Drink()
         {
-            int? amount = SelectDrinkAmount();
-            if (!amount.HasValue)
-                return;
             DateTime now = DateTime.UtcNow;
-            session.Drink(now, amount.Value);
+            session.Drink(now);
             happyUntil = now.AddSeconds(7);
             Speak(drinkReactions.Next(), 10);
             Save();
@@ -361,7 +343,7 @@ namespace Gole.Desktop
         void OpenMenu()
         {
             var menu = new ContextMenu { FontFamily = FontFamily, FontSize = 14, PlacementTarget = Art };
-            Item(menu, "✓  Já bebi!", Drink);
+            Item(menu, "✓  Já bebi um gole", Drink);
             Item(menu, "Abrir painel", delegate
             {
                 OpenPanel(0);
@@ -420,7 +402,7 @@ namespace Gole.Desktop
             {
                 Dispatcher.Invoke(new Action(ShowPet));
             });
-            menu.Items.Add("Já bebi!", null, delegate
+            menu.Items.Add("Já bebi um gole", null, delegate
             {
                 Dispatcher.Invoke(new Action(Drink));
             });

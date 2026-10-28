@@ -13,7 +13,7 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Área | Verificação |
 | --- | --- |
 | Ciclo | Cheio no início, metade em 15 minutos e vazio aos 30 minutos |
-| Registro | Quantidade escolhida, reposição proporcional e acumulada, limite visual de 100%, total diário completo, limites de entrada e reinício do prazo |
+| Registro | Volume configurado por gole, padrão de 200 ml, reposição completa, total diário, validação de quantidade e reinício do prazo |
 | Lembretes | Emissão no prazo, sem duplicação nem repetição de intervalos perdidos |
 | Falas | Prazo de cinco minutos, mensagem por humor e ausência de duplicação com lembretes |
 | Após beber | Elogios sem números ou volume, com variedade e sem repetição consecutiva |
@@ -30,7 +30,7 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Acessórios | Três itens simultâneos, bloqueio do quarto, remoção e limpeza |
 | Expressões | Seis faixas e seus limites exatos ao longo do esvaziamento |
 | Desenho | Renderização em memória de todos os modelos e expressões e de todos os acessórios |
-| Integração do painel | Escolha de quantidade, preview proporcional, cancelamento, entradas inválidas, registro e desfazer por eventos reais dos botões |
+| Integração do painel | Configuração de ml por gole, salvamento, bloqueio de valores inválidos, registro em um clique e desfazer por eventos reais dos botões |
 | Atualizador | Download automático sem configuração, falhas de rede com nova tentativa, aplicação ao sair e verificações serializadas |
 | Migração do atualizador | Remoção de credenciais antigas sem alterar as preferências |
 

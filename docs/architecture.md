@@ -12,7 +12,7 @@ flowchart LR
     DesktopTests[Testes STA sem janelas] --> Desktop
 ```
 
-**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. O registro recebe de 25 a 1.000 ml. Cada 200 ml repõem 100% do pet, somando ao nível restante até 100%, sem descartar volume do histórico. O schema 7 preserva o último volume escolhido e migra os dados anteriores sem reiniciar o ciclo.
+**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 8 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
 
 **Infrastructure** implementa `JsonStateStore`. A gravação usa arquivo temporário, flush e substituição atômica. O carregamento tenta o arquivo principal e depois a cópia anterior. Após recuperar um principal corrompido, o primeiro salvamento preserva o backup válido. Falhas de gravação são retornadas à interface; um schema futuro é rejeitado para evitar sobrescrita de dados incompatíveis.
 
@@ -29,7 +29,7 @@ Não há contêiner de injeção de dependências: `App` compõe os serviços e 
 ### Estado e tempo
 
 - O ciclo inicia cheio e chega a zero em um intervalo.
-- Um registro repõe o nível proporcionalmente ao volume e agenda o próximo lembrete após um intervalo completo. O nível parcial seca proporcionalmente antes desse prazo. A âncora visual representa o instante equivalente de um pet cheio e permanece compatível com a persistência anterior.
+- Um registro usa o volume configurado, enche o pet e agenda o próximo lembrete após um intervalo completo. Alterar o volume configurado afeta apenas os próximos registros, sem reiniciar o relógio ou modificar os anteriores.
 - A pausa exclui o tempo pausado do esvaziamento.
 - A retomada conserva o tempo restante; não reinicia um intervalo completo.
 - Após suspensão do computador, um tick atrasado emite no máximo um aviso.

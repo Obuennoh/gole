@@ -6,11 +6,10 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 7;
-    public const int RegistrationMl = 200;
-    public const int SmallSipMl = 25;
-    public const int MinimumDrinkMl = SmallSipMl;
-    public const int MaximumDrinkMl = 1000;
+    public const int CurrentVersion = 8;
+    public const int DefaultServingMl = 200;
+    public const int MinimumServingMl = 1;
+    public const int MaximumServingMl = 6000;
     public const int DefaultInterval = 30;
     public const int PhraseInterval = 5;
 
@@ -35,7 +34,7 @@ public sealed class HydrationState
     }
     [DataMember] public int Interval { get; set; } = DefaultInterval;
     [DataMember] public int Goal { get; set; } = 2000;
-    [DataMember] public int LastAmountMl { get; set; } = RegistrationMl;
+    [DataMember] public int ServingMl { get; set; } = DefaultServingMl;
     [DataMember] public double Size { get; set; } = 180;
     [DataMember] public double X { get; set; } = -99999;
     [DataMember] public double Y { get; set; } = -99999;
@@ -89,7 +88,7 @@ public sealed class HydrationState
         Color = "#26B9C4";
         Interval = DefaultInterval;
         Goal = 2000;
-        LastAmountMl = RegistrationMl;
+        ServingMl = DefaultServingMl;
         Size = 180;
         X = Y = -99999;
         Notifications = Motion = SpeechSound = true;
@@ -110,8 +109,6 @@ public sealed class HydrationState
             Accessories = [Accessory];
         Accessories = PetCatalog.Normalize(Accessories);
         Accessory = 0;
-        if (Version < 7 && LastAmountMl == 250)
-            LastAmountMl = RegistrationMl;
         Version = CurrentVersion;
         Name = string.IsNullOrWhiteSpace(Name) ? "Gole" : Name.Trim()[..Math.Min(20, Name.Trim().Length)];
         if (!IsColor(Color))
@@ -119,8 +116,8 @@ public sealed class HydrationState
         Color = Color.ToUpperInvariant();
         Interval = Math.Clamp(Interval, 5, 180);
         Goal = Math.Clamp(Goal, 250, 6000);
-        if (LastAmountMl is < MinimumDrinkMl or > MaximumDrinkMl)
-            LastAmountMl = RegistrationMl;
+        if (ServingMl is < MinimumServingMl or > MaximumServingMl)
+            ServingMl = DefaultServingMl;
         Size = double.IsFinite(Size) ? Math.Clamp(Size, 100, 280) : 180;
         Vessel = Math.Clamp(Vessel, 0, PetCatalog.Models.Count - 1);
         if (VisualAnchor <= 0 || VisualAnchor > utcNow.AddMinutes(5).Ticks)
@@ -134,7 +131,7 @@ public sealed class HydrationState
         if (LastDrink < 0 || LastDrink > utcNow.AddMinutes(5).Ticks)
             LastDrink = 0;
         Sips ??= [];
-        Sips = Sips.Where(s => s is not null && s.Utc > 0 && s.Utc <= utcNow.AddMinutes(5).Ticks && s.Ml is >= MinimumDrinkMl and <= MaximumDrinkMl).ToList();
+        Sips = Sips.Where(s => s is not null && s.Utc > 0 && s.Utc <= utcNow.AddMinutes(5).Ticks && s.Ml is >= MinimumServingMl and <= MaximumServingMl).ToList();
         if (!double.IsFinite(X))
             X = -99999;
         if (!double.IsFinite(Y))
@@ -184,20 +181,16 @@ public sealed class HydrationState
         NextReminder = (Paused(utcNow) ? PauseEnd : utcNow.Ticks) + remaining;
     }
 
-    public double LevelAfterDrink(DateTime utcNow, int ml) => Math.Min(1, Level(utcNow) + ml / (double)RegistrationMl);
-
-    public Sip Drink(DateTime utcNow, int ml = RegistrationMl)
+    public Sip Drink(DateTime utcNow)
     {
-        if (ml is < MinimumDrinkMl or > MaximumDrinkMl)
-            throw new ArgumentOutOfRangeException(nameof(ml));
+        if (ServingMl is < MinimumServingMl or > MaximumServingMl)
+            throw new ArgumentOutOfRangeException(nameof(ServingMl));
         if (PauseEnd > 0 && !Paused(utcNow))
             Resume(utcNow);
-        var level = LevelAfterDrink(utcNow, ml);
-        var sip = new Sip { Utc = utcNow.Ticks, Ml = ml };
+        var sip = new Sip { Utc = utcNow.Ticks, Ml = ServingMl };
         Sips.Add(sip);
         LastDrink = utcNow.Ticks;
-        VisualAnchor = utcNow.Ticks - (long)((1 - level) * TimeSpan.FromMinutes(Interval).Ticks);
-        LastAmountMl = ml;
+        VisualAnchor = utcNow.Ticks;
         if (Paused(utcNow))
             PauseStart = utcNow.Ticks;
         NextReminder = (Paused(utcNow) ? PauseEnd : utcNow.Ticks) + TimeSpan.FromMinutes(Interval).Ticks;

@@ -4,21 +4,19 @@ public readonly record struct TickResult(bool Notify, bool Changed, bool Chatter
 
 public sealed class HydrationSession(HydrationState state)
 {
-    private sealed record UndoRecord(Sip Sip, long LastDrink, long Anchor, long Deadline, long PhraseDeadline, long PauseStart, int AmountMl, DateTime Until);
+    private sealed record UndoRecord(Sip Sip, long LastDrink, long Anchor, long Deadline, long PhraseDeadline, long PauseStart, DateTime Until);
     private UndoRecord? undo;
     public HydrationState State { get; } = state;
 
     public bool CanUndo(DateTime utcNow) => undo is not null && utcNow < undo.Until && State.Sips.Contains(undo.Sip);
 
-    public void Drink(DateTime utcNow, int ml = HydrationState.RegistrationMl)
+    public void Drink(DateTime utcNow)
     {
-        if (ml is < HydrationState.MinimumDrinkMl or > HydrationState.MaximumDrinkMl)
-            throw new ArgumentOutOfRangeException(nameof(ml));
         if (State.PauseEnd > 0 && !State.Paused(utcNow))
             State.Resume(utcNow);
-        var timing = (State.LastDrink, State.VisualAnchor, State.NextReminder, State.NextPhrase, State.PauseStart, State.LastAmountMl);
-        var sip = State.Drink(utcNow, ml);
-        undo = new UndoRecord(sip, timing.LastDrink, timing.VisualAnchor, timing.NextReminder, timing.NextPhrase, timing.PauseStart, timing.LastAmountMl, utcNow.AddSeconds(20));
+        var timing = (State.LastDrink, State.VisualAnchor, State.NextReminder, State.NextPhrase, State.PauseStart);
+        var sip = State.Drink(utcNow);
+        undo = new UndoRecord(sip, timing.LastDrink, timing.VisualAnchor, timing.NextReminder, timing.NextPhrase, timing.PauseStart, utcNow.AddSeconds(20));
     }
 
     public bool Undo(DateTime utcNow)
@@ -32,7 +30,6 @@ public sealed class HydrationSession(HydrationState state)
         State.NextReminder = record.Deadline;
         State.NextPhrase = record.PhraseDeadline;
         State.PauseStart = record.PauseStart;
-        State.LastAmountMl = record.AmountMl;
         undo = null;
         return true;
     }

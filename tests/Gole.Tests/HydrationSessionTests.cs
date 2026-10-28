@@ -7,50 +7,35 @@ public sealed class HydrationSessionTests
     private static readonly DateTime Start = new(2026, 10, 27, 12, 0, 0, DateTimeKind.Utc);
     private static HydrationSession NewSession() => new(HydrationState.Fresh(Start));
 
-    [Theory]
-    [InlineData(25, .125)]
-    [InlineData(50, .25)]
-    [InlineData(100, .5)]
-    [InlineData(125, .625)]
-    [InlineData(200, 1)]
-    [InlineData(1000, 1)]
-    public void Selected_amount_refills_proportionally_and_records_the_full_volume(int ml, double expected)
-    {
-        var session = NewSession();
-        var now = Start.AddHours(2);
-        session.Drink(now, ml);
-        Assert.Equal(expected, session.State.Level(now), 8);
-        Assert.Equal(ml, session.State.Today(now));
-        Assert.Equal(ml, session.State.LastAmountMl);
-        Assert.Equal(now.AddMinutes(30).Ticks, session.State.NextReminder);
-        Assert.Equal(Math.Max(0, expected - .1), session.State.Level(now.AddMinutes(3)), 8);
-    }
-
     [Fact]
-    public void Small_drinks_add_to_the_remaining_level_and_undo_restores_it()
+    public void Each_click_uses_the_configured_volume_without_rewriting_prior_drinks()
     {
         var session = NewSession();
-        var now = Start.AddMinutes(30);
-        session.Drink(now, 100);
-        session.Drink(now, 100);
-        Assert.Equal(1, session.State.Level(now), 8);
-        Assert.True(session.Undo(now.AddSeconds(1)));
-        Assert.Equal(.5, session.State.Level(now), 8);
-        Assert.Equal(100, session.State.Today(now));
-        Assert.Equal(100, session.State.LastAmountMl);
+        session.State.ServingMl = 333;
+        session.Drink(Start.AddMinutes(15));
+        Assert.Equal(333, session.State.Today(Start));
+        Assert.Equal(1, session.State.Level(Start.AddMinutes(15)));
+        Assert.Equal(Start.AddMinutes(45).Ticks, session.State.NextReminder);
+        session.State.ServingMl = 500;
+        session.Drink(Start.AddMinutes(16));
+        Assert.Equal(833, session.State.Today(Start));
+        Assert.True(session.Undo(Start.AddMinutes(16).AddSeconds(1)));
+        Assert.Equal(333, session.State.Today(Start));
+        Assert.Equal(500, session.State.ServingMl);
+        Assert.Equal(Start.AddMinutes(45).Ticks, session.State.NextReminder);
     }
 
     [Theory]
     [InlineData(0)]
-    [InlineData(24)]
-    [InlineData(1001)]
-    public void Invalid_amount_does_not_change_the_state(int ml)
+    [InlineData(-1)]
+    [InlineData(6001)]
+    public void Invalid_configured_volume_cannot_create_a_record(int ml)
     {
         var session = NewSession();
-        Assert.Throws<ArgumentOutOfRangeException>(() => session.Drink(Start, ml));
+        session.State.ServingMl = ml;
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.Drink(Start));
         Assert.Empty(session.State.Sips);
         Assert.Equal(0, session.State.LastDrink);
-        Assert.Equal(Start.Ticks, session.State.VisualAnchor);
     }
 
     [Fact]

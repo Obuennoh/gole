@@ -103,37 +103,23 @@ public sealed class EditorTests
                     (b.Content as string)?.Contains("Pausar") == true || (b.Content as string)?.Contains("Retomar") == true);
                 var interval = Descendants(panel).OfType<TextBox>().Single(t => AutomationProperties.GetName(t) == "Intervalo em minutos");
                 interval.Text = "45";
+                var serving = Descendants(panel).OfType<TextBox>().Single(t => AutomationProperties.GetName(t) == "Quantidade por gole em ml");
+                serving.Text = "333";
                 Click(panel, "Salvar lembretes");
                 Assert.Equal(45, state.Interval);
+                Assert.Equal(333, state.ServingMl);
+                Assert.Equal(333, store.Load(DateTime.UtcNow).State.ServingMl);
+                serving.Text = "0";
+                interval.Text = "60";
+                Click(panel, "Salvar lembretes");
+                Assert.Equal(45, state.Interval);
+                Assert.Equal(333, state.ServingMl);
 
                 panel.SelectPage(0);
                 state.VisualAnchor = DateTime.UtcNow.AddHours(-1).Ticks;
-                var drinkDialog = new DrinkWindow(state) { Resources = Theme.CreateResources() };
-                foreach (var preset in new[] { ("1 gole · ~25 ml", 25), ("100 ml", 100), ("200 ml", 200), ("500 ml", 500) })
-                {
-                    Click(drinkDialog, preset.Item1);
-                    Assert.Equal(preset.Item2, drinkDialog.AmountMl);
-                    Assert.True(drinkDialog.ConfirmButton.IsEnabled);
-                    Assert.Equal(Math.Min(1, preset.Item2 / 200.0), drinkDialog.Preview.Level, 5);
-                }
-                drinkDialog.AmountBox.Text = "24";
-                Assert.False(drinkDialog.ConfirmButton.IsEnabled);
-                drinkDialog.AmountBox.Text = "100";
-                Assert.Equal(100, drinkDialog.AmountMl);
-                Assert.Equal(.5, drinkDialog.Preview.Level, 5);
-                Assert.True(drinkDialog.ConfirmButton.IsEnabled);
-                drinkDialog.AmountBox.Text = "0";
-                Assert.False(drinkDialog.ConfirmButton.IsEnabled);
-                drinkDialog.AmountBox.Text = "abc";
-                Assert.False(drinkDialog.ConfirmButton.IsEnabled);
-                drinkDialog.Close();
-                pet.SelectDrinkAmount = () => null;
-                Click(panel, "✓  Já bebi");
-                Assert.Empty(state.Sips);
-                pet.SelectDrinkAmount = () => 150;
-                Click(panel, "✓  Já bebi");
-                Assert.Equal(150, state.Today(DateTime.UtcNow));
-                Assert.Equal(.75, state.Level(new DateTime(state.LastDrink, DateTimeKind.Utc)), 8);
+                Click(panel, "✓  Já bebi um gole");
+                Assert.Equal(333, state.Today(DateTime.UtcNow));
+                Assert.Equal(1, state.Level(new DateTime(state.LastDrink, DateTimeKind.Utc)), 8);
                 panel.RefreshStats();
                 Click(panel, "Desfazer registro");
                 Assert.Empty(state.Sips);
