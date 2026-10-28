@@ -74,6 +74,7 @@ public sealed class StateStoreTests : IDisposable
         state.Motion = false;
         state.Sound = true;
         state.SpeechSound = false;
+        state.AlertVolume = 35;
         state.X = 100;
         state.Y = 200;
         var store = Store();
@@ -93,6 +94,7 @@ public sealed class StateStoreTests : IDisposable
         Assert.False(loaded.Motion);
         Assert.True(loaded.Sound);
         Assert.False(loaded.SpeechSound);
+        Assert.Equal(35, loaded.AlertVolume);
         Assert.Equal(100, loaded.X);
         Assert.Equal(200, loaded.Y);
     }
@@ -132,6 +134,7 @@ public sealed class StateStoreTests : IDisposable
         Assert.Equal(200, state.ServingMl);
         Assert.True(state.SpeechSound);
         Assert.Equal(3, state.AlertSoundId);
+        Assert.Equal(70, state.AlertVolume);
     }
 
     [Fact]

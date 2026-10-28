@@ -235,9 +235,9 @@ namespace Gole.Desktop
             bubble.Opacity = 1;
             bubbleUntil = DateTime.UtcNow.AddSeconds(seconds);
             if (Data.SpeechSound)
-                waterSound.Play(Data.AlertSoundId);
+                waterSound.Play(Data.AlertSoundId, Data.AlertVolume);
         }
-        internal void PreviewSound(int id) => waterSound.Play(id, preview: true);
+        internal void PreviewSound(int id, int volume) => waterSound.Play(id, volume, preview: true);
         public void Drink()
         {
             DateTime now = DateTime.UtcNow;
@@ -322,7 +322,7 @@ namespace Gole.Desktop
                     tray.ShowBalloonTip(8000);
                 }
                 if (!IsVisible && Data.SpeechSound)
-                    waterSound.Play(Data.AlertSoundId);
+                    waterSound.Play(Data.AlertSoundId, Data.AlertVolume);
             }
             if (tick.Chatter && IsVisible)
                 Speak(Phrase(), 14);

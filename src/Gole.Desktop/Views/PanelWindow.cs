@@ -507,18 +507,37 @@ namespace Gole.Desktop
             UpdateEditor();
             RefreshStats();
         }
+        Grid NumberField(TextBox input, string unit)
+        {
+            input.Width = 120;
+            input.Height = 38;
+            input.VerticalContentAlignment = VerticalAlignment.Center;
+            input.Margin = new Thickness(0);
+            var grid = new Grid { Height = 38, Margin = new Thickness(0, 0, 0, 8) };
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(120) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+            var label = Theme.Text(unit, 14, Theme.Muted);
+            label.Margin = new Thickness(12, 0, 0, 0);
+            label.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(label, 1);
+            grid.Children.Add(input);
+            grid.Children.Add(label);
+            return grid;
+        }
+        void SettingsFeedback(string text, bool error)
+        {
+            settingsMessage.Text = text;
+            settingsMessage.Foreground = error ? Theme.B("#AF3434") : Theme.Teal;
+        }
         UIElement Settings()
         {
             var page = new StackPanel();
             var timings = new StackPanel();
             timings.Children.Add(Heading("Intervalo do lembrete"));
             timings.Children.Add(Theme.Text("Falas do personagem a cada 5 minutos.", 12, Theme.Muted));
-            var row = new WrapPanel();
-            intervalBox = new TextBox { Text = data.Interval.ToString(), Width = 95, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) };
+            intervalBox = new TextBox { Text = data.Interval.ToString() };
             System.Windows.Automation.AutomationProperties.SetName(intervalBox, "Intervalo em minutos");
-            row.Children.Add(intervalBox);
-            row.Children.Add(Theme.Text("minutos", 14, Theme.Muted));
-            timings.Children.Add(row);
+            timings.Children.Add(NumberField(intervalBox, "minutos"));
             timings.Children.Add(Theme.Text("O pet passa de cheio a vazio nesse tempo.", 12, Theme.Muted));
             var presets = new WrapPanel { Margin = new Thickness(0, 8, 0, 0) };
             foreach (int value in new[] { 15, 30, 45, 60 })
@@ -531,30 +550,50 @@ namespace Gole.Desktop
             }
             timings.Children.Add(presets);
             Label(timings, "Quantidade por gole");
-            var servingRow = new WrapPanel();
-            servingBox = new TextBox { Text = data.ServingMl.ToString(), Width = 120, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) };
+            servingBox = new TextBox { Text = data.ServingMl.ToString() };
             System.Windows.Automation.AutomationProperties.SetName(servingBox, "Quantidade por gole em ml");
-            servingRow.Children.Add(servingBox);
-            servingRow.Children.Add(Theme.Text("ml", 14, Theme.Muted));
-            timings.Children.Add(servingRow);
+            timings.Children.Add(NumberField(servingBox, "ml"));
             timings.Children.Add(Theme.Text("Cada clique em Já bebi um gole registra essa quantidade e enche o pet.", 12, Theme.Muted));
             Label(timings, "Meta diária de água");
-            var goalRow = new WrapPanel();
-            goalBox = new TextBox { Text = data.Goal.ToString(), Width = 120, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) };
+            goalBox = new TextBox { Text = data.Goal.ToString() };
             System.Windows.Automation.AutomationProperties.SetName(goalBox, "Meta diária em ml");
-            goalRow.Children.Add(goalBox);
-            goalRow.Children.Add(Theme.Text("ml por dia", 14, Theme.Muted));
-            timings.Children.Add(goalRow);
+            timings.Children.Add(NumberField(goalBox, "ml por dia"));
             Label(timings, "Alertas");
             var sound = new CheckBox { Content = "Som nas falas e lembretes", IsChecked = data.SpeechSound };
             var notify = new CheckBox { Content = "Notificação do Windows", IsChecked = data.Notifications };
             timings.Children.Add(sound);
-            var soundRow = new WrapPanel { Margin = new Thickness(0, 6, 0, 12) };
-            var soundChoice = new ComboBox { ItemsSource = SoundCatalog.Names, SelectedIndex = data.AlertSoundId, MinWidth = 190, Padding = new Thickness(10, 8, 10, 8), Margin = new Thickness(0, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center };
+            var soundRow = new Grid { Margin = new Thickness(0, 6, 0, 12) };
+            soundRow.ColumnDefinitions.Add(new ColumnDefinition());
+            soundRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            var soundChoice = new ComboBox { ItemsSource = SoundCatalog.Names, SelectedIndex = data.AlertSoundId, Height = 40, Padding = new Thickness(10, 7, 10, 7), Margin = new Thickness(0, 0, 12, 0), VerticalContentAlignment = VerticalAlignment.Center };
             System.Windows.Automation.AutomationProperties.SetName(soundChoice, "Som do personagem");
+            var volume = new Slider { Minimum = 0, Maximum = 100, Value = data.AlertVolume, TickFrequency = 1, IsSnapToTickEnabled = true, IsMoveToPointEnabled = true, SmallChange = 1, LargeChange = 10, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 14, 0) };
+            System.Windows.Automation.AutomationProperties.SetName(volume, "Volume do alerta");
+            var listen = Theme.Button("Ouvir", () => pet.PreviewSound(soundChoice.SelectedIndex, (int)volume.Value), false);
+            listen.Height = 40;
+            listen.Margin = new Thickness(0);
+            Grid.SetColumn(listen, 1);
             soundRow.Children.Add(soundChoice);
-            soundRow.Children.Add(Theme.Button("Ouvir", () => pet.PreviewSound(soundChoice.SelectedIndex), false));
+            soundRow.Children.Add(listen);
             timings.Children.Add(soundRow);
+            var volumeRow = new Grid { Margin = new Thickness(0, 0, 0, 12), Height = 34 };
+            volumeRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(140) });
+            volumeRow.ColumnDefinitions.Add(new ColumnDefinition());
+            volumeRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(48) });
+            var volumeTitle = Theme.Text("Volume do alerta", 13, Theme.Ink);
+            volumeTitle.Margin = new Thickness(0);
+            volumeTitle.VerticalAlignment = VerticalAlignment.Center;
+            var volumeValue = Theme.Text(data.AlertVolume + "%", 13, Theme.Muted);
+            volumeValue.Margin = new Thickness(0);
+            volumeValue.VerticalAlignment = VerticalAlignment.Center;
+            volumeValue.TextAlignment = TextAlignment.Right;
+            volume.ValueChanged += (_, _) => volumeValue.Text = Math.Round(volume.Value) + "%";
+            Grid.SetColumn(volume, 1);
+            Grid.SetColumn(volumeValue, 2);
+            volumeRow.Children.Add(volumeTitle);
+            volumeRow.Children.Add(volume);
+            volumeRow.Children.Add(volumeValue);
+            timings.Children.Add(volumeRow);
             timings.Children.Add(notify);
             settingsMessage = Theme.Text("", 12, Theme.Teal);
             settingsMessage.Margin = new Thickness(0, 10, 0, 7);
@@ -564,17 +603,17 @@ namespace Gole.Desktop
                 int interval, goal, serving;
                 if (!int.TryParse(intervalBox.Text, out interval) || interval < 5 || interval > 180)
                 {
-                    settingsMessage.Text = "Defina um intervalo entre 5 e 180 minutos.";
+                    SettingsFeedback("Defina um intervalo entre 5 e 180 minutos.", true);
                     return;
                 }
                 if (!int.TryParse(goalBox.Text, out goal) || goal < 250 || goal > 6000)
                 {
-                    settingsMessage.Text = "Defina uma meta entre 250 e 6.000 ml.";
+                    SettingsFeedback("Defina uma meta entre 250 e 6.000 ml.", true);
                     return;
                 }
                 if (!int.TryParse(servingBox.Text, out serving) || serving < HydrationState.MinimumServingMl || serving > HydrationState.MaximumServingMl)
                 {
-                    settingsMessage.Text = "Defina uma quantidade por gole entre 1 e 6.000 ml.";
+                    SettingsFeedback("Defina uma quantidade por gole entre 1 e 6.000 ml.", true);
                     return;
                 }
                 if (interval != data.Interval)
@@ -583,10 +622,11 @@ namespace Gole.Desktop
                 data.ServingMl = serving;
                 data.SpeechSound = sound.IsChecked == true;
                 data.AlertSoundId = SoundCatalog.Normalize(soundChoice.SelectedIndex);
+                data.AlertVolume = (int)volume.Value;
                 data.Notifications = notify.IsChecked == true;
                 pet.Save();
                 RefreshStats();
-                settingsMessage.Text = pet.Store.SaveFailed ? "Falha ao salvar." : "Lembretes atualizados.";
+                SettingsFeedback(pet.Store.SaveFailed ? "Falha ao salvar." : "Lembretes atualizados.", pet.Store.SaveFailed);
             }, true));
             page.Children.Add(Card(timings));
             var pause = new WrapPanel { Margin = new Thickness(0, 18, 0, 0) };

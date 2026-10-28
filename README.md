@@ -30,7 +30,7 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
 - Frases aleatórias a cada cinco minutos, felizes ou irritadas conforme o estado do pet.
 - Elogios variados após beber, sem mencionar volume e sem repetição consecutiva.
-- Cinco sons para falas e lembretes: gotinhas, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
+- Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
 
 ![Modelos e acessórios do Gole](docs/images/characters.png)
 
@@ -90,3 +90,5 @@ Você define a quantidade por gole nas configurações, com padrão de 200 ml. C
 Cada push em `main`, após passar nos testes, gera uma release pública versionada com Velopack. O pipeline verifica a instalação e a atualização entre versões em um runner Windows descartável antes de publicar o instalador. O pacote é instalado em `%LOCALAPPDATA%\GoleDesktop`, separado dos dados em `%LOCALAPPDATA%\Gole`.
 
 `scripts/package.ps1 -Version 0.1.1` gera o pacote localmente. `scripts/smoke-install-update.ps1` é exclusivo do CI e não executa no computador de desenvolvimento. Os builds de desenvolvimento não tentam substituir arquivos nem baixar atualizações.
+
+As fontes e licenças dos sons estão em [Créditos de áudio](docs/audio-credits.md).

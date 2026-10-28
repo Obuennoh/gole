@@ -32,7 +32,7 @@ namespace Gole.Desktop
         }
         public static Button Button(string value, Action action, bool primary)
         {
-            var b = new Button { Content = value, Padding = new Thickness(15, 10, 15, 10), Margin = new Thickness(0, 0, 8, 8), Cursor = Cursors.Hand, Background = primary ? Teal : B("#EAF2F0"), Foreground = primary ? Brushes.White : Ink, BorderThickness = new Thickness(0), FontWeight = FontWeights.SemiBold, MinHeight = 38 };
+            var b = new Button { Content = value, Padding = new Thickness(15, 10, 15, 10), Margin = new Thickness(0, 0, 8, 8), Cursor = Cursors.Hand, Background = primary ? Teal : B("#EAF2F0"), Foreground = primary ? Brushes.White : Ink, BorderThickness = new Thickness(0), FontWeight = FontWeights.SemiBold, MinHeight = 38, HorizontalContentAlignment = HorizontalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center };
             b.Click += delegate
             {
                 action();
@@ -55,7 +55,7 @@ namespace Gole.Desktop
        </Setter.Value>
      </Setter>
    </Style>
-   <Style TargetType='Button'><Setter Property='FocusVisualStyle' Value='{StaticResource KeyboardFocus}'/><Setter Property='Template'><Setter.Value><ControlTemplate TargetType='Button'><Border x:Name='b' CornerRadius='10' Background='{TemplateBinding Background}' BorderBrush='{TemplateBinding BorderBrush}' BorderThickness='{TemplateBinding BorderThickness}' Padding='{TemplateBinding Padding}'><ContentPresenter HorizontalAlignment='Center' VerticalAlignment='Center'/></Border><ControlTemplate.Triggers><Trigger Property='IsMouseOver' Value='True'><Setter TargetName='b' Property='Opacity' Value='.82'/></Trigger><Trigger Property='IsPressed' Value='True'><Setter TargetName='b' Property='Opacity' Value='.65'/></Trigger><Trigger Property='IsEnabled' Value='False'><Setter TargetName='b' Property='Opacity' Value='.4'/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
+   <Style TargetType='Button'><Setter Property='FocusVisualStyle' Value='{StaticResource KeyboardFocus}'/><Setter Property='Template'><Setter.Value><ControlTemplate TargetType='Button'><Border x:Name='b' CornerRadius='10' Background='{TemplateBinding Background}' BorderBrush='{TemplateBinding BorderBrush}' BorderThickness='{TemplateBinding BorderThickness}' Padding='{TemplateBinding Padding}'><ContentPresenter HorizontalAlignment='{TemplateBinding HorizontalContentAlignment}' VerticalAlignment='{TemplateBinding VerticalContentAlignment}'/></Border><ControlTemplate.Triggers><Trigger Property='IsMouseOver' Value='True'><Setter TargetName='b' Property='Opacity' Value='.82'/></Trigger><Trigger Property='IsPressed' Value='True'><Setter TargetName='b' Property='Opacity' Value='.65'/></Trigger><Trigger Property='IsEnabled' Value='False'><Setter TargetName='b' Property='Opacity' Value='.4'/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
    <Style TargetType='TextBox'><Setter Property='Padding' Value='10,7'/><Setter Property='BorderBrush' Value='#CBDBD7'/><Setter Property='BorderThickness' Value='1'/><Setter Property='Background' Value='White'/><Setter Property='FontSize' Value='14'/></Style>
    <Style TargetType='ComboBox'><Setter Property='Padding' Value='9,7'/><Setter Property='FontSize' Value='14'/><Setter Property='MinHeight' Value='36'/></Style>
    <Style TargetType='CheckBox'><Setter Property='Margin' Value='0,7,0,7'/><Setter Property='FontSize' Value='14'/><Setter Property='Foreground' Value='#18343D'/></Style>

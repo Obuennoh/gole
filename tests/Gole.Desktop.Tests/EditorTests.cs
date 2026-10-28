@@ -19,9 +19,11 @@ public sealed class EditorTests
         public int Plays;
         public int LastId;
         public bool Preview;
-        public void Play(int soundId = SoundCatalog.DefaultId, bool preview = false)
+        public int Volume;
+        public void Play(int soundId = SoundCatalog.DefaultId, int volume = SoundCatalog.DefaultVolume, bool preview = false)
         {
             Plays++;
+            Volume = volume;
             LastId = soundId;
             Preview = preview;
         }
@@ -115,15 +117,37 @@ public sealed class EditorTests
                 var soundChoice = Descendants(panel).OfType<ComboBox>().Single(t => AutomationProperties.GetName(t) == "Som do personagem");
                 Assert.Equal(5, soundChoice.Items.Count);
                 soundChoice.SelectedIndex = 2;
+                var volume = Descendants(panel).OfType<Slider>().Single(t => AutomationProperties.GetName(t) == "Volume do alerta");
+                volume.Value = 35;
+                var layout = (FrameworkElement)panel.Content;
+                layout.Measure(new Size(1090, 800));
+                layout.Arrange(new Rect(0, 0, 1090, 800));
+                layout.UpdateLayout();
+                var listen = FindButton(panel, "Ouvir");
+                Assert.Equal(soundChoice.ActualHeight, listen.ActualHeight, 1);
+                var soundPosition = soundChoice.TransformToAncestor(layout).Transform(new Point());
+                var buttonPosition = listen.TransformToAncestor(layout).Transform(new Point());
+                Assert.Equal(soundPosition.Y, buttonPosition.Y, 1);
+                Assert.True(soundPosition.X + soundChoice.ActualWidth < buttonPosition.X);
+                foreach (var input in new[] { interval, serving })
+                {
+                    var unit = ((Grid)input.Parent).Children.OfType<TextBlock>().Single();
+                    var inputPosition = input.TransformToAncestor(layout).Transform(new Point());
+                    var unitPosition = unit.TransformToAncestor(layout).Transform(new Point());
+                    Assert.Equal(inputPosition.Y + input.ActualHeight / 2, unitPosition.Y + unit.ActualHeight / 2, 1);
+                }
                 Click(panel, "Ouvir");
                 Assert.Equal(2, sound.LastId);
                 Assert.True(sound.Preview);
+                Assert.Equal(35, sound.Volume);
                 Assert.Equal(3, state.AlertSoundId);
                 Click(panel, "Salvar lembretes");
                 Assert.Equal(45, state.Interval);
                 Assert.Equal(333, state.ServingMl);
                 Assert.Equal(2, state.AlertSoundId);
+                Assert.Equal(35, state.AlertVolume);
                 Assert.Equal(2, store.Load(DateTime.UtcNow).State.AlertSoundId);
+                Assert.Equal(35, store.Load(DateTime.UtcNow).State.AlertVolume);
                 Assert.Equal(333, store.Load(DateTime.UtcNow).State.ServingMl);
                 serving.Text = "0";
                 interval.Text = "60";
