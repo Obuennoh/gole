@@ -9,7 +9,7 @@ namespace Gole.Desktop.Audio;
 
 internal interface IWaterSound : IDisposable
 {
-    void Play(int soundId = 0, bool preview = false);
+    void Play(int soundId = SoundCatalog.DefaultId, bool preview = false);
 }
 
 internal sealed class WaterSound : IWaterSound
@@ -20,7 +20,7 @@ internal sealed class WaterSound : IWaterSound
     private SoundPlayer active;
     private long? lastPlay;
 
-    public void Play(int soundId = 0, bool preview = false)
+    public void Play(int soundId = SoundCatalog.DefaultId, bool preview = false)
     {
         if (!preview && lastPlay.HasValue && Stopwatch.GetElapsedTime(lastPlay.Value).TotalSeconds < 1.3)
             return;

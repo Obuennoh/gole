@@ -50,7 +50,7 @@ public sealed class HydrationState
     public int AlertSoundId
     {
         get; set;
-    }
+    } = SoundCatalog.DefaultId;
     [DataMember]
     public long LastDrink
     {
@@ -97,6 +97,7 @@ public sealed class HydrationState
         Size = 180;
         X = Y = -99999;
         Notifications = Motion = SpeechSound = true;
+        AlertSoundId = SoundCatalog.DefaultId;
         Sips = [];
         Accessories = [];
     }

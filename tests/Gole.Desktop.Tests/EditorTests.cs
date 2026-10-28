@@ -19,7 +19,7 @@ public sealed class EditorTests
         public int Plays;
         public int LastId;
         public bool Preview;
-        public void Play(int soundId = 0, bool preview = false)
+        public void Play(int soundId = SoundCatalog.DefaultId, bool preview = false)
         {
             Plays++;
             LastId = soundId;
@@ -118,7 +118,7 @@ public sealed class EditorTests
                 Click(panel, "Ouvir");
                 Assert.Equal(2, sound.LastId);
                 Assert.True(sound.Preview);
-                Assert.Equal(0, state.AlertSoundId);
+                Assert.Equal(3, state.AlertSoundId);
                 Click(panel, "Salvar lembretes");
                 Assert.Equal(45, state.Interval);
                 Assert.Equal(333, state.ServingMl);

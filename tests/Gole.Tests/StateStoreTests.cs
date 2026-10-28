@@ -55,6 +55,7 @@ public sealed class StateStoreTests : IDisposable
         Assert.False(result.Reset);
         Assert.False(File.Exists(store.FilePath));
         Assert.Equal(30, result.State.Interval);
+        Assert.Equal(3, result.State.AlertSoundId);
     }
 
     [Fact]
@@ -130,6 +131,7 @@ public sealed class StateStoreTests : IDisposable
         Assert.Equal("Lulu", state.Name);
         Assert.Equal(200, state.ServingMl);
         Assert.True(state.SpeechSound);
+        Assert.Equal(3, state.AlertSoundId);
     }
 
     [Fact]
