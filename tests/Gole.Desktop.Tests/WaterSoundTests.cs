@@ -6,10 +6,15 @@ namespace Gole.Desktop.Tests;
 
 public sealed class WaterSoundTests
 {
-    [Fact]
-    public void Embedded_water_audio_is_short_valid_pcm_without_playing_it()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public void Embedded_audio_is_short_valid_pcm_without_playing_it(int soundId)
     {
-        using var stream = typeof(WaterSound).Assembly.GetManifestResourceStream(WaterSound.ResourceName);
+        using var stream = typeof(WaterSound).Assembly.GetManifestResourceStream(WaterSound.ResourceName(soundId));
         Assert.NotNull(stream);
         using var reader = new BinaryReader(stream);
         Assert.Equal("RIFF", Encoding.ASCII.GetString(reader.ReadBytes(4)));
@@ -25,7 +30,7 @@ public sealed class WaterSoundTests
         Assert.Equal("data", Encoding.ASCII.GetString(reader.ReadBytes(4)));
         uint size = reader.ReadUInt32();
         Assert.Equal(stream.Length - stream.Position, size);
-        Assert.InRange(size / 88200.0, .1, 1);
+        Assert.InRange(size / 88200.0, .1, 1.5);
         Assert.Contains(reader.ReadBytes((int)size), sample => sample != 0);
     }
 }

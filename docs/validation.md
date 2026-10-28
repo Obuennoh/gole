@@ -31,6 +31,7 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Expressões | Seis faixas e seus limites exatos ao longo do esvaziamento |
 | Desenho | Renderização em memória de todos os modelos e expressões e de todos os acessórios |
 | Integração do painel | Configuração de ml por gole, salvamento, bloqueio de valores inválidos, registro em um clique e desfazer por eventos reais dos botões |
+| Sons | Cinco recursos WAV válidos, preview sem alterar a escolha salva e persistência do som escolhido, sem reprodução real durante testes |
 | Atualizador | Download automático sem configuração, falhas de rede com nova tentativa, aplicação ao sair e verificações serializadas |
 | Migração do atualizador | Remoção de credenciais antigas sem alterar as preferências |
 

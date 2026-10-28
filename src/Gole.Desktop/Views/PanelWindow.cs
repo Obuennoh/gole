@@ -546,9 +546,15 @@ namespace Gole.Desktop
             goalRow.Children.Add(Theme.Text("ml por dia", 14, Theme.Muted));
             timings.Children.Add(goalRow);
             Label(timings, "Alertas");
-            var sound = new CheckBox { Content = "Som de água nas falas e lembretes", IsChecked = data.SpeechSound };
+            var sound = new CheckBox { Content = "Som nas falas e lembretes", IsChecked = data.SpeechSound };
             var notify = new CheckBox { Content = "Notificação do Windows", IsChecked = data.Notifications };
             timings.Children.Add(sound);
+            var soundRow = new WrapPanel { Margin = new Thickness(0, 6, 0, 12) };
+            var soundChoice = new ComboBox { ItemsSource = SoundCatalog.Names, SelectedIndex = data.AlertSoundId, MinWidth = 190, Padding = new Thickness(10, 8, 10, 8), Margin = new Thickness(0, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center };
+            System.Windows.Automation.AutomationProperties.SetName(soundChoice, "Som do personagem");
+            soundRow.Children.Add(soundChoice);
+            soundRow.Children.Add(Theme.Button("Ouvir", () => pet.PreviewSound(soundChoice.SelectedIndex), false));
+            timings.Children.Add(soundRow);
             timings.Children.Add(notify);
             settingsMessage = Theme.Text("", 12, Theme.Teal);
             settingsMessage.Margin = new Thickness(0, 10, 0, 7);
@@ -576,6 +582,7 @@ namespace Gole.Desktop
                 data.Goal = goal;
                 data.ServingMl = serving;
                 data.SpeechSound = sound.IsChecked == true;
+                data.AlertSoundId = SoundCatalog.Normalize(soundChoice.SelectedIndex);
                 data.Notifications = notify.IsChecked == true;
                 pet.Save();
                 RefreshStats();

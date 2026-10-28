@@ -17,7 +17,14 @@ public sealed class EditorTests
     private sealed class SilentSound : IWaterSound
     {
         public int Plays;
-        public void Play() => Plays++;
+        public int LastId;
+        public bool Preview;
+        public void Play(int soundId = 0, bool preview = false)
+        {
+            Plays++;
+            LastId = soundId;
+            Preview = preview;
+        }
         public void Dispose()
         {
         }
@@ -105,9 +112,18 @@ public sealed class EditorTests
                 interval.Text = "45";
                 var serving = Descendants(panel).OfType<TextBox>().Single(t => AutomationProperties.GetName(t) == "Quantidade por gole em ml");
                 serving.Text = "333";
+                var soundChoice = Descendants(panel).OfType<ComboBox>().Single(t => AutomationProperties.GetName(t) == "Som do personagem");
+                Assert.Equal(5, soundChoice.Items.Count);
+                soundChoice.SelectedIndex = 2;
+                Click(panel, "Ouvir");
+                Assert.Equal(2, sound.LastId);
+                Assert.True(sound.Preview);
+                Assert.Equal(0, state.AlertSoundId);
                 Click(panel, "Salvar lembretes");
                 Assert.Equal(45, state.Interval);
                 Assert.Equal(333, state.ServingMl);
+                Assert.Equal(2, state.AlertSoundId);
+                Assert.Equal(2, store.Load(DateTime.UtcNow).State.AlertSoundId);
                 Assert.Equal(333, store.Load(DateTime.UtcNow).State.ServingMl);
                 serving.Text = "0";
                 interval.Text = "60";

@@ -30,7 +30,7 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
 - Frases aleatórias a cada cinco minutos, felizes ou irritadas conforme o estado do pet.
 - Elogios variados após beber, sem mencionar volume e sem repetição consecutiva.
-- Som curto de água em cada fala e lembrete, ativado por padrão e desligável em **Lembretes**; avisos na bandeja sem soneca ou pausa.
+- Cinco sons para falas e lembretes: gotinhas, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
 
 ![Modelos e acessórios do Gole](docs/images/characters.png)
 

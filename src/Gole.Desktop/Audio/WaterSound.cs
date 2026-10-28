@@ -1,52 +1,62 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
+using Gole.Core;
 
 namespace Gole.Desktop.Audio;
 
 internal interface IWaterSound : IDisposable
 {
-    void Play();
+    void Play(int soundId = 0, bool preview = false);
 }
 
 internal sealed class WaterSound : IWaterSound
 {
-    internal const string ResourceName = "Gole.Desktop.Audio.water-drops.wav";
-    private readonly Stream stream;
-    private readonly SoundPlayer player;
+    private static readonly string[] Files = { "water-drops", "bubbles", "water-stream", "single-drop", "soft-chime" };
+    internal static string ResourceName(int id) => "Gole.Desktop.Audio." + Files[SoundCatalog.Normalize(id)] + ".wav";
+    private readonly Dictionary<int, (Stream Stream, SoundPlayer Player)> loaded = new();
+    private SoundPlayer active;
     private long? lastPlay;
 
-    internal WaterSound()
+    public void Play(int soundId = 0, bool preview = false)
     {
-        try
-        {
-            stream = typeof(WaterSound).Assembly.GetManifestResourceStream(ResourceName);
-            if (stream != null)
-            {
-                player = new SoundPlayer(stream);
-                player.Load();
-            }
-        }
-        catch (Exception) { player?.Dispose(); player = null; }
-    }
-
-    public void Play()
-    {
-        if (player == null || (lastPlay.HasValue && Stopwatch.GetElapsedTime(lastPlay.Value).TotalSeconds < 1))
+        if (!preview && lastPlay.HasValue && Stopwatch.GetElapsedTime(lastPlay.Value).TotalSeconds < 1.3)
             return;
+        soundId = SoundCatalog.Normalize(soundId);
         try
         {
+            if (!loaded.TryGetValue(soundId, out var audio))
+            {
+                var stream = typeof(WaterSound).Assembly.GetManifestResourceStream(ResourceName(soundId));
+                if (stream == null)
+                    return;
+                var player = new SoundPlayer(stream);
+                try
+                {
+                    player.Load();
+                }
+                catch { player.Dispose(); stream.Dispose(); throw; }
+                audio = (stream, player);
+                loaded.Add(soundId, audio);
+            }
+            active?.Stop();
+            active = audio.Player;
             lastPlay = Stopwatch.GetTimestamp();
-            player.Play();
+            active.Play();
         }
-        catch (Exception) { /* Missing audio devices must not interrupt reminders. */ }
+        catch (Exception) { /* Audio device failures must not interrupt reminders. */ }
     }
 
     public void Dispose()
     {
-        player?.Stop();
-        player?.Dispose();
-        stream?.Dispose();
+        active?.Stop();
+        foreach (var audio in loaded.Values)
+        {
+            audio.Player.Dispose();
+            audio.Stream.Dispose();
+        }
+        loaded.Clear();
     }
 }
