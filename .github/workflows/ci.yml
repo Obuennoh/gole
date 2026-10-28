@@ -1,0 +1,101 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build, test and check formatting
+        shell: pwsh
+        run: ./scripts/check.ps1
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build-and-test
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Define release version
+        id: version
+        shell: pwsh
+        run: '"version=0.2.${{ github.run_number }}" >> $env:GITHUB_OUTPUT'
+      - name: Restore packaging tool and previous package
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VPK_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          dotnet tool restore
+          if ($LASTEXITCODE -ne 0) { throw 'Packaging tool restore failed.' }
+          $count = gh api 'repos/${{ github.repository }}/releases' --jq '[.[] | select(.draft == false and .prerelease == false)] | length'
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to inspect published releases.' }
+          if ([int]$count -gt 0) {
+            dotnet tool run vpk -- download github --repoUrl 'https://github.com/${{ github.repository }}' --outputDir artifacts/releases --channel win
+            if ($LASTEXITCODE -ne 0) { throw 'Previous package download failed.' }
+          }
+      - name: Package Windows x64 installer
+        shell: pwsh
+        run: ./scripts/package.ps1 -Version '${{ steps.version.outputs.version }}'
+      - name: Verify installation and upgrade without windows
+        shell: pwsh
+        run: ./scripts/smoke-install-update.ps1 -Version '${{ steps.version.outputs.version }}'
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VPK_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = '${{ steps.version.outputs.version }}'
+          $setup = @(Get-ChildItem artifacts/releases -Filter '*Setup.exe')
+          if ($setup.Count -ne 1) { throw 'Installer not identified.' }
+          Copy-Item -LiteralPath $setup[0].FullName -Destination artifacts/Gole-Setup.exe
+          $hash = (Get-FileHash artifacts/Gole-Setup.exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  Gole-Setup.exe" | Set-Content artifacts/SHA256SUMS.txt -Encoding utf8
+          dotnet tool run vpk -- upload github --repoUrl 'https://github.com/${{ github.repository }}' --outputDir artifacts/releases --channel win --releaseName "Gole $version" --tag "v$version" --targetCommitish '${{ github.sha }}'
+          if ($LASTEXITCODE -ne 0) { throw 'Update package upload failed.' }
+          gh release upload "v$version" artifacts/Gole-Setup.exe artifacts/SHA256SUMS.txt --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Installer upload failed.' }
+          gh release edit "v$version" --draft=false --latest --notes-file docs/release-notes.md
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed.' }
+      - name: Verify update feed without authentication
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $report = Join-Path $env:RUNNER_TEMP 'gole-public-feed.txt'
+          $probe = Start-Process -FilePath $env:GOLE_SMOKE_EXE -ArgumentList '--smoke-public-feed', ('"' + $report + '"') -WindowStyle Hidden -Wait -PassThru
+          if ($probe.ExitCode -ne 0 -or !(Test-Path -LiteralPath $report)) { throw 'Anonymous update feed check failed.' }
+          Get-Content -LiteralPath $report
+      - name: Remove incomplete draft
+        if: failure() && steps.version.outputs.version != ''
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = 'v${{ steps.version.outputs.version }}'
+          $draft = gh release view $tag --json isDraft --jq .isDraft 2>$null
+          if ($LASTEXITCODE -eq 0 -and $draft -eq 'true') { gh release delete $tag --yes }
+          exit 0
