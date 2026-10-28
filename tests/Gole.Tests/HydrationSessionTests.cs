@@ -112,6 +112,7 @@ public sealed class HydrationSessionTests
         Assert.Empty(state.Sips);
         Assert.Equal(0, state.LastDrink);
         Assert.Equal(30, state.Interval);
+        Assert.True(state.SpeechSound);
         Assert.Equal(Start.AddMinutes(30).Ticks, state.NextReminder);
     }
 

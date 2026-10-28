@@ -12,7 +12,7 @@ flowchart LR
     DesktopTests[Testes STA sem janelas] --> Desktop
 ```
 
-**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. O registro recebe de 25 a 1.000 ml. Cada 250 ml repõem 100% do pet, somando ao nível restante até 100%, sem descartar volume do histórico. O schema 5 preserva o último volume escolhido e migra os dados anteriores sem reiniciar o ciclo.
+**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. O registro recebe de 25 a 1.000 ml. Cada 250 ml repõem 100% do pet, somando ao nível restante até 100%, sem descartar volume do histórico. O schema 6 preserva o último volume escolhido e migra os dados anteriores sem reiniciar o ciclo.
 
 **Infrastructure** implementa `JsonStateStore`. A gravação usa arquivo temporário, flush e substituição atômica. O carregamento tenta o arquivo principal e depois a cópia anterior. Após recuperar um principal corrompido, o primeiro salvamento preserva o backup válido. Falhas de gravação são retornadas à interface; um schema futuro é rejeitado para evitar sobrescrita de dados incompatíveis.
 
@@ -70,3 +70,7 @@ O job de release depende dos testes. Ele gera uma versão monotônica por execu�
 - Empacotamento e execução em uma instalação limpa de Windows.
 
 Esses cenários não são garantidos pelos testes de domínio ou pelos testes de controles sem janela.
+
+### Som das falas
+
+Um WAV PCM curto e original é incorporado à assembly. `WaterSound` carrega o recurso uma vez, reproduz sem bloquear a interface e impede sobreposição em falas consecutivas. Falhas do dispositivo de áudio não interrompem o lembrete. `SpeechSound` começa ativado e a escolha fica persistida; o campo legado `Sound` é preservado apenas por compatibilidade. O script `scripts/generate-water-sound.py` permite reconstruir o arquivo sem dependências externas. Os testes usam uma implementação silenciosa, sem reproduzir áudio no computador de desenvolvimento.

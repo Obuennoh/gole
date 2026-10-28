@@ -18,5 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Velopack" Version="1.2.161" />
+    <EmbeddedResource Include="Audio/water-drops.wav" LogicalName="Gole.Desktop.Audio.water-drops.wav" />
   </ItemGroup>
 </Project>

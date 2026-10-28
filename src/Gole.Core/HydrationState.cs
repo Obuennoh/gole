@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 5;
+    public const int CurrentVersion = 6;
     public const int RegistrationMl = 250;
     public const int SmallSipMl = 25;
     public const int MinimumDrinkMl = SmallSipMl;
@@ -46,6 +46,7 @@ public sealed class HydrationState
     }
     [DataMember] public bool Notifications { get; set; } = true;
     [DataMember] public bool Motion { get; set; } = true;
+    [DataMember] public bool SpeechSound { get; set; } = true;
     [DataMember]
     public long LastDrink
     {
@@ -91,7 +92,7 @@ public sealed class HydrationState
         LastAmountMl = RegistrationMl;
         Size = 180;
         X = Y = -99999;
-        Notifications = Motion = true;
+        Notifications = Motion = SpeechSound = true;
         Sips = [];
         Accessories = [];
     }

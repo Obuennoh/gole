@@ -539,7 +539,7 @@ namespace Gole.Desktop
             goalRow.Children.Add(Theme.Text("ml por dia", 14, Theme.Muted));
             timings.Children.Add(goalRow);
             Label(timings, "Alertas");
-            var sound = new CheckBox { Content = "Som", IsChecked = data.Sound };
+            var sound = new CheckBox { Content = "Som de água nas falas e lembretes", IsChecked = data.SpeechSound };
             var notify = new CheckBox { Content = "Notificação do Windows", IsChecked = data.Notifications };
             timings.Children.Add(sound);
             timings.Children.Add(notify);
@@ -562,7 +562,7 @@ namespace Gole.Desktop
                 if (interval != data.Interval)
                     pet.ConfigureInterval(interval);
                 data.Goal = goal;
-                data.Sound = sound.IsChecked == true;
+                data.SpeechSound = sound.IsChecked == true;
                 data.Notifications = notify.IsChecked == true;
                 pet.Save();
                 RefreshStats();

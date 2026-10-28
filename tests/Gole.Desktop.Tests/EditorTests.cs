@@ -8,11 +8,21 @@ using System.Windows.Media.Imaging;
 using Gole.Core;
 using Gole.Desktop;
 using Gole.Infrastructure;
+using Gole.Desktop.Audio;
 
 namespace Gole.Desktop.Tests;
 
 public sealed class EditorTests
 {
+    private sealed class SilentSound : IWaterSound
+    {
+        public int Plays;
+        public void Play() => Plays++;
+        public void Dispose()
+        {
+        }
+    }
+
     [Fact]
     public void Editor_preview_discard_save_and_registration_work_without_showing_windows()
     {
@@ -26,7 +36,14 @@ public sealed class EditorTests
             {
                 var state = HydrationState.Fresh(DateTime.UtcNow);
                 var store = new JsonStateStore(folder);
-                pet = new CompanionWindow(new HydrationSession(state), store) { Left = 100, Top = 100 };
+                var sound = new SilentSound();
+                pet = new CompanionWindow(new HydrationSession(state), store, null, sound) { Left = 100, Top = 100 };
+                pet.Speak("Som ativado", 1);
+                Assert.Equal(1, sound.Plays);
+                state.SpeechSound = false;
+                pet.Speak("Som desativado", 1);
+                Assert.Equal(1, sound.Plays);
+                state.SpeechSound = true;
                 panel = new PanelWindow(pet) { Resources = Theme.CreateResources() };
                 panel.SelectPage(1);
                 Assert.False(panel.IsVisible);

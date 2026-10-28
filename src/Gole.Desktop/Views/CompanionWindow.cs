@@ -18,6 +18,7 @@ using Forms = System.Windows.Forms;
 using Gole.Core;
 using Gole.Infrastructure;
 using Gole.Desktop.Updates;
+using Gole.Desktop.Audio;
 namespace Gole.Desktop
 {
     public class CompanionWindow : Window
@@ -34,6 +35,7 @@ namespace Gole.Desktop
             get; private set;
         }
         readonly HydrationSession session;
+        readonly IWaterSound waterSound;
         internal Func<int?> SelectDrinkAmount
         {
             get; set;
@@ -57,8 +59,9 @@ namespace Gole.Desktop
         readonly DrinkReactions drinkReactions;
         public CompanionWindow(HydrationSession session, JsonStateStore store) : this(session, store, null) { }
 
-        internal CompanionWindow(HydrationSession session, JsonStateStore store, DesktopUpdateService updates)
+        internal CompanionWindow(HydrationSession session, JsonStateStore store, DesktopUpdateService updates, IWaterSound waterSound = null)
         {
+            this.waterSound = waterSound ?? new WaterSound();
             Updates = updates;
             drinkReactions = new DrinkReactions(random);
             this.session = session;
@@ -150,6 +153,7 @@ namespace Gole.Desktop
             Closed += delegate
             {
                 clock.Stop();
+                this.waterSound.Dispose();
                 CompositionTarget.Rendering -= Render;
                 if (tray != null)
                 {
@@ -235,6 +239,8 @@ namespace Gole.Desktop
             speech.Text = text;
             bubble.Opacity = 1;
             bubbleUntil = DateTime.UtcNow.AddSeconds(seconds);
+            if (Data.SpeechSound)
+                waterSound.Play();
         }
         int? ShowDrinkDialog()
         {
@@ -332,8 +338,8 @@ namespace Gole.Desktop
                     tray.BalloonTipIcon = Forms.ToolTipIcon.Info;
                     tray.ShowBalloonTip(8000);
                 }
-                if (Data.Sound)
-                    System.Media.SystemSounds.Asterisk.Play();
+                if (!IsVisible && Data.SpeechSound)
+                    waterSound.Play();
             }
             if (tick.Chatter && IsVisible)
                 Speak(Phrase(), 14);
