@@ -252,15 +252,29 @@ namespace Gole.Desktop
         {
             get
             {
-                return session.CanUndo(DateTime.UtcNow);
+                return session.CanUndo;
             }
         }
         public void Undo()
         {
             if (!session.Undo(DateTime.UtcNow))
                 return;
+            HistoryChanged("Registro desfeito.");
+        }
+        internal void RemoveDrink(Sip sip)
+        {
+            if (session.RemoveDrink(sip, DateTime.UtcNow))
+                HistoryChanged("Registro desfeito.");
+        }
+        internal void ClearDrinks()
+        {
+            if (session.ClearDrinks(DateTime.UtcNow))
+                HistoryChanged("Histórico de água limpo.");
+        }
+        void HistoryChanged(string message)
+        {
             happyUntil = DateTime.MinValue;
-            Speak("Registro desfeito. Sem crise, eu espero o gole de verdade.", 8);
+            Speak(message, 6);
             Save();
             if (panel != null)
                 panel.RefreshStats();

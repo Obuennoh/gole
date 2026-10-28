@@ -1,5 +1,10 @@
 Gole para Windows x64, com instalação por usuário e runtime .NET incluído.
 
+- Desfaça qualquer gole pelo histórico, sem limite de tempo, inclusive depois de fechar e abrir o app.
+- Histórico de todos os dias com paginação, data, horário e volume de cada registro.
+- **Limpar todo o histórico** remove todos os registros após confirmação, mantendo o visual, os sons e os lembretes.
+- Totais e estado do pet são atualizados ao desfazer; registros apagados permanecem apagados ao reabrir.
+
 - Configure os ml de cada gole em **Lembretes → Quantidade por gole**. O padrão é 200 ml.
 - O botão **Já bebi um gole** registra a quantidade salva em um clique, enche o pet e reinicia o intervalo. Não há seletor de quantidade no menu.
 - Preferências, visual e histórico preservados; alterar o volume afeta apenas os próximos registros.

@@ -35,7 +35,7 @@ Não há contêiner de injeção de dependências: `App` compõe os serviços e 
 - Após suspensão do computador, um tick atrasado emite no máximo um aviso.
 - Uma fala no balão ocorre a cada cinco minutos e usa o estado atual do personagem para selecionar a mensagem. O aviso de beber água substitui uma fala simultânea. O prazo da próxima fala é persistido e é reiniciado após registrar água.
 - O pet permanece vazio após o prazo até um novo registro.
-- Desfazer restaura o registro anterior e os marcadores temporais; pausa e mudança de intervalo invalidam essa operação para evitar restaurar marcadores antigos.
+- Desfazer não tem limite de tempo. O último gole da sessão pode restaurar o snapshot anterior; pausa, mudança de intervalo ou qualquer remoção descartam esse snapshot para evitar restaurar dados antigos. Sem snapshot, remover o registro mais recente recalcula o nível e o prazo a partir do último gole restante. Remover um registro anterior altera apenas os totais. Limpar tudo zera os registros, deixa o pet vazio e agenda o próximo lembrete após um intervalo, preservando as preferências.
 - O total diário usa o fuso local. Os instantes persistidos usam ticks UTC, preservando compatibilidade com os registros existentes.
 
 Os controles de pausa e soneca foram removidos. A lógica de pausa continua coberta para compatibilidade de dados; ao abrir uma instalação com pausa antiga pendente, `App` retoma a contagem automaticamente.
@@ -74,3 +74,7 @@ Esses cenários não são garantidos pelos testes de domínio ou pelos testes de
 ### Som das falas
 
 Cinco WAVs PCM curtos são incorporados à assembly. Quatro usam amostras CC0 adaptadas; as fontes e licenças estão em `docs/audio-credits.md`. `SoundCatalog` define os identificadores e nomes disponíveis. `AlertSoundId` persiste a escolha; o preview usa o rascunho do seletor sem alterar a preferência salva. `WaterSound` carrega cada recurso uma vez, reproduz sem bloquear a interface e impede sobreposição em falas consecutivas. Um preview interrompe o som anterior e pode ser repetido imediatamente. `AlertVolume` guarda o nível de 0 a 100, inicialmente 70. `WaveVolume` escala as amostras PCM em memória sem alterar o arquivo original nem o volume geral do Windows. O cache mantém no máximo uma versão de volume por som. Falhas do dispositivo de áudio não interrompem o lembrete. `SpeechSound` começa ativado e a escolha fica persistida; o campo legado `Sound` é preservado apenas por compatibilidade. O script de desenvolvimento `scripts/prepare-audio.py` permite reproduzir o tratamento das amostras licenciadas. Os testes usam uma implementação silenciosa, sem reproduzir áudio no computador de desenvolvimento.
+
+### Histórico
+
+A visão geral lista registros de todos os dias, ordenados do mais recente para o mais antigo, em páginas de oito itens. Cada botão captura a instância exata do registro, distinguindo até dois goles com horário e volume iguais. A lista é reconstruída somente quando os registros ou a página mudam, preservando foco e rolagem durante os ticks do relógio. A limpeza completa pede confirmação com resposta inicial negativa. Os testes exercitam confirmação e cancelamento por uma função injetada, sem abrir diálogos.

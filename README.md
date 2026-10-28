@@ -22,8 +22,8 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 
 - Pet sobre as outras janelas, com posição e tamanho ajustáveis.
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
-- Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Opção de desfazer por 20 segundos.
-- Meta diária configurável e histórico do dia no horário local.
+- Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Desfaça o último gole ou qualquer registro do histórico, sem limite de tempo, inclusive após reabrir.
+- Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
 - Treze modelos, incluindo garrafinhas squeeze, slim, retrô, quadrada, arredondada e com alça.
 - Trinta e dois acessórios para combinar até três itens, incluindo bolsa, saia, salto alto, vestido, batom e tiara floral.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.

@@ -20,7 +20,8 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Pausa | Nível congelado, retomada antecipada e conservação do tempo restante |
 | Suspensão | Tick atrasado após a pausa produz no máximo um aviso |
 | Configuração | Intervalo alterado durante atividade ou pausa |
-| Desfazer | Restauração dos marcadores, expiração e invalidação após pausa |
+| Desfazer | Sem limite de tempo, inclusive após reabrir; remoção individual sem restaurar registros já apagados e recálculo do nível ao apagar o mais recente |
+| Histórico | Todos os dias, paginação, registros com mesmo horário, correção da última página após remover, cancelamento e confirmação da limpeza completa |
 | Total diário | Contagem pela meia-noite local, independente da meia-noite UTC |
 | Persistência | Reabertura com visual, três acessórios, configurações e posição preservados; gravação atômica e falha de escrita sem alteração do principal |
 | Recuperação | Fallback para backup e preservação da cópia válida após recuperar |

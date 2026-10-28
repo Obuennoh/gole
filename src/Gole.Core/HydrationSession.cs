@@ -4,11 +4,11 @@ public readonly record struct TickResult(bool Notify, bool Changed, bool Chatter
 
 public sealed class HydrationSession(HydrationState state)
 {
-    private sealed record UndoRecord(Sip Sip, long LastDrink, long Anchor, long Deadline, long PhraseDeadline, long PauseStart, DateTime Until);
+    private sealed record UndoRecord(Sip Sip, long LastDrink, long Anchor, long Deadline, long PhraseDeadline, long PauseStart);
     private UndoRecord? undo;
     public HydrationState State { get; } = state;
 
-    public bool CanUndo(DateTime utcNow) => undo is not null && utcNow < undo.Until && State.Sips.Contains(undo.Sip);
+    public bool CanUndo => State.Sips.Count > 0;
 
     public void Drink(DateTime utcNow)
     {
@@ -16,22 +16,63 @@ public sealed class HydrationSession(HydrationState state)
             State.Resume(utcNow);
         var timing = (State.LastDrink, State.VisualAnchor, State.NextReminder, State.NextPhrase, State.PauseStart);
         var sip = State.Drink(utcNow);
-        undo = new UndoRecord(sip, timing.LastDrink, timing.VisualAnchor, timing.NextReminder, timing.NextPhrase, timing.PauseStart, utcNow.AddSeconds(20));
+        undo = new UndoRecord(sip, timing.LastDrink, timing.VisualAnchor, timing.NextReminder, timing.NextPhrase, timing.PauseStart);
     }
 
     public bool Undo(DateTime utcNow)
     {
-        if (!CanUndo(utcNow))
+        if (!CanUndo)
             return false;
-        var record = undo!;
-        State.Sips.Remove(record.Sip);
-        State.LastDrink = record.LastDrink;
-        State.VisualAnchor = record.Anchor;
-        State.NextReminder = record.Deadline;
-        State.NextPhrase = record.PhraseDeadline;
-        State.PauseStart = record.PauseStart;
+        var latest = State.Sips.Max(s => s.Utc);
+        return RemoveDrink(State.Sips.Last(s => s.Utc == latest), utcNow);
+    }
+
+    public bool RemoveDrink(Sip sip, DateTime utcNow)
+    {
+        if (!State.Sips.Contains(sip))
+            return false;
+        var latest = State.Sips.Max(s => s.Utc);
+        State.Sips.Remove(sip);
+        if (undo is not null && ReferenceEquals(undo.Sip, sip))
+        {
+            State.LastDrink = undo.LastDrink;
+            State.VisualAnchor = undo.Anchor;
+            State.NextReminder = undo.Deadline;
+            State.NextPhrase = undo.PhraseDeadline;
+            State.PauseStart = undo.PauseStart;
+        }
+        else if (sip.Utc == latest && !State.Sips.Any(s => s.Utc == latest))
+            RebuildTiming(utcNow);
+        // Removing any entry invalidates the snapshot so it cannot restore deleted history later.
         undo = null;
         return true;
+    }
+
+    public bool ClearDrinks(DateTime utcNow)
+    {
+        if (State.Sips.Count == 0)
+            return false;
+        State.Sips.Clear();
+        undo = null;
+        RebuildTiming(utcNow);
+        return true;
+    }
+
+    private void RebuildTiming(DateTime utcNow)
+    {
+        long latest = State.Sips.Count == 0 ? 0 : State.Sips.Max(s => s.Utc);
+        long interval = TimeSpan.FromMinutes(State.Interval).Ticks;
+        long clock = State.Paused(utcNow) ? State.PauseStart : utcNow.Ticks;
+        State.LastDrink = latest;
+        State.VisualAnchor = latest == 0 ? clock - interval : latest;
+        if (State.Paused(utcNow))
+            State.NextReminder = State.PauseEnd + (latest == 0 ? interval : Math.Max(0, latest + interval - clock));
+        else
+        {
+            State.PauseStart = State.PauseEnd = 0;
+            State.NextReminder = latest == 0 ? utcNow.AddMinutes(State.Interval).Ticks : Math.Max(utcNow.Ticks, latest + interval);
+        }
+        State.NextPhrase = utcNow.AddMinutes(HydrationState.PhraseInterval).Ticks;
     }
 
     public void Pause(DateTime utcNow, int minutes)

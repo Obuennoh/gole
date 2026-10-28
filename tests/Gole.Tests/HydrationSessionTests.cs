@@ -206,25 +206,33 @@ public sealed class HydrationSessionTests
         Assert.Equal(200, session.State.Today(Start));
         Assert.Equal(Start.AddMinutes(5).Ticks, session.State.LastDrink);
         Assert.Equal(Start.AddMinutes(35).Ticks, session.State.NextReminder);
-        Assert.False(session.Undo(Start.AddMinutes(6).AddSeconds(6)));
+        Assert.True(session.Undo(Start.AddMinutes(6).AddSeconds(6)));
+        Assert.Empty(session.State.Sips);
+        Assert.False(session.Undo(Start.AddMinutes(6).AddSeconds(7)));
     }
 
     [Fact]
-    public void Undo_expires_after_twenty_seconds()
+    public void Undo_has_no_time_limit_and_works_after_reopening()
     {
         var session = NewSession();
         session.Drink(Start);
-        Assert.False(session.Undo(Start.AddSeconds(20)));
-        Assert.Single(session.State.Sips);
+        var reopened = new HydrationSession(session.State);
+        Assert.True(reopened.CanUndo);
+        Assert.True(reopened.Undo(Start.AddDays(2)));
+        Assert.Empty(reopened.State.Sips);
+        Assert.False(reopened.CanUndo);
     }
 
     [Fact]
-    public void Pause_invalidates_undo_so_it_cannot_restore_stale_timing()
+    public void Pause_invalidates_the_timing_snapshot_but_not_record_removal()
     {
         var session = NewSession();
         session.Drink(Start);
         session.Pause(Start.AddSeconds(3), 60);
-        Assert.False(session.CanUndo(Start.AddSeconds(4)));
+        Assert.True(session.CanUndo);
+        Assert.True(session.Undo(Start.AddSeconds(4)));
+        Assert.Equal(Start.AddSeconds(3).AddMinutes(60).Ticks, session.State.PauseEnd);
+        Assert.Equal(0, session.State.Level(Start.AddSeconds(4)));
     }
 
     [Fact]

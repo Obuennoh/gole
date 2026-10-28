@@ -23,10 +23,19 @@ namespace Gole.Desktop
         ContentControl pageHost;
         UIElement[] pages;
         int selectedPage;
-        TextBlock title, subtitle, total, progressLabel, countdown, last, records, footer, petStatus;
+        TextBlock title, subtitle, total, progressLabel, countdown, last, footer, petStatus;
         ProgressBar progress;
         Bottle live, preview;
-        Button undo, saveVisual;
+        Button undo, saveVisual, previousHistory, nextHistory, clearHistory;
+        StackPanel recordRows;
+        TextBlock historyPageLabel;
+        List<Sip> historySnapshot;
+        int historyPage;
+        const int RecordsPerPage = 8;
+        internal Func<bool> ConfirmClearHistory
+        {
+            get; set;
+        }
         TextBox nameBox, goalBox, intervalBox, servingBox;
         Slider sizeSlider;
         CheckBox motionBox;
@@ -50,6 +59,9 @@ namespace Gole.Desktop
         {
             pet = companion;
             data = pet.Data;
+            ConfirmClearHistory = () => MessageBox.Show(this,
+                "Apagar todos os " + data.Sips.Count + " registros de água de todos os dias? Suas personalizações e lembretes serão mantidos.",
+                "Limpar histórico", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
             ReadDraft();
             Title = App.DevelopmentMode ? "Gole · desenvolvimento" : "Gole · painel";
             Width = 1090;
@@ -210,14 +222,44 @@ namespace Gole.Desktop
             {
                 pet.Drink();
             }, true));
-            undo = Theme.Button("Desfazer registro", pet.Undo, false);
+            undo = Theme.Button("Desfazer último gole", () => { pet.Undo(); RefreshStats(); }, false);
             undo.Margin = new Thickness(0, 8, 0, 0);
             consumption.Children.Add(undo);
             left.Children.Add(Card(consumption));
             var history = new StackPanel();
-            history.Children.Add(Heading("Últimos registros"));
-            records = Theme.Text("", 13, Theme.Muted);
-            history.Children.Add(records);
+            history.Children.Add(Heading("Histórico de água"));
+            recordRows = new StackPanel();
+            history.Children.Add(recordRows);
+            var pagination = new Grid { Margin = new Thickness(0, 12, 0, 0) };
+            pagination.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            pagination.ColumnDefinitions.Add(new ColumnDefinition());
+            pagination.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            previousHistory = Theme.Button("Anterior", () => { historyPage--; RefreshHistory(true); }, false);
+            nextHistory = Theme.Button("Próxima", () => { historyPage++; RefreshHistory(true); }, false);
+            previousHistory.FontSize = nextHistory.FontSize = 12;
+            previousHistory.Margin = nextHistory.Margin = new Thickness(0);
+            historyPageLabel = Theme.Text("", 12, Theme.Muted);
+            historyPageLabel.Margin = new Thickness(4, 0, 4, 0);
+            historyPageLabel.VerticalAlignment = VerticalAlignment.Center;
+            historyPageLabel.TextAlignment = TextAlignment.Center;
+            Grid.SetColumn(historyPageLabel, 1);
+            Grid.SetColumn(nextHistory, 2);
+            pagination.Children.Add(previousHistory);
+            pagination.Children.Add(historyPageLabel);
+            pagination.Children.Add(nextHistory);
+            history.Children.Add(pagination);
+            clearHistory = Theme.Button("Limpar todo o histórico", () =>
+            {
+                if (data.Sips.Count > 0 && ConfirmClearHistory())
+                {
+                    pet.ClearDrinks();
+                    RefreshStats();
+                }
+            }, false);
+            clearHistory.Foreground = Theme.B("#A63838");
+            clearHistory.Background = Theme.B("#FBEFEF");
+            clearHistory.Margin = new Thickness(0, 14, 0, 0);
+            history.Children.Add(clearHistory);
             var hc = Card(history);
             hc.Margin = new Thickness(0, 18, 0, 0);
             left.Children.Add(hc);
@@ -669,6 +711,50 @@ namespace Gole.Desktop
             content.Children.Add(Theme.Text("O Gole busca atualizações ao abrir e instala ao sair pelo menu. Sem conta nem configuração.", 12, Theme.Muted));
             return Card(content);
         }
+        void RefreshHistory(bool force = false)
+        {
+            if (recordRows == null || (!force && historySnapshot != null && historySnapshot.SequenceEqual(data.Sips)))
+                return;
+            historySnapshot = data.Sips.ToList();
+            var ordered = historySnapshot.AsEnumerable().Reverse().OrderByDescending(s => s.Utc).ToList();
+            int pages = Math.Max(1, (ordered.Count + RecordsPerPage - 1) / RecordsPerPage);
+            historyPage = Math.Clamp(historyPage, 0, pages - 1);
+            recordRows.Children.Clear();
+            if (ordered.Count == 0)
+                recordRows.Children.Add(Theme.Text("Nenhum gole registrado.", 13, Theme.Muted));
+            foreach (var sip in ordered.Skip(historyPage * RecordsPerPage).Take(RecordsPerPage))
+            {
+                var local = new DateTime(sip.Utc, DateTimeKind.Utc).ToLocalTime();
+                var row = new Grid();
+                row.ColumnDefinitions.Add(new ColumnDefinition());
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                var timestamp = Theme.Text(local.ToString("dd/MM/yyyy HH:mm:ss"), 12, Theme.Muted);
+                timestamp.Margin = new Thickness(0, 0, 8, 0);
+                timestamp.VerticalAlignment = VerticalAlignment.Center;
+                var amount = Theme.Text(sip.Ml.ToString("N0", CultureInfo.GetCultureInfo("pt-BR")) + " ml", 13, Theme.Ink);
+                amount.Margin = new Thickness(0, 0, 12, 0);
+                amount.VerticalAlignment = VerticalAlignment.Center;
+                amount.FontWeight = FontWeights.SemiBold;
+                var remove = Theme.Button("Desfazer", () => { pet.RemoveDrink(sip); RefreshStats(); }, false);
+                remove.Tag = sip;
+                remove.FontSize = 12;
+                remove.Padding = new Thickness(10, 6, 10, 6);
+                remove.MinHeight = 32;
+                remove.Margin = new Thickness(0);
+                System.Windows.Automation.AutomationProperties.SetName(remove, "Desfazer gole de " + local.ToString("dd/MM/yyyy HH:mm:ss") + ", " + sip.Ml + " ml");
+                Grid.SetColumn(amount, 1);
+                Grid.SetColumn(remove, 2);
+                row.Children.Add(timestamp);
+                row.Children.Add(amount);
+                row.Children.Add(remove);
+                recordRows.Children.Add(new Border { Child = row, Padding = new Thickness(0, 8, 0, 8), BorderBrush = Theme.B("#E5ECEF"), BorderThickness = new Thickness(0, 0, 0, 1) });
+            }
+            historyPageLabel.Text = "Página " + (historyPage + 1) + " de " + pages;
+            previousHistory.IsEnabled = historyPage > 0;
+            nextHistory.IsEnabled = historyPage < pages - 1;
+            clearHistory.IsEnabled = ordered.Count > 0;
+        }
         public void RefreshStats()
         {
             if (total == null || footer == null)
@@ -682,8 +768,7 @@ namespace Gole.Desktop
             countdown.Text = pet.NextText();
             last.Text = data.LastDrink == 0 ? "Nenhum registro ainda" : "Último registro · " + new DateTime(data.LastDrink, DateTimeKind.Utc).ToLocalTime().ToString("dd/MM HH:mm");
             petStatus.Text = data.Paused(now) ? "Pausado" : HydrationExpression.Label(HydrationExpression.AtLevel(data.Level(now))) + " · " + Math.Round(data.Level(now) * 100) + "%";
-            var today = data.Sips.Where(s => new DateTime(s.Utc, DateTimeKind.Utc).ToLocalTime().Date == now.ToLocalTime().Date).Reverse().Take(5).ToList();
-            records.Text = today.Count == 0 ? "Nenhum registro hoje" : string.Join("\n\n", today.Select(s => new DateTime(s.Utc, DateTimeKind.Utc).ToLocalTime().ToString("HH:mm") + "                                 + " + s.Ml + " ml"));
+            RefreshHistory();
             undo.IsEnabled = pet.CanUndo;
             footer.Text = pet.Store.SaveFailed ? "Não foi possível salvar os dados." : pet.Store.Recovered ? "Preferências recuperadas. Confira seus ajustes." : "Fechar o painel mantém o pet ativo.";
         }
