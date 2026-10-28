@@ -1,1 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk" />
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <EmbeddedResource Include="Content/personalities.json" LogicalName="Gole.Core.Content.personalities.json" />
+  </ItemGroup>
+</Project>

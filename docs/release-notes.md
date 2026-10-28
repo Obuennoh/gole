@@ -1,5 +1,11 @@
 Gole para Windows x64, com instalação por usuário e runtime .NET incluído.
 
+- **Personalizar → Personalidade**: debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica ou pirata. O modo **Aleatória** mistura os estilos.
+- **504 frases distintas**, adaptadas aos seis estados do pet, e elogios próprios de cada personalidade após beber.
+- Prévia da fala no editor, botão **Outra frase** e salvamento por **Salvar personalização**. A escolha é restaurada ao reabrir.
+- As falas não repetem a mesma mensagem consecutivamente. Não há opções regionais.
+
+
 - Desfaça qualquer gole pelo histórico, sem limite de tempo, inclusive depois de fechar e abrir o app.
 - Histórico de todos os dias com paginação, data, horário e volume de cada registro.
 - **Limpar todo o histórico** remove todos os registros após confirmação, mantendo o visual, os sons e os lembretes.

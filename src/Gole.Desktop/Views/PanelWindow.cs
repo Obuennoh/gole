@@ -40,7 +40,12 @@ namespace Gole.Desktop
         Slider sizeSlider;
         CheckBox motionBox;
         string draftName, draftColor;
-        int draftModel;
+        int draftModel, draftPersonality;
+        ComboBox personalityChoice;
+        TextBlock personalityDescription, personalityMessage;
+        readonly ReminderPhrases previewSpeech = new ReminderPhrases(new Random());
+        int lastPreviewPersonality = -1;
+        HydrationMood? lastPreviewMood;
         List<int> draftAccessories = new List<int>();
         double draftSize, previewLevel = 1;
         bool draftMotion, syncing;
@@ -293,6 +298,7 @@ namespace Gole.Desktop
             draftName = data.Name;
             draftColor = data.Color;
             draftModel = data.Vessel;
+            draftPersonality = data.PersonalityId;
             draftAccessories = data.Accessories.ToList();
             draftSize = data.Size;
             draftMotion = data.Motion;
@@ -301,7 +307,7 @@ namespace Gole.Desktop
         {
             get
             {
-                return draftName != data.Name || draftColor != data.Color || draftModel != data.Vessel || !draftAccessories.SequenceEqual(data.Accessories) || Math.Abs(draftSize - data.Size) > .1 || draftMotion != data.Motion;
+                return draftName != data.Name || draftColor != data.Color || draftModel != data.Vessel || draftPersonality != data.PersonalityId || !draftAccessories.SequenceEqual(data.Accessories) || Math.Abs(draftSize - data.Size) > .1 || draftMotion != data.Motion;
             }
         }
         UIElement Editor()
@@ -320,6 +326,20 @@ namespace Gole.Desktop
                 UpdateEditor();
             };
             controls.Children.Add(nameBox);
+            Label(controls, "Personalidade");
+            personalityChoice = new ComboBox { ItemsSource = PersonalityCatalog.Options, DisplayMemberPath = "Name", SelectedValuePath = "Id", SelectedValue = draftPersonality, Height = 40, VerticalContentAlignment = VerticalAlignment.Center };
+            System.Windows.Automation.AutomationProperties.SetName(personalityChoice, "Personalidade do pet");
+            personalityChoice.SelectionChanged += delegate
+            {
+                if (syncing || personalityChoice.SelectedValue is not int id)
+                    return;
+                draftPersonality = id;
+                UpdateEditor();
+            };
+            controls.Children.Add(personalityChoice);
+            personalityDescription = Theme.Text("", 12, Theme.Muted);
+            personalityDescription.Margin = new Thickness(0, 8, 0, 0);
+            controls.Children.Add(personalityDescription);
             Label(controls, "Modelo");
             var models = new WrapPanel();
             for (int i = 0; i < Bottle.Models.Length; i++)
@@ -427,6 +447,13 @@ namespace Gole.Desktop
                 states.Children.Add(b);
             }
             previewContent.Children.Add(states);
+            personalityMessage = Theme.Text("", 12, Theme.Ink);
+            personalityMessage.Margin = new Thickness(0);
+            System.Windows.Automation.AutomationProperties.SetName(personalityMessage, "Prévia da fala");
+            previewContent.Children.Add(new Border { Child = personalityMessage, Background = Theme.B("#F0F6F7"), CornerRadius = new CornerRadius(10), Padding = new Thickness(12), Margin = new Thickness(0, 4, 0, 8) });
+            var anotherPhrase = Theme.Button("Outra frase", () => UpdatePersonalityPreview(true), false);
+            anotherPhrase.FontSize = 12;
+            previewContent.Children.Add(anotherPhrase);
             var test = Theme.Button("▶  Simular ciclo", delegate
             {
                 previewLevel = 1;
@@ -436,7 +463,7 @@ namespace Gole.Desktop
             test.FontSize = 12;
             previewContent.Children.Add(test);
             previewColumn.Children.Add(Scroll(Card(previewContent)));
-            saveVisual = Theme.Button("Salvar visual", SaveAppearance, true);
+            saveVisual = Theme.Button("Salvar personalização", SaveAppearance, true);
             saveVisual.Margin = new Thickness(0, 16, 0, 6);
             previewActions.Children.Add(saveVisual);
             var discard = Theme.Button("Descartar alterações", delegate
@@ -479,6 +506,7 @@ namespace Gole.Desktop
         {
             syncing = true;
             nameBox.Text = draftName;
+            personalityChoice.SelectedValue = draftPersonality;
             sizeSlider.Value = draftSize;
             motionBox.IsChecked = draftMotion;
             syncing = false;
@@ -487,6 +515,7 @@ namespace Gole.Desktop
         {
             if (preview == null)
                 return;
+            personalityDescription.Text = PersonalityCatalog.Get(draftPersonality).Description;
             preview.Tint = draftColor;
             preview.Vessel = draftModel;
             preview.EquippedAccessories = draftAccessories.ToArray();
@@ -529,8 +558,20 @@ namespace Gole.Desktop
             button.BorderThickness = new Thickness(selected ? 2 : 1);
             button.Background = selected ? Theme.B("#EDF7F6") : Brushes.White;
         }
+        void UpdatePersonalityPreview(bool force = false)
+        {
+            if (personalityMessage == null)
+                return;
+            var mood = HydrationExpression.AtLevel(previewLevel);
+            if (!force && lastPreviewPersonality == draftPersonality && lastPreviewMood == mood)
+                return;
+            personalityMessage.Text = previewSpeech.Next(mood, draftPersonality);
+            lastPreviewPersonality = draftPersonality;
+            lastPreviewMood = mood;
+        }
         void UpdatePreviewLabel()
         {
+            UpdatePersonalityPreview();
             if (previewState != null)
                 previewState.Text = simulation.HasValue ? "Simulando · " + Math.Round(previewLevel * 100) + "%" : HydrationExpression.Label(HydrationExpression.AtLevel(previewLevel)) + " · " + Math.Round(previewLevel * 100) + "% de água";
         }
@@ -539,6 +580,7 @@ namespace Gole.Desktop
             data.Name = string.IsNullOrWhiteSpace(draftName) ? "Gole" : draftName.Trim();
             data.Color = draftColor;
             data.Vessel = draftModel;
+            data.PersonalityId = draftPersonality;
             data.Accessories = draftAccessories.ToList();
             data.Accessory = 0;
             data.Size = draftSize;

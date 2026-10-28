@@ -15,6 +15,7 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Ciclo | Cheio no início, metade em 15 minutos e vazio aos 30 minutos |
 | Registro | Volume configurado por gole, padrão de 200 ml, reposição completa, total diário, validação de quantidade e reinício do prazo |
 | Lembretes | Emissão no prazo, sem duplicação nem repetição de intervalos perdidos |
+| Personalidades | Cobertura dos seis humores, frases e reações exclusivas de cada estilo, mistura aleatória, ausência de repetição imediata, fallback de IDs e persistência |
 | Falas | Prazo de cinco minutos, mensagem por humor e ausência de duplicação com lembretes |
 | Após beber | Elogios sem números ou volume, com variedade e sem repetição consecutiva |
 | Pausa | Nível congelado, retomada antecipada e conservação do tempo restante |
@@ -26,7 +27,7 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Persistência | Reabertura com visual, três acessórios, configurações e posição preservados; gravação atômica e falha de escrita sem alteração do principal |
 | Recuperação | Fallback para backup e preservação da cópia válida após recuperar |
 | Compatibilidade | Migração de registros anteriores e rejeição de schema futuro |
-| Editor | Preview independente, descarte, salvamento, paleta e configuração |
+| Editor | Preview de visual e falas, troca de personalidade sem aplicação antecipada, botão Outra frase, descarte e salvamento do estilo |
 | Seleção visual | Borda efetiva do template ao marcar e desmarcar repetidamente; foco separado da seleção |
 | Acessórios | Três itens simultâneos, bloqueio do quarto, remoção e limpeza |
 | Expressões | Seis faixas e seus limites exatos ao longo do esvaziamento |

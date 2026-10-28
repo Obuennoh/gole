@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 10;
+    public const int CurrentVersion = 11;
     public const int DefaultServingMl = 200;
     public const int MinimumServingMl = 1;
     public const int MaximumServingMl = 6000;
@@ -35,6 +35,11 @@ public sealed class HydrationState
     [DataMember] public int Interval { get; set; } = DefaultInterval;
     [DataMember] public int Goal { get; set; } = 2000;
     [DataMember] public int ServingMl { get; set; } = DefaultServingMl;
+    [DataMember]
+    public int PersonalityId
+    {
+        get; set;
+    }
     [DataMember] public double Size { get; set; } = 180;
     [DataMember] public double X { get; set; } = -99999;
     [DataMember] public double Y { get; set; } = -99999;
@@ -125,6 +130,7 @@ public sealed class HydrationState
         Interval = Math.Clamp(Interval, 5, 180);
         Goal = Math.Clamp(Goal, 250, 6000);
         AlertSoundId = SoundCatalog.Normalize(AlertSoundId);
+        PersonalityId = PersonalityCatalog.Normalize(PersonalityId);
         AlertVolume = Math.Clamp(AlertVolume, 0, 100);
         if (ServingMl is < MinimumServingMl or > MaximumServingMl)
             ServingMl = DefaultServingMl;

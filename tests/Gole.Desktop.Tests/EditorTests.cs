@@ -58,6 +58,25 @@ public sealed class EditorTests
                 Assert.False(panel.IsVisible);
                 Assert.False(pet.IsVisible);
                 AssertAccessoryBorderTracksSelection(panel);
+                var personality = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade do pet");
+                Assert.Equal(10, personality.Items.Count);
+                personality.SelectedValue = 9;
+                Assert.Equal(0, state.PersonalityId);
+                var phrase = Descendants(panel).OfType<TextBlock>().Single(t => AutomationProperties.GetName(t) == "Prévia da fala");
+                Assert.Contains(phrase.Text, PersonalityCatalog.Reminders(9, HydrationMood.Happy));
+                string beforePhrase = phrase.Text;
+                Click(panel, "Outra frase");
+                Assert.NotEqual(beforePhrase, phrase.Text);
+                Assert.Equal(1, sound.Plays);
+                Click(panel, "Morto");
+                Assert.Contains(phrase.Text, PersonalityCatalog.Reminders(9, HydrationMood.Dead));
+                Click(panel, "Descartar alterações");
+                Assert.Equal(0, (int)personality.SelectedValue);
+                personality.SelectedValue = 6;
+                Click(panel, "Salvar personalização");
+                Assert.Equal(6, state.PersonalityId);
+                Assert.Equal(6, store.Load(DateTime.UtcNow).State.PersonalityId);
+
 
                 Click(panel, "Caneca");
                 Assert.Equal(0, state.Vessel);
@@ -69,7 +88,7 @@ public sealed class EditorTests
                 Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Vessel == 0 && b.Height > 100);
                 Click(panel, "Caneca");
                 Click(panel, "Cor Rosa");
-                Click(panel, "Salvar visual");
+                Click(panel, "Salvar personalização");
                 Assert.Equal(5, state.Vessel);
                 Assert.Equal("#D875B3", state.Color);
                 Assert.Equal(5, store.Load(DateTime.UtcNow).State.Vessel);
@@ -81,7 +100,7 @@ public sealed class EditorTests
                 Click(panel, "Óculos de grau");
                 Assert.False(FindButton(panel, "Auréola").IsEnabled);
                 Assert.Empty(state.Accessories);
-                Click(panel, "Salvar visual");
+                Click(panel, "Salvar personalização");
                 Assert.Equal(new[] { 3, 15, 21 }, state.Accessories);
                 Click(panel, "Brincos");
                 Assert.True(FindButton(panel, "Auréola").IsEnabled);
@@ -89,16 +108,16 @@ public sealed class EditorTests
                 Click(panel, "Descartar alterações");
                 Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.EquippedAccessories.SequenceEqual(new[] { 3, 15, 21 }));
                 Click(panel, "Nenhum");
-                Click(panel, "Salvar visual");
+                Click(panel, "Salvar personalização");
                 Assert.Empty(state.Accessories);
 
                 Click(panel, "Bolsa");
                 Click(panel, "Saia");
                 Click(panel, "Salto alto");
-                Click(panel, "Salvar visual");
+                Click(panel, "Salvar personalização");
                 Assert.Equal(new[] { 26, 27, 28 }, store.Load(DateTime.UtcNow).State.Accessories);
                 Click(panel, "Nenhum");
-                Click(panel, "Salvar visual");
+                Click(panel, "Salvar personalização");
 
                 foreach (double level in new[] { 1, .7, .5, .3, .1, 0 })
                 {
@@ -159,6 +178,7 @@ public sealed class EditorTests
                 state.VisualAnchor = DateTime.UtcNow.AddHours(-1).Ticks;
                 Click(panel, "✓  Já bebi um gole");
                 Assert.Equal(333, state.Today(DateTime.UtcNow));
+                Assert.Contains(Descendants(pet).OfType<TextBlock>(), t => PersonalityCatalog.Reactions(6).Contains(t.Text));
                 Assert.Equal(1, state.Level(new DateTime(state.LastDrink, DateTimeKind.Utc)), 8);
                 panel.RefreshStats();
                 Click(panel, "Desfazer último gole");

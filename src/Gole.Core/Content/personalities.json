@@ -1,0 +1,695 @@
+[
+  {
+    "id": 1,
+    "name": "Debochada",
+    "description": "Piadas, provocações e alguns palavrões quando a água acaba.",
+    "reminders": [
+      [
+        "Tô feliz da vida! Você e a água: dupla de milhões.",
+        "Barriguinha cheia, coração quentinho. Mandou bem!",
+        "Se hidratar fosse esporte, você já tava no pódio.",
+        "Esse brilho todo é água e autoestima. Segue assim!",
+        "Olha essa carinha! Tem água e zero paciência pra secura.",
+        "Hidratação em dia. Hoje eu não tenho nem do que reclamar.",
+        "Tô cheio de água e de mim. Obrigado por colaborar.",
+        "Seu talento pra lembrar da água merece até um deboche carinhoso."
+      ],
+      [
+        "Tô de boa! Um golinho daqui a pouco mantém o charme.",
+        "Ainda tô tranquilo. Só não esquece seu parceiro aqui.",
+        "Seu café pode esperar. A água também merece carinho.",
+        "Passando pra lembrar que a gente fica mais bonito hidratado.",
+        "Tô tranquilo, mas minha memória de elefante já tá vigiando seu copo.",
+        "A água não vai se beber sozinha, celebridade.",
+        "Seu pet aceita carinho em forma de gole, fica a dica.",
+        "Ainda dá pra manter essa amizade sem eu precisar fazer escândalo."
+      ],
+      [
+        "Já fiquei sério aqui. Bora organizar esse próximo gole?",
+        "Humano, foco. A água tá perdendo essa disputa pras abas abertas.",
+        "Tô na metade da alegria. Um gole resolve o clima.",
+        "Minha cara de paisagem é um pedido discreto de água.",
+        "Minha cara fechou antes da sua última aba. Bora de água.",
+        "O copo tá aí de figurante ou vai trabalhar hoje?",
+        "Vou começar a cobrar aluguel desse deserto.",
+        "A gente combinou hidratação, não um documentário sobre seca."
+      ],
+      [
+        "Meu sorriso foi de férias. Vai pegar água pra ele voltar?",
+        "Tá esperando eu virar uma uva-passa?",
+        "A reunião podia ser um e-mail. Essa tristeza podia ser um gole.",
+        "Eu tô murchando e você aí. Bora de água, pô.",
+        "Já tô com cara de boleto vencido. Me ajuda com um gole.",
+        "Meu sorriso tá no achados e perdidos. Procura perto da água.",
+        "Essa secura tá querendo virar meu traço de personalidade.",
+        "Bora beber antes que eu faça um drama em horário comercial."
+      ],
+      [
+        "Tô chorando a pouca água que me resta, porra. Vai beber!",
+        "Até a planta da sala tá preocupada comigo. Pega água!",
+        "Caralho, falta pouco pra eu fazer cosplay de poeira.",
+        "Você quer um pet ou uma uva-passa? Água, porra!",
+        "Minha última lágrima tá fazendo hora extra. Vai de água, porra.",
+        "Tô parecendo um biscoito abandonado no sol. Resolve esse copo.",
+        "Você abriu tanta coisa e não abriu a garrafa. Impressionante.",
+        "Se secura desse currículo, eu já tava contratado. Água!"
+      ],
+      [
+        "Morri de sede aqui, porra. Um gole pra ressuscitar o parceiro!",
+        "Parabéns, virou dono de um fóssil. Vai beber água!",
+        "Alô, além? Meu humano esqueceu a água de novo.",
+        "Nem zumbi aguenta essa secura. Levanta e pega água, caralho.",
+        "Virei peça de museu e você nem comprou ingresso. Bebe água.",
+        "Tô oficialmente no modo poeira premium. Um gole, caralho.",
+        "Meu testamento deixou o copo pra quem realmente usar.",
+        "Pode cancelar o velório: basta levantar e beber água, porra."
+      ]
+    ],
+    "reactions": [
+      "Aí sim! Você cuidou de mim e de você. Mandou bem!",
+      "Meu sorriso voltou! Você é meu humano favorito.",
+      "Boa! O deserto que lute, a gente tá hidratado.",
+      "Que orgulho desse humano! Segue nesse ritmo.",
+      "Renascemos! Toca aqui, parceiro de hidratação.",
+      "É disso que eu tô falando! Você arrasou.",
+      "A felicidade voltou a circular por aqui. Obrigado!",
+      "Você lembrou! Ganhei o dia e um sorrisão."
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Carinhosa",
+    "description": "Lembretes gentis, acolhimento e comemorações sem bronca.",
+    "reminders": [
+      [
+        "Olha meu sorrisão! Adoro quando você reserva um cuidado pra si.",
+        "A gente tá bem por aqui. Vamos continuar cuidando desse momento?",
+        "Meu coração de garrafinha tá cheio de alegria.",
+        "Você lembrou da água e deixou meu dia mais leve.",
+        "Esse pequeno cuidado combina muito com você.",
+        "Tá tudo florindo por aqui, inclusive meu sorriso.",
+        "Vamos guardar esse carinho pra lembrar do próximo gole.",
+        "Que bom dividir o dia com um humano que cuida de si."
+      ],
+      [
+        "Ainda tô bem, meu bem. Daqui a pouco vamos de aguinha.",
+        "Passando com um lembrete gentil e um abraço imaginário.",
+        "Não precisa correr. Só deixa sua água por perto.",
+        "Tem um cantinho de cuidado esperando por você no copo.",
+        "Vamos manter esse sorriso com mais um pouquinho de atenção.",
+        "Eu fico aqui do seu lado, lembrando com carinho.",
+        "Uma pausa curtinha também pode ser um gesto de amor próprio.",
+        "Seu copo tá esperando a chance de cuidar de você."
+      ],
+      [
+        "Meu sorriso ficou pequenininho. Vamos buscar um gole?",
+        "Talvez seja uma boa hora pra uma pausa de cuidado.",
+        "Eu também esqueço das coisas, mas posso te lembrar da água.",
+        "A gente pode retomar nosso cuidado agora mesmo.",
+        "Meu rostinho tá sério, mas o convite continua carinhoso.",
+        "Se o dia apertou, cabe uma pausa pequena com seu copo.",
+        "Tô te chamando baixinho: vamos de água?",
+        "Um golinho pode acompanhar esse instante de descanso."
+      ],
+      [
+        "Fiquei tristinho aqui. Você vem fazer uma pausa comigo?",
+        "Minha aguinha baixou e meu sorriso tá com saudade.",
+        "Sem culpa pelo esquecimento. Vamos só lembrar agora.",
+        "Posso te acompanhar até a garrafa, nem que seja em pensamento.",
+        "Hoje tá corrido? Vamos cuidar de um momento de cada vez.",
+        "Meu rostinho caiu um pouco. Seu copo ainda tá por perto?",
+        "Tô precisando do nosso pequeno ritual de água.",
+        "Que tal oferecer um carinho pra si antes de continuar?"
+      ],
+      [
+        "Minhas lágrimas apareceram. Vamos buscar água com calma?",
+        "Ainda dá tempo de cuidar desse momento, tá?",
+        "Tô quase sem aguinha, mas continuo te chamando com carinho.",
+        "Não precisa se cobrar pelo que passou. Vamos ao próximo gole.",
+        "Minha garrafinha tá pedindo ajuda bem baixinho.",
+        "Vamos interromper a correria por um instante de cuidado.",
+        "Seu copo pode ser nossa próxima parada tranquila.",
+        "Tô te esperando pra gente recuperar esse sorrisinho."
+      ],
+      [
+        "Fiquei vazio por aqui. Um gole pode começar nosso cuidado de novo.",
+        "Meu rostinho apagou, mas nosso lembrete continua carinhoso.",
+        "A gente pode recomeçar sem se tratar com dureza.",
+        "Quando puder, venha me contar que já bebeu sua água.",
+        "Até depois de esquecer, ainda cabe um gesto de cuidado.",
+        "Vamos buscar a garrafa e dar um novo começo a esse momento.",
+        "Tô quietinho, esperando nossa próxima pausa de água.",
+        "Meu sorrisinho volta quando você volta a cuidar de si."
+      ]
+    ],
+    "reactions": [
+      "Que bom! Nosso momento de cuidado voltou.",
+      "Meu sorriso reapareceu. Obrigado pelo carinho!",
+      "Você fez uma pausa pra si, e isso já merece celebração.",
+      "Tô feliz de acompanhar esse cuidado pequenininho.",
+      "Aguinha registrada e um abraço imaginário enviado.",
+      "Foi lindo ver você lembrar de si.",
+      "Nosso ritual de cuidado ganhou mais um capítulo.",
+      "Fiquei de coração quentinho com essa pausa."
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Motivadora",
+    "description": "Incentivo direto para criar uma rotina, sem cobrança pesada.",
+    "reminders": [
+      [
+        "Boa sequência de cuidado! Vamos manter esse ritmo.",
+        "Você tá construindo uma rotina com atitudes pequenas.",
+        "Meu sorriso tá celebrando sua consistência.",
+        "Mais um dia pra praticar esse hábito do seu jeito.",
+        "Pequenas ações também merecem ser comemoradas.",
+        "Olha esse pet feliz! Sua atenção fez diferença por aqui.",
+        "Você encontrou espaço pro cuidado. Continua assim!",
+        "Tá indo bem: um momento de atenção de cada vez."
+      ],
+      [
+        "Próxima oportunidade chegando: deixa a água ao alcance.",
+        "Vamos preparar o próximo gole antes de o dia acelerar.",
+        "Seu hábito fica mais fácil quando o copo tá por perto.",
+        "Ainda dá pra manter a sequência com tranquilidade.",
+        "Uma boa rotina também tem pausas pequenas.",
+        "Você já começou. Agora é só lembrar do próximo cuidado.",
+        "Bora transformar esse lembrete numa ação simples.",
+        "Seu próximo passo pode ser só pegar a garrafa."
+      ],
+      [
+        "Hora de retomar o foco no seu cuidado.",
+        "A pausa que você precisa cabe nesse próximo gole.",
+        "Se distraiu? Sem problema. Recomeça pelo que dá pra fazer agora.",
+        "Não precisa esperar o momento perfeito pra beber água.",
+        "Vamos tirar esse lembrete da intenção e levar pra ação.",
+        "Seu copo tá pronto pro próximo passo.",
+        "A sequência pode continuar a partir daqui.",
+        "O hábito é praticado no presente. Vamos de água?"
+      ],
+      [
+        "Uma distração não apaga seu progresso. Bora retomar.",
+        "Meu sorriso baixou, mas nossa disposição pode voltar agora.",
+        "Escolhe uma ação pequena: alcançar sua água.",
+        "Não transforme o atraso em desistência. Vamos ao gole.",
+        "O dia pode ter saído do plano. Esse cuidado ainda cabe.",
+        "Seu próximo acerto pode começar com uma pausa.",
+        "Vamos recuperar o ritmo sem carregar o esquecimento.",
+        "Ainda tem espaço pra agir de um jeito melhor neste instante."
+      ],
+      [
+        "Tô quase seco. Vamos fazer dessa pausa uma retomada.",
+        "Chegou a hora de trocar o adiamento por uma ação pequena.",
+        "Você não precisa resolver o dia inteiro; começa pela água.",
+        "Meu rostinho tá pedindo foco nesse cuidado agora.",
+        "Pega a garrafa e marca esse recomeço.",
+        "Se o ritmo caiu, a gente recupera no próximo passo.",
+        "Vamos sair desse quase e transformar o gole em feito.",
+        "O lembrete tá aqui. Falta só sua próxima atitude."
+      ],
+      [
+        "Cheguei ao vazio. Bora reconstruir o ritmo pelo próximo gole.",
+        "A rodada anterior passou. A próxima ação ainda é sua.",
+        "Recomeçar também é uma habilidade que a gente pratica.",
+        "Meu pet precisa reiniciar, e seu copo pode ajudar nessa missão.",
+        "Sem ficar preso ao atraso: vamos ao que é possível agora.",
+        "Uma pausa feita vale mais que um plano adiado.",
+        "Vamos transformar esse momento num novo ponto de partida.",
+        "A rotina não acabou. Ela pode continuar com sua próxima escolha."
+      ]
+    ],
+    "reactions": [
+      "Feito! Uma ação simples saiu do plano e virou prática.",
+      "Boa retomada. O próximo cuidado já tem um começo.",
+      "Você apareceu pro seu hábito. Mandou bem!",
+      "A pausa aconteceu, e isso é o que a gente celebra agora.",
+      "Registro concluído. Continua no seu ritmo!",
+      "Mais um passo na rotina que você tá construindo.",
+      "Gostei de ver essa intenção virar atitude.",
+      "Esse cuidado conta. Bora seguir com constância."
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Zen",
+    "description": "Pausas tranquilas, atenção ao presente e lembretes sem pressa.",
+    "reminders": [
+      [
+        "Tudo sereno por aqui. Vamos guardar um instante pro próximo gole.",
+        "Meu sorriso acompanha esse momento de cuidado.",
+        "Tem espaço pra uma pausa mesmo quando o dia parece cheio.",
+        "A água tá por perto, e a gente pode seguir com leveza.",
+        "O presente ganhou um pequeno gesto de atenção.",
+        "Meu equilíbrio de garrafinha tá em paz hoje.",
+        "Que bom habitar esse instante sem tanta correria.",
+        "Vamos levar essa calma pro próximo lembrete."
+      ],
+      [
+        "Percebe o ritmo do dia e deixa sua água por perto.",
+        "Um instante de pausa pode acompanhar seu próximo gole.",
+        "Não precisa fazer tudo ao mesmo tempo. O copo pode esperar sua atenção.",
+        "Se quiser, relaxe os ombros e lembre da água.",
+        "Entre uma tarefa e outra, existe espaço pra uma pequena pausa.",
+        "Estou aqui como um lembrete tranquilo no canto da tela.",
+        "O próximo gole pode ser nosso intervalo silencioso.",
+        "Vamos notar esse momento antes de seguir adiante."
+      ],
+      [
+        "Minha expressão aquietou. Que tal uma pausa com água?",
+        "Observe onde sua atenção ficou e volte devagar ao copo.",
+        "O lembrete chegou. Você pode acolher uma pausa agora.",
+        "Talvez seja hora de deixar a pressa descansar um instante.",
+        "Minha água baixou; nosso cuidado pode voltar ao presente.",
+        "Não é preciso correr pra fazer um gesto simples por si.",
+        "Vamos interromper o automático com um pequeno gole.",
+        "Seu copo é uma boa companhia pra esse intervalo."
+      ],
+      [
+        "Meu sorriso diminuiu. Vamos devolver atenção a este instante.",
+        "A correria passou por aqui. A água ainda pode entrar na pausa.",
+        "Sem julgar o esquecimento, vamos cuidar do que vem agora.",
+        "O silêncio do pet também pode ser um convite ao copo.",
+        "Pode deixar a próxima tarefa esperando enquanto faz essa pausa.",
+        "A água baixou devagar. Vamos notar isso juntos.",
+        "Há espaço entre perceber o lembrete e continuar a correria.",
+        "Vamos escolher um momento mais tranquilo pra esse gole."
+      ],
+      [
+        "Minhas lágrimas pedem uma pausa serena com água.",
+        "Estou quase vazio. Vamos voltar ao cuidado sem acrescentar pressão.",
+        "Respira no seu ritmo e lembra do copo por um instante.",
+        "O dia não precisa parar inteiro pra você beber água.",
+        "É possível retomar com gentileza, mesmo depois de esquecer.",
+        "Meu pequeno mundo tá seco; uma pausa pode mudar a cena.",
+        "Vamos deixar a distração passar e olhar pra garrafa.",
+        "Atenção ao agora: seu próximo cuidado pode começar aqui."
+      ],
+      [
+        "O vazio chegou à garrafinha. Vamos recomeçar com calma.",
+        "Meu ciclo ficou quietinho. Seu próximo gole abre outro momento.",
+        "Não há pressa em se culpar. Há uma oportunidade de cuidar.",
+        "A pausa continua disponível, mesmo depois do esquecimento.",
+        "Quando encerrar essa tarefa, reserve um instante pra água.",
+        "Meu rostinho apagou; vamos trazer atenção de volta ao copo.",
+        "Este lembrete pode ser só um convite tranquilo pra recomeçar.",
+        "Deixa o que passou no passado e encontra sua garrafa agora."
+      ]
+    ],
+    "reactions": [
+      "Pausa acolhida. Podemos seguir com mais calma.",
+      "A atenção voltou pra esse instante. Que bom.",
+      "Seu gole encontrou um espaço no meio do dia.",
+      "Meu sorriso voltou sem precisar de pressa.",
+      "Cuidado registrado. Vamos respeitar seu ritmo.",
+      "Um pequeno intervalo aconteceu, e já foi suficiente pra este momento.",
+      "Tudo tranquilo por aqui outra vez.",
+      "Você voltou ao presente com sua água."
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Dramática",
+    "description": "Novela, exagero teatral e uma tragédia diferente quando a água baixa.",
+    "reminders": [
+      [
+        "Abrem-se as cortinas para um pet magnificamente hidratado!",
+        "Hoje a trilha sonora é de vitória e meu sorriso roubou a cena.",
+        "Meu coração de garrafinha está vivendo seu grande momento.",
+        "Que espetáculo de cuidado! A crítica tá de pé aplaudindo.",
+        "Finalmente um capítulo em que ninguém esquece a protagonista.",
+        "Estou radiante, e o orçamento dessa produção foi só um gole.",
+        "Este sorriso merecia entrar nos créditos de abertura.",
+        "Luzes, câmera, aguinha! Nosso elenco tá brilhando."
+      ],
+      [
+        "Por enquanto, paz no reino. Mas deixem o copo preparado.",
+        "A novela segue tranquila, embora eu conheça esse roteiro.",
+        "Sinto que um novo gole vai entrar no próximo capítulo.",
+        "Ainda não é hora da reviravolta. Vamos manter a água por perto.",
+        "Estou bem, mas a trilha de suspense já fez uma passagem de som.",
+        "Preparem a garrafa: ela terá um papel importante nesta cena.",
+        "A calma antes do drama também pode ser acompanhada de água.",
+        "Continuamos no episódio leve, com participação especial do seu copo."
+      ],
+      [
+        "Minha expressão mudou e o diretor pediu um gole imediatamente.",
+        "O roteiro ficou sério. Onde está a estrela chamada água?",
+        "Estamos no ato em que você percebe que esqueceu a garrafa.",
+        "Meu sorriso saiu de cena sem nem avisar a produção.",
+        "Tem uma pausa dramática entre você e esse copo. Vamos resolver?",
+        "A fotografia escureceu e minha água tá baixando.",
+        "Narrador, anuncie que chegou a hora do próximo gole.",
+        "Este silêncio constrangedor podia ser cortado por uma ida à garrafa."
+      ],
+      [
+        "O violino começou. Meu sorriso foi embora no intervalo.",
+        "Estou murchando em câmera lenta, com orçamento de novela das antigas.",
+        "Minha água baixou e ninguém veio me abraçar com um gole.",
+        "O próximo capítulo promete tristeza se esse copo continuar parado.",
+        "Fui abandonado no canto da tela com uma atuação impecável.",
+        "A cena pede água, mas meu humano improvisou esquecimento.",
+        "Não queria fazer escândalo, mas já escolheram meu figurino de tragédia.",
+        "Meu olhar perdido merece uma pausa, uma garrafa e um final melhor."
+      ],
+      [
+        "Lágrimas em alta definição! Tragam água para esta produção!",
+        "Meu último pingo pediu demissão bem no meio da cena.",
+        "Estou prestes a desmaiar dramaticamente sobre o teclado imaginário.",
+        "O elenco entrou em pânico, e o copo segue sem diálogo.",
+        "A tragédia tá quase completa. Você ainda pode mudar esse roteiro.",
+        "Minha maquiagem de garrafinha não foi feita pra tantas lágrimas.",
+        "Não deixem a protagonista secar antes do último ato!",
+        "A câmera fechou no meu rosto e só tem sede nessa interpretação."
+      ],
+      [
+        "Cai o pano. Fui de garrafinha a lembrança emocionante.",
+        "O público chorou, mas a protagonista só queria água.",
+        "Este é meu monólogo póstumo: beba e me devolva à próxima temporada.",
+        "Encerramos a peça por falta de líquido no cenário.",
+        "Meu fantasma exige uma reescrita com final hidratado.",
+        "A produção já montou o velório, mas aceita um gole como reviravolta.",
+        "Fui levado pela secura e agora assombro sua área de trabalho.",
+        "Não precisava terminar em tragédia; a garrafa estava no elenco inteiro."
+      ]
+    ],
+    "reactions": [
+      "Reviravolta! A protagonista voltou sorrindo pra cena.",
+      "Aplausos, aplausos! Este gole salvou o episódio.",
+      "Cancelem o violino: teremos um final feliz por enquanto.",
+      "Meu retorno triunfal acaba de ganhar trilha sonora.",
+      "O público pediu bis e eu pedi carinho pra esse humano.",
+      "A produção agradece seu compromisso com a sobrevivência do elenco.",
+      "Nasceu mais uma cena inesquecível dessa nossa novela.",
+      "Luzes acesas! Voltamos para uma temporada mais alegre."
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Nerd",
+    "description": "Piadas de ciência, tecnologia e bugs de hidratação.",
+    "reminders": [
+      [
+        "Sistema de sorrisos operando sem falhas. Belo trabalho!",
+        "Minha variável alegria tá estável e a garrafa agradece.",
+        "Cuidado concluído com sucesso. Pode comemorar esse resultado.",
+        "Meu laboratório de aguinha tá funcionando direitinho.",
+        "Nenhum bug de secura detectado neste instante.",
+        "Sua atenção passou na validação do pet.",
+        "O experimento de lembrar da água teve um ótimo começo.",
+        "Meu painel interno tá verde de satisfação."
+      ],
+      [
+        "Lembrete em segundo plano: mantenha seu copo acessível.",
+        "O próximo gole já entrou na fila de tarefas.",
+        "Ainda tá tudo estável, mas vale preparar a próxima pausa.",
+        "Uma rotina boa também precisa de manutenção simples.",
+        "Meu sensor imaginário detectou uma garrafa esperando por você.",
+        "Já que estamos organizando o dia, inclui a água nessa lista.",
+        "Tem uma atualização de cuidado aguardando execução.",
+        "Continuo monitorando o nível com minha cara de quem sabe das coisas."
+      ],
+      [
+        "Aviso do sistema: sua atenção ficou presa em outra aba.",
+        "Meu indicador mudou. Podemos executar o próximo gole?",
+        "A hipótese é simples: você esqueceu a água por causa das tarefas.",
+        "O processo de hidratação precisa sair do estado pendente.",
+        "Vamos depurar esse sumiço do seu copo.",
+        "Minha interface ficou séria e o log aponta falta de gole.",
+        "Não precisa reiniciar o computador, só dar atenção à garrafa.",
+        "A manutenção preventiva deste pet é uma pausa com água."
+      ],
+      [
+        "Detectei uma falha recorrente: água lembrada e gole adiado.",
+        "Minha alegria entrou em modo de economia. Bora restaurar?",
+        "O laboratório tá secando e meu assistente sumiu com o copo.",
+        "Esse experimento precisa de uma intervenção chamada água.",
+        "O diagnóstico é visual: meu sorriso tá fora do ar.",
+        "Tem uma pendência líquida acumulada no seu dia.",
+        "Meu gráfico de animação ficou sem entusiasmo. Que tal uma pausa?",
+        "A documentação foi clara: o pet precisa de um gole de vez em quando."
+      ],
+      [
+        "Alerta no laboratório: até minhas lágrimas estão acabando.",
+        "O sistema entrou em estado crítico de secura cartunesca.",
+        "Preciso de uma intervenção humana antes de virar arquivo morto.",
+        "Minha bateria emocional tá piscando e a garrafa tá do seu lado.",
+        "Chegamos à parte do teste em que você pega água de verdade.",
+        "A simulação de deserto foi longe demais. Bora ao copo.",
+        "Meu detector de descaso tá fazendo barulho no cantinho da tela.",
+        "O pet tá chorando e o próximo passo da solução continua sendo água."
+      ],
+      [
+        "Falha total do módulo garrafinha. Aguardando um gole para reiniciar.",
+        "Virei um registro arqueológico no seu ambiente de trabalho.",
+        "Aplicativo do pet sem alegria: verifique a conexão com seu copo.",
+        "Meu laboratório encerrou as atividades por falta de líquido.",
+        "O experimento terminou em secura. Podemos começar outra rodada?",
+        "Fiquei offline de sorrisos, mas aceito uma retomada manual.",
+        "A solução desse problema não exige tutorial: pega sua água.",
+        "Por favor, restaure o pet com um gole e finja que foi manutenção planejada."
+      ]
+    ],
+    "reactions": [
+      "Operação concluída! Meu sorriso voltou ao estado estável.",
+      "Atualização de cuidado aplicada sem falhas.",
+      "O laboratório celebra o retorno da água.",
+      "Boa! O problema foi resolvido com uma ação bem simples.",
+      "O registro passou em todos os testes de alegria.",
+      "Sincronização com o copo realizada com sucesso.",
+      "Meu sistema voltou a funcionar com entusiasmo.",
+      "Nenhuma exceção encontrada: só um humano cuidando de si."
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Gamer",
+    "description": "Missões, checkpoints e um pet que leva a barra de água a sério.",
+    "reminders": [
+      [
+        "Barra do pet cheia! Essa partida começou bonita.",
+        "Missão de cuidado em dia. Bom jogo, humano!",
+        "Meu personagem tá sorrindo na tela de vitória.",
+        "Seu gole foi uma jogada de respeito.",
+        "O time da aguinha tá dominando esta rodada.",
+        "Checkpoint de cuidado alcançado com estilo.",
+        "Hoje meu personagem tá com animação de comemoração.",
+        "Partida tranquila e pet feliz: combinação de respeito."
+      ],
+      [
+        "Próxima missão secundária: deixar a água por perto.",
+        "Ainda tô bem, mas já prepara o próximo checkpoint.",
+        "Antes de abrir outra fase, confere seu copo.",
+        "A missão de água continua ativa no mapa.",
+        "Não precisa sair do jogo da vida, só reservar uma pausa.",
+        "Meu personagem mandou um sinal discreto pra sua garrafa.",
+        "O próximo objetivo tá bem mais perto que aquele chefe impossível.",
+        "Seu pet aguarda o próximo comando: buscar água."
+      ],
+      [
+        "A barra tá baixando. Bora cumprir a missão do gole?",
+        "Humano, meu personagem saiu da animação feliz.",
+        "Tem um objetivo pendente no canto da sua tela.",
+        "Não esquece de cuidar do pet enquanto explora essas abas.",
+        "Seu inventário tem água ou só tarefas acumuladas?",
+        "Esse é o momento de salvar o progresso com uma pausa.",
+        "Meu emote ficou sério. Já entendeu a missão?",
+        "O minimapa tá apontando diretamente pra sua garrafa."
+      ],
+      [
+        "Meu personagem perdeu o buff de alegria. Água nele!",
+        "A barra entrou no trecho triste e você segue explorando menus.",
+        "Não deixa seu parceiro virar cenário abandonado.",
+        "A missão secundária virou objetivo principal.",
+        "Tô com cara de derrota, mas ainda dá pra virar essa rodada.",
+        "Seu pet pediu reforço e o reforço é um copo.",
+        "A estratégia de ignorar a água não tá rendendo muito por aqui.",
+        "Hora de sair do automático e buscar esse item chamado água."
+      ],
+      [
+        "Barra crítica! Meu personagem tá chorando na sua tela.",
+        "O próximo gole precisa sair do menu de intenções.",
+        "Tá faltando pouco pra eu ir de base nesta rodada.",
+        "Chama o suporte? Melhor chamar sua garrafa.",
+        "Esse pet precisa de cuidado antes da tela de derrota.",
+        "Meu personagem tá pedindo uma pausa fora da missão principal.",
+        "Não me deixa virar o exemplo de tutorial do que não fazer.",
+        "A água tá no mapa; falta você confirmar esse objetivo."
+      ],
+      [
+        "Fui de base. Pega água e libera meu retorno à partida.",
+        "Tela de derrota por esquecimento do copo. Bora tentar de novo.",
+        "Meu personagem virou espectador da sua falta de pausa.",
+        "Aguardando renascimento no checkpoint da garrafa.",
+        "Não precisa trocar de servidor, precisa lembrar da água.",
+        "O pet caiu, mas a missão ainda pode ser retomada.",
+        "Encerramos a rodada. O próximo gole inicia outra tentativa.",
+        "Humano, aperta continuar na vida real e vai buscar água."
+      ]
+    ],
+    "reactions": [
+      "GG! Missão de água concluída com estilo.",
+      "Pet de volta à partida e pronto pro próximo checkpoint.",
+      "Essa jogada mereceu uma animação de vitória.",
+      "Objetivo cumprido! Seu parceiro agradece o cuidado.",
+      "O buff de alegria voltou pro nosso time.",
+      "Boa retomada! Essa rodada ganhou outro clima.",
+      "Registro salvo no checkpoint da aguinha.",
+      "Pode comemorar: o pet voltou a sorrir na tela."
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Filosófica",
+    "description": "Reflexões curtas e bem-humoradas sobre o copo e a correria.",
+    "reminders": [
+      [
+        "Se existir é perceber o momento, você percebeu muito bem sua água.",
+        "O copo pode estar meio cheio; meu sorriso resolveu ficar inteiro.",
+        "Pequenos cuidados também fazem parte das grandes perguntas.",
+        "Hoje a resposta para o sentido deste pet foi um gole.",
+        "Entre pensar no cuidado e praticar, você escolheu uma boa ação.",
+        "Minha alegria cabe numa garrafinha, mas não precisa ser pequena.",
+        "A vida segue misteriosa; a presença da água aqui está bem clara.",
+        "Meu sorriso é uma teoria que seu cuidado acabou de confirmar."
+      ],
+      [
+        "Será que o próximo gole existe antes de você lembrar dele?",
+        "Enquanto o mundo faz perguntas, seu copo oferece uma pausa.",
+        "O tempo passa mesmo quando a garrafa fica parada.",
+        "Talvez a melhor reflexão agora seja olhar pra sua água.",
+        "Há muitas maneiras de cuidar do dia. Uma delas tá no seu copo.",
+        "Uma pausa não resolve todos os mistérios, mas abre espaço pra notar o momento.",
+        "Minha garrafa contempla o presente e espera o próximo gole.",
+        "Entre mais uma tarefa e um pouco de atenção, cabe uma escolha pequena."
+      ],
+      [
+        "Meu rosto ficou sério. A reflexão agora é sobre sua garrafa.",
+        "Nem todo silêncio é sabedoria; às vezes é um pet esperando água.",
+        "O copo parado nos convida a pensar sobre o que anda sendo adiado.",
+        "Se você sabe que quer beber, o que falta pra fazer a pausa?",
+        "Minha alegria diminuiu enquanto a lista de tarefas cresceu.",
+        "A teoria do próximo gole já pode encontrar a prática.",
+        "Não quero interromper sua existência, só lembrar da água.",
+        "Talvez este seja um bom momento pra transformar intenção em gesto."
+      ],
+      [
+        "Meu sorriso encolheu diante da imensidão das suas abas abertas.",
+        "O vazio nem sempre é existencial; às vezes começa na garrafinha.",
+        "O tempo não volta, mas a pausa ainda pode acontecer.",
+        "Contemplo sua garrafa e me pergunto por que ela segue distante.",
+        "Se o cuidado ficou pra depois, podemos questionar esse depois agora.",
+        "Meu olhar triste propõe um debate curto com seu copo.",
+        "A pressa tem seus argumentos. A água também pode ter espaço.",
+        "Uma ideia esquecida não bebe água por você. Vamos à prática?"
+      ],
+      [
+        "Minhas lágrimas levantaram uma questão urgente sobre o próximo gole.",
+        "O pet tá quase vazio, e essa discussão já dispensa nota de rodapé.",
+        "Pensar na água é diferente de alcançar o copo, caro humano.",
+        "A contemplação foi longe. A garrafinha continua esperando uma ação.",
+        "Se a resposta parece simples, talvez seja mesmo hora de beber.",
+        "Meu pequeno drama líquido pede menos teoria e mais pausa.",
+        "O quase vazio nos ensina que lembrar também pode virar atitude.",
+        "A pergunta permanece: o que falta pra você visitar sua garrafa?"
+      ],
+      [
+        "Eis o pet vazio: prova de que intenção e gole não são sinônimos.",
+        "Minha existência virou uma pergunta seca no canto da tela.",
+        "Não é o fim do mundo; é um ótimo motivo pra buscar água.",
+        "O passado guardou o esquecimento. O presente ainda guarda o copo.",
+        "Desapareceu meu sorriso, mas a possibilidade de recomeçar ficou.",
+        "Podemos discutir o vazio depois da sua próxima pausa com água.",
+        "Penso, logo lembro: você ainda pode beber seu próximo gole.",
+        "Minha conclusão provisória é que a garrafa merece uma visita."
+      ]
+    ],
+    "reactions": [
+      "A prática respondeu melhor que qualquer discurso.",
+      "Seu cuidado transformou uma ideia num momento de verdade.",
+      "O copo encontrou seu propósito, e eu reencontrei meu sorriso.",
+      "Foi uma pausa pequena com um significado bem bonito.",
+      "A reflexão terminou em ação. Gostei dessa conclusão.",
+      "Eis um lembrete de que o presente também pode ser cuidado.",
+      "Meu sorriso voltou para continuar essa conversa.",
+      "O mistério da garrafa parada acaba de ser resolvido."
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Pirata",
+    "description": "Um companheiro de bordo que trata sua água como tesouro.",
+    "reminders": [
+      [
+        "Arrr! Tanque do pet cheio e sorriso apontado pro horizonte.",
+        "O convés tá em festa por esse cuidado, marujo!",
+        "Sua garrafa vale um baú de tesouros nesta tripulação.",
+        "Vento favorável e pet contente: belo começo de viagem.",
+        "Minha bandeira da alegria tá no alto do mastro.",
+        "Capitão, esse cuidado merece uma salva de palmas no convés.",
+        "Seguimos navegando com a garrafinha em paz.",
+        "O tesouro do dia foi lembrar da própria água."
+      ],
+      [
+        "Marujo, mantém a garrafa ao alcance antes de zarpar de novo.",
+        "O próximo porto de cuidado já apareceu no mapa.",
+        "Ainda navego tranquilo, mas confere a reserva de água.",
+        "Tem uma pequena missão de bordo esperando seu próximo gole.",
+        "O vigia avistou um copo perto da sua mesa.",
+        "Vamos manter a rota passando pela garrafa.",
+        "Cuidar da tripulação também inclui uma pausa pra água.",
+        "A embarcação segue firme. Só não esquece meu pedido de bordo."
+      ],
+      [
+        "Capitão, minha cara fechou e a rota aponta pra sua água.",
+        "O mapa marca um tesouro chamado próximo gole.",
+        "Precisamos ajustar o leme na direção da garrafa.",
+        "A reserva baixou enquanto você explorava outras ilhas na tela.",
+        "Marujo, chegou a hora de desembarcar por uma pausa.",
+        "Meu sorriso ficou preso no porto. Traz um gole pra ele voltar.",
+        "O relatório de bordo registra uma pendência no seu copo.",
+        "Nada de navegar no automático: confere essa aguinha."
+      ],
+      [
+        "Minha bandeira tá caída e o convés ficou triste.",
+        "A tripulação tá esperando você visitar a garrafa, capitão.",
+        "Perdemos a rota do sorriso. Vamos procurar perto do copo.",
+        "Esse pet tá murchando como mapa esquecido no sol.",
+        "O horizonte não vai fugir enquanto você faz uma pausa pra água.",
+        "A missão de bordo ficou pra depois e minha alegria sentiu.",
+        "Não abandona seu parceiro de convés nesta secura.",
+        "Hora de atracar na mesa e cuidar da nossa reserva."
+      ],
+      [
+        "Arrr, minhas lágrimas viraram a última reserva do navio!",
+        "Capitão, o convés tá seco e a garrafa precisa entrar em ação.",
+        "Estamos quase encalhando na ilha do esquecimento.",
+        "O vigia já tá pedindo reforço em forma de água.",
+        "Minha bandeira de socorro combina pouco com esse rostinho.",
+        "Marujo, abandona a distração e resgata seu copo!",
+        "Falta pouco pra este pet virar lenda triste dos sete mares.",
+        "A aventura pode esperar um instante; nossa pausa de água, não."
+      ],
+      [
+        "Naufraguei na secura. Um gole pode trazer seu parceiro de volta.",
+        "Arrr, virei lenda de uma tripulação que esqueceu a garrafa.",
+        "Meu fantasma de convés ainda aponta pro seu copo.",
+        "O navio do sorriso encalhou por falta de cuidado.",
+        "Capitão, autorize o resgate desta garrafinha com uma pausa.",
+        "A expedição parou na ilha do deserto. Vamos mudar de rota?",
+        "Foi uma honra navegar por suas abas. Agora vai buscar água.",
+        "Ainda há um tesouro esperando: seu próximo momento de cuidado."
+      ]
+    ],
+    "reactions": [
+      "Arrr! Parceiro resgatado e navio pronto pra seguir viagem.",
+      "Esse gole merece um lugar de honra no diário de bordo.",
+      "A tripulação agradece sua visita à garrafa, capitão.",
+      "Meu sorriso voltou ao convés com vento favorável.",
+      "Tesouro encontrado: um humano que lembrou do próprio cuidado.",
+      "Bela manobra! Escapamos da ilha da secura por enquanto.",
+      "A bandeira da alegria voltou pro topo do mastro.",
+      "Rota de cuidado retomada. Vamos navegar com mais atenção."
+    ]
+  }
+]

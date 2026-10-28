@@ -53,6 +53,7 @@ namespace Gole.Desktop
         double phase;
         Random random = new Random();
         readonly DrinkReactions drinkReactions;
+        readonly ReminderPhrases reminderPhrases;
         public CompanionWindow(HydrationSession session, JsonStateStore store) : this(session, store, null) { }
 
         internal CompanionWindow(HydrationSession session, JsonStateStore store, DesktopUpdateService updates, IWaterSound waterSound = null)
@@ -60,6 +61,7 @@ namespace Gole.Desktop
             this.waterSound = waterSound ?? new WaterSound();
             Updates = updates;
             drinkReactions = new DrinkReactions(random);
+            reminderPhrases = new ReminderPhrases(random);
             this.session = session;
             Store = store;
             Title = "Gole · seu pet de água";
@@ -130,7 +132,7 @@ namespace Gole.Desktop
                     SetupTray();
                 clock.Start();
                 Place();
-                Speak("Oi! Sou " + Data.Name + ". Bora de água?", 8);
+                Speak(Phrase(), 10);
             };
             KeyDown += delegate (object sender, KeyEventArgs e)
             {
@@ -243,7 +245,7 @@ namespace Gole.Desktop
             DateTime now = DateTime.UtcNow;
             session.Drink(now);
             happyUntil = now.AddSeconds(7);
-            Speak(drinkReactions.Next(), 10);
+            Speak(drinkReactions.Next(Data.PersonalityId), 10);
             Save();
             if (panel != null)
                 panel.RefreshStats();
@@ -315,7 +317,7 @@ namespace Gole.Desktop
         }
         string Phrase()
         {
-            return ReminderPhrases.Next(random, HydrationExpression.AtLevel(Data.Level(DateTime.UtcNow)));
+            return reminderPhrases.Next(HydrationExpression.AtLevel(Data.Level(DateTime.UtcNow)), Data.PersonalityId);
         }
         void Tick()
         {

@@ -12,7 +12,7 @@ flowchart LR
     DesktopTests[Testes STA sem janelas] --> Desktop
 ```
 
-**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 10 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
+**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 11 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
 
 **Infrastructure** implementa `JsonStateStore`. A gravação usa arquivo temporário, flush e substituição atômica. O carregamento tenta o arquivo principal e depois a cópia anterior. Após recuperar um principal corrompido, o primeiro salvamento preserva o backup válido. Falhas de gravação são retornadas à interface; um schema futuro é rejeitado para evitar sobrescrita de dados incompatíveis.
 
@@ -42,7 +42,7 @@ Os controles de pausa e soneca foram removidos. A lógica de pausa continua cobe
 
 ### Editor
 
-As alterações visuais ficam em um rascunho. O preview usa o mesmo componente vetorial do pet, com nível independente dos registros reais. **Salvar visual** aplica o rascunho; **Descartar alterações** recupera o estado salvo. As cores são escolhidas exclusivamente na paleta. A seleção de acessórios permite até três itens distintos; remover um item libera uma vaga. Itens de fundo são desenhados antes do corpo para permitir combinações com acessórios de rosto e cabeça.
+As alterações visuais ficam em um rascunho. O preview usa o mesmo componente vetorial do pet, com nível independente dos registros reais. **Salvar personalização** aplica o rascunho; **Descartar alterações** recupera o estado salvo. As cores são escolhidas exclusivamente na paleta. A seleção de acessórios permite até três itens distintos; remover um item libera uma vaga. Itens de fundo são desenhados antes do corpo para permitir combinações com acessórios de rosto e cabeça.
 
 `PetCatalog` centraliza os modelos, os acessórios e o limite da seleção. O schema 3 migra o acessório único das versões anteriores para uma lista sem reiniciar o intervalo nem alterar os registros. `HydrationExpression` define as faixas de expressão: feliz acima de 80%, de boa até 60%, sério até 40%, triste até 20%, chorando até esvaziar e morto em zero. Pausa mantém a expressão de sono; um novo registro recupera o personagem.
 
@@ -78,3 +78,11 @@ Cinco WAVs PCM curtos são incorporados à assembly. Quatro usam amostras CC0 ad
 ### Histórico
 
 A visão geral lista registros de todos os dias, ordenados do mais recente para o mais antigo, em páginas de oito itens. Cada botão captura a instância exata do registro, distinguindo até dois goles com horário e volume iguais. A lista é reconstruída somente quando os registros ou a página mudam, preservando foco e rolagem durante os ticks do relógio. A limpeza completa pede confirmação com resposta inicial negativa. Os testes exercitam confirmação e cancelamento por uma função injetada, sem abrir diálogos.
+
+### Personalidades e falas
+
+`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam nove estilos; o ID zero mantém o modo aleatório. Cada estilo contém oito frases para cada expressão e oito respostas após beber, totalizando 504 mensagens distintas. Não há personalidades regionais.
+
+`ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
+
+A personalidade integra o rascunho do editor. A prévia usa o humor selecionado, sem mudar registros, tocar áudio ou emitir falas pelo pet real. **Outra frase** oferece um novo exemplo. Salvar aplica e persiste a escolha; descartar recupera o estilo salvo. A mudança de personalidade não reinicia o nível ou os prazos de hidratação. Instalações anteriores recebem o modo aleatório sem perder preferências ou histórico.
