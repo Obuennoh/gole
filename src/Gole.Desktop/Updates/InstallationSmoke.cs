@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Velopack;
-using Velopack.Sources;
 
 namespace Gole.Desktop.Updates;
 
@@ -12,7 +11,7 @@ internal static class InstallationSmoke
     {
         if (args.Length == 2 && args[0] == "--smoke-status")
         {
-            var manager = new UpdateManager(new GithubSource(GithubUpdateBackend.RepositoryUrl, null, false));
+            var manager = GithubUpdateBackend.CreateManager();
             File.WriteAllText(args[1], JsonSerializer.Serialize(new
             {
                 Installed = manager.IsInstalled,
@@ -33,10 +32,18 @@ internal static class InstallationSmoke
         }
         if (args.Length == 2 && args[0] == "--smoke-public-feed")
         {
-            var manager = new UpdateManager(new GithubSource(GithubUpdateBackend.RepositoryUrl, null, false));
-            manager.CheckForUpdatesAsync().GetAwaiter().GetResult();
-            File.WriteAllText(args[1], "Public feed reached without credentials.");
-            return 0;
+            try
+            {
+                var manager = GithubUpdateBackend.CreateManager();
+                manager.CheckForUpdatesAsync().GetAwaiter().GetResult();
+                File.WriteAllText(args[1], "Public feed reached without credentials.");
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(args[1], ex.ToString());
+                return 4;
+            }
         }
         return 2;
     }

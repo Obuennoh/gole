@@ -86,9 +86,14 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $report = Join-Path $env:RUNNER_TEMP 'gole-public-feed.txt'
-          $probe = Start-Process -FilePath $env:GOLE_SMOKE_EXE -ArgumentList '--smoke-public-feed', ('"' + $report + '"') -WindowStyle Hidden -Wait -PassThru
-          if ($probe.ExitCode -ne 0 -or !(Test-Path -LiteralPath $report)) { throw 'Anonymous update feed check failed.' }
-          Get-Content -LiteralPath $report
+          $verified = $false
+          for ($attempt = 1; $attempt -le 3; $attempt++) {
+            $probe = Start-Process -FilePath $env:GOLE_SMOKE_EXE -ArgumentList '--smoke-public-feed', ('"' + $report + '"') -WindowStyle Hidden -Wait -PassThru
+            if (Test-Path -LiteralPath $report) { Get-Content -LiteralPath $report }
+            if ($probe.ExitCode -eq 0 -and (Test-Path -LiteralPath $report)) { $verified = $true; break }
+            if ($attempt -lt 3) { Start-Sleep -Seconds (5 * $attempt) }
+          }
+          if (!$verified) { throw 'Anonymous update feed check failed after three attempts.' }
       - name: Remove incomplete draft
         if: failure() && steps.version.outputs.version != ''
         shell: pwsh

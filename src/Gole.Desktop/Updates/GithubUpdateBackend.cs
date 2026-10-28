@@ -10,7 +10,9 @@ namespace Gole.Desktop.Updates;
 internal sealed class GithubUpdateBackend(UpdateManager manager = null) : IUpdateBackend
 {
     internal const string RepositoryUrl = "https://github.com/Obuennoh/gole";
-    private readonly UpdateManager local = manager ?? new(new GithubSource(RepositoryUrl, null, false));
+    internal const string FeedUrl = RepositoryUrl + "/releases/latest/download/";
+    internal static UpdateManager CreateManager() => new(new SimpleWebSource(FeedUrl));
+    private readonly UpdateManager local = manager ?? CreateManager();
     public bool IsInstalled => local.IsInstalled;
     public string CurrentVersion => local.CurrentVersion?.ToString()
         ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "desenvolvimento";
