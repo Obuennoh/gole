@@ -8,6 +8,7 @@ public sealed class HydrationSessionTests
     private static HydrationSession NewSession() => new(HydrationState.Fresh(Start));
 
     [Theory]
+    [InlineData(25, .1)]
     [InlineData(50, .2)]
     [InlineData(100, .4)]
     [InlineData(125, .5)]
@@ -41,7 +42,7 @@ public sealed class HydrationSessionTests
 
     [Theory]
     [InlineData(0)]
-    [InlineData(49)]
+    [InlineData(24)]
     [InlineData(1001)]
     public void Invalid_amount_does_not_change_the_state(int ml)
     {

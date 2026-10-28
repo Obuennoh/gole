@@ -92,6 +92,15 @@ public sealed class EditorTests
                 panel.SelectPage(0);
                 state.VisualAnchor = DateTime.UtcNow.AddHours(-1).Ticks;
                 var drinkDialog = new DrinkWindow(state) { Resources = Theme.CreateResources() };
+                foreach (var preset in new[] { ("1 gole · ~25 ml", 25), ("100 ml", 100), ("250 ml", 250), ("500 ml", 500) })
+                {
+                    Click(drinkDialog, preset.Item1);
+                    Assert.Equal(preset.Item2, drinkDialog.AmountMl);
+                    Assert.True(drinkDialog.ConfirmButton.IsEnabled);
+                    Assert.Equal(Math.Min(1, preset.Item2 / 250.0), drinkDialog.Preview.Level, 5);
+                }
+                drinkDialog.AmountBox.Text = "24";
+                Assert.False(drinkDialog.ConfirmButton.IsEnabled);
                 drinkDialog.AmountBox.Text = "100";
                 Assert.Equal(100, drinkDialog.AmountMl);
                 Assert.Equal(.4, drinkDialog.Preview.Level, 5);

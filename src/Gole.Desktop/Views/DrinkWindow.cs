@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using Gole.Core;
@@ -38,13 +39,14 @@ internal sealed class DrinkWindow : Window
         FontFamily = new FontFamily("Segoe UI");
         var content = new StackPanel { Margin = new Thickness(24) };
         content.Children.Add(Theme.Text("Quanto você bebeu?", 22, Theme.Ink));
-        var presets = new WrapPanel { Margin = new Thickness(0, 12, 0, 8) };
+        var presets = new UniformGrid { Columns = 2, Margin = new Thickness(0, 12, 0, 8) };
         AmountBox = new TextBox { Text = state.LastAmountMl.ToString(), MaxLength = 4, Width = 100, Margin = new Thickness(0, 0, 10, 0) };
         System.Windows.Automation.AutomationProperties.SetName(AmountBox, "Quantidade de água em mililitros");
-        foreach (int value in new[] { 100, 150, 200, 250, 300, 500 })
+        foreach (int value in new[] { HydrationState.SmallSipMl, 100, 250, 500 })
         {
             int ml = value;
-            presets.Children.Add(Theme.Button(ml + " ml", () => AmountBox.Text = ml.ToString(), false));
+            string label = ml == HydrationState.SmallSipMl ? "1 gole · ~25 ml" : ml + " ml";
+            presets.Children.Add(Theme.Button(label, () => AmountBox.Text = ml.ToString(), false));
         }
         content.Children.Add(presets);
         var row = new StackPanel { Orientation = Orientation.Horizontal };
@@ -73,7 +75,7 @@ internal sealed class DrinkWindow : Window
             ConfirmButton.IsEnabled = valid;
             Preview.Level = valid ? state.LevelAfterDrink(DateTime.UtcNow, amount) : state.Level(DateTime.UtcNow);
             Preview.InvalidateVisual();
-            levelLabel.Text = valid ? "Após registrar: " + Math.Round(Preview.Level * 100) + "%" : "Informe entre 50 e 1.000 ml.";
+            levelLabel.Text = valid ? "Após registrar: " + Math.Round(Preview.Level * 100) + "%" : "Informe entre 25 e 1.000 ml.";
         }
         AmountBox.TextChanged += (_, _) => Refresh();
         Loaded += (_, _) => { AmountBox.Focus(); AmountBox.SelectAll(); Refresh(); };

@@ -12,7 +12,7 @@ flowchart LR
     DesktopTests[Testes STA sem janelas] --> Desktop
 ```
 
-**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. O registro recebe de 50 a 1.000 ml. Cada 250 ml repõem 100% do pet, somando ao nível restante até 100%, sem descartar volume do histórico. O schema 4 preserva o último volume escolhido e migra os dados anteriores sem reiniciar o ciclo.
+**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. O registro recebe de 25 a 1.000 ml. Cada 250 ml repõem 100% do pet, somando ao nível restante até 100%, sem descartar volume do histórico. O schema 5 preserva o último volume escolhido e migra os dados anteriores sem reiniciar o ciclo.
 
 **Infrastructure** implementa `JsonStateStore`. A gravação usa arquivo temporário, flush e substituição atômica. O carregamento tenta o arquivo principal e depois a cópia anterior. Após recuperar um principal corrompido, o primeiro salvamento preserva o backup válido. Falhas de gravação são retornadas à interface; um schema futuro é rejeitado para evitar sobrescrita de dados incompatíveis.
 

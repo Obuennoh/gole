@@ -10,6 +10,19 @@ public sealed class StateStoreTests : IDisposable
     private JsonStateStore Store() => new(directory);
 
     [Fact]
+    public void Small_sip_and_last_selected_amount_survive_reopening()
+    {
+        var state = HydrationState.Fresh(Now);
+        var time = Now.AddHours(1);
+        state.Drink(time, HydrationState.SmallSipMl);
+        Assert.True(Store().Save(state));
+        var loaded = Store().Load(time).State;
+        Assert.Equal(25, loaded.Today(time));
+        Assert.Equal(25, loaded.LastAmountMl);
+        Assert.Equal(.1, loaded.Level(time), 8);
+    }
+
+    [Fact]
     public void Partial_level_and_last_amount_survive_reopening()
     {
         var state = HydrationState.Fresh(Now);

@@ -22,7 +22,7 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 
 - Pet sobre as outras janelas, com posição e tamanho ajustáveis.
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
-- Registro pelo botão **Já bebi**, com atalhos de quantidade e valor personalizado de 50 a 1.000 ml; opção de desfazer por 20 segundos.
+- Registro pelo botão **Já bebi**, com atalhos de **1 gole (~25 ml), 100 ml, 250 ml e 500 ml**, além de valor personalizado de 25 a 1.000 ml; opção de desfazer por 20 segundos.
 - Meta diária configurável e histórico do dia no horário local.
 - Treze modelos, incluindo garrafinhas squeeze, slim, retrô, quadrada, arredondada e com alça.
 - Trinta e dois acessórios para combinar até três itens, incluindo bolsa, saia, salto alto, vestido, batom e tiara floral.

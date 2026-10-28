@@ -6,9 +6,10 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 4;
+    public const int CurrentVersion = 5;
     public const int RegistrationMl = 250;
-    public const int MinimumDrinkMl = 50;
+    public const int SmallSipMl = 25;
+    public const int MinimumDrinkMl = SmallSipMl;
     public const int MaximumDrinkMl = 1000;
     public const int DefaultInterval = 30;
     public const int PhraseInterval = 5;
@@ -130,7 +131,7 @@ public sealed class HydrationState
         if (LastDrink < 0 || LastDrink > utcNow.AddMinutes(5).Ticks)
             LastDrink = 0;
         Sips ??= [];
-        Sips = Sips.Where(s => s is not null && s.Utc > 0 && s.Utc <= utcNow.AddMinutes(5).Ticks && s.Ml is >= 50 and <= 1000).ToList();
+        Sips = Sips.Where(s => s is not null && s.Utc > 0 && s.Utc <= utcNow.AddMinutes(5).Ticks && s.Ml is >= MinimumDrinkMl and <= MaximumDrinkMl).ToList();
         if (!double.IsFinite(X))
             X = -99999;
         if (!double.IsFinite(Y))
