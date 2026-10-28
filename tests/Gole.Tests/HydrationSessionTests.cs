@@ -8,11 +8,11 @@ public sealed class HydrationSessionTests
     private static HydrationSession NewSession() => new(HydrationState.Fresh(Start));
 
     [Theory]
-    [InlineData(25, .1)]
-    [InlineData(50, .2)]
-    [InlineData(100, .4)]
-    [InlineData(125, .5)]
-    [InlineData(250, 1)]
+    [InlineData(25, .125)]
+    [InlineData(50, .25)]
+    [InlineData(100, .5)]
+    [InlineData(125, .625)]
+    [InlineData(200, 1)]
     [InlineData(1000, 1)]
     public void Selected_amount_refills_proportionally_and_records_the_full_volume(int ml, double expected)
     {
@@ -33,9 +33,9 @@ public sealed class HydrationSessionTests
         var now = Start.AddMinutes(30);
         session.Drink(now, 100);
         session.Drink(now, 100);
-        Assert.Equal(.8, session.State.Level(now), 8);
+        Assert.Equal(1, session.State.Level(now), 8);
         Assert.True(session.Undo(now.AddSeconds(1)));
-        Assert.Equal(.4, session.State.Level(now), 8);
+        Assert.Equal(.5, session.State.Level(now), 8);
         Assert.Equal(100, session.State.Today(now));
         Assert.Equal(100, session.State.LastAmountMl);
     }
@@ -122,7 +122,7 @@ public sealed class HydrationSessionTests
         var session = NewSession();
         var now = Start.AddMinutes(70);
         session.Drink(now);
-        Assert.Equal(250, session.State.Today(now));
+        Assert.Equal(200, session.State.Today(now));
         Assert.Equal(1, session.State.Level(now));
         Assert.Equal(now.AddMinutes(30).Ticks, session.State.NextReminder);
     }
@@ -218,7 +218,7 @@ public sealed class HydrationSessionTests
         session.Drink(Start.AddMinutes(5));
         session.Drink(Start.AddMinutes(6));
         Assert.True(session.Undo(Start.AddMinutes(6).AddSeconds(5)));
-        Assert.Equal(250, session.State.Today(Start));
+        Assert.Equal(200, session.State.Today(Start));
         Assert.Equal(Start.AddMinutes(5).Ticks, session.State.LastDrink);
         Assert.Equal(Start.AddMinutes(35).Ticks, session.State.NextReminder);
         Assert.False(session.Undo(Start.AddMinutes(6).AddSeconds(6)));
@@ -262,6 +262,6 @@ public sealed class HydrationSessionTests
         var state = HydrationState.Fresh(midnight);
         state.Drink(midnight.AddSeconds(-1));
         state.Drink(midnight.AddSeconds(1));
-        Assert.Equal(250, state.Today(midnight.AddMinutes(5), zone));
+        Assert.Equal(200, state.Today(midnight.AddMinutes(5), zone));
     }
 }

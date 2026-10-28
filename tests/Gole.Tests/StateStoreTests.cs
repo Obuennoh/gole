@@ -10,6 +10,20 @@ public sealed class StateStoreTests : IDisposable
     private JsonStateStore Store() => new(directory);
 
     [Fact]
+    public void Updating_the_old_preset_preserves_historical_volumes_and_timing()
+    {
+        var state = HydrationState.Fresh(Now);
+        state.Version = 6;
+        state.Drink(Now, 250);
+        Assert.True(Store().Save(state));
+        var loaded = Store().Load(Now.AddMinutes(3)).State;
+        Assert.Equal(200, loaded.LastAmountMl);
+        Assert.Equal(250, loaded.Today(Now));
+        Assert.Equal(state.NextReminder, loaded.NextReminder);
+        Assert.Equal(.9, loaded.Level(Now.AddMinutes(3)), 8);
+    }
+
+    [Fact]
     public void Small_sip_and_last_selected_amount_survive_reopening()
     {
         var state = HydrationState.Fresh(Now);
@@ -19,7 +33,7 @@ public sealed class StateStoreTests : IDisposable
         var loaded = Store().Load(time).State;
         Assert.Equal(25, loaded.Today(time));
         Assert.Equal(25, loaded.LastAmountMl);
-        Assert.Equal(.1, loaded.Level(time), 8);
+        Assert.Equal(.125, loaded.Level(time), 8);
     }
 
     [Fact]
@@ -30,7 +44,7 @@ public sealed class StateStoreTests : IDisposable
         state.Drink(time, 125);
         Assert.True(Store().Save(state));
         var loaded = Store().Load(time.AddMinutes(3)).State;
-        Assert.Equal(.4, loaded.Level(time.AddMinutes(3)), 8);
+        Assert.Equal(.525, loaded.Level(time.AddMinutes(3)), 8);
         Assert.Equal(125, loaded.LastAmountMl);
         Assert.Equal(125, loaded.Today(time));
     }
@@ -85,7 +99,7 @@ public sealed class StateStoreTests : IDisposable
         Assert.Equal(state.Color, loaded.Color);
         Assert.Equal(5, loaded.Vessel);
         Assert.Equal(new[] { 3, 21, 11 }, loaded.Accessories);
-        Assert.Equal(250, loaded.Today(Now));
+        Assert.Equal(200, loaded.Today(Now));
         Assert.Equal(state.NextReminder, loaded.NextReminder);
         Assert.Equal(state.NextPhrase, loaded.NextPhrase);
         Assert.Equal(45, loaded.Interval);

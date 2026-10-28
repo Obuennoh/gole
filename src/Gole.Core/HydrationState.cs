@@ -6,8 +6,8 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 6;
-    public const int RegistrationMl = 250;
+    public const int CurrentVersion = 7;
+    public const int RegistrationMl = 200;
     public const int SmallSipMl = 25;
     public const int MinimumDrinkMl = SmallSipMl;
     public const int MaximumDrinkMl = 1000;
@@ -110,6 +110,8 @@ public sealed class HydrationState
             Accessories = [Accessory];
         Accessories = PetCatalog.Normalize(Accessories);
         Accessory = 0;
+        if (Version < 7 && LastAmountMl == 250)
+            LastAmountMl = RegistrationMl;
         Version = CurrentVersion;
         Name = string.IsNullOrWhiteSpace(Name) ? "Gole" : Name.Trim()[..Math.Min(20, Name.Trim().Length)];
         if (!IsColor(Color))

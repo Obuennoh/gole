@@ -42,7 +42,7 @@ internal sealed class DrinkWindow : Window
         var presets = new UniformGrid { Columns = 2, Margin = new Thickness(0, 12, 0, 8) };
         AmountBox = new TextBox { Text = state.LastAmountMl.ToString(), MaxLength = 4, Width = 100, Margin = new Thickness(0, 0, 10, 0) };
         System.Windows.Automation.AutomationProperties.SetName(AmountBox, "Quantidade de água em mililitros");
-        foreach (int value in new[] { HydrationState.SmallSipMl, 100, 250, 500 })
+        foreach (int value in new[] { HydrationState.SmallSipMl, 100, HydrationState.RegistrationMl, 500 })
         {
             int ml = value;
             string label = ml == HydrationState.SmallSipMl ? "1 gole · ~25 ml" : ml + " ml";
@@ -58,7 +58,7 @@ internal sealed class DrinkWindow : Window
         var levelLabel = Theme.Text("", 13, Theme.Ink);
         levelLabel.TextAlignment = TextAlignment.Center;
         content.Children.Add(levelLabel);
-        var hint = Theme.Text("250 ml repõem 100% do pet. Máximo: 100%.", 12, Theme.Muted);
+        var hint = Theme.Text(HydrationState.RegistrationMl + " ml repõem 100% do pet. Máximo: 100%.", 12, Theme.Muted);
         hint.TextAlignment = TextAlignment.Center;
         content.Children.Add(hint);
         ConfirmButton = Theme.Button("Registrar água", () => { DialogResult = true; }, true);

@@ -22,7 +22,7 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 
 - Pet sobre as outras janelas, com posição e tamanho ajustáveis.
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
-- Registro pelo botão **Já bebi**, com atalhos de **1 gole (~25 ml), 100 ml, 250 ml e 500 ml**, além de valor personalizado de 25 a 1.000 ml; opção de desfazer por 20 segundos.
+- Registro pelo botão **Já bebi**, com atalhos de **1 gole (~25 ml), 100 ml, 200 ml e 500 ml**, além de valor personalizado de 25 a 1.000 ml; opção de desfazer por 20 segundos.
 - Meta diária configurável e histórico do dia no horário local.
 - Treze modelos, incluindo garrafinhas squeeze, slim, retrô, quadrada, arredondada e com alça.
 - Trinta e dois acessórios para combinar até três itens, incluindo bolsa, saia, salto alto, vestido, batom e tiara floral.
@@ -83,7 +83,7 @@ Consulte as [decisões de arquitetura](docs/architecture.md) e o [escopo de vali
 
 Os lembretes e o registro de água funcionam offline. A internet é usada apenas para consultar e baixar atualizações públicas; o histórico de água e as preferências não são enviados. Os dados ficam em `%LOCALAPPDATA%\Gole\preferences.json`, com uma cópia anterior em `.bak`, separados por usuário do Windows em cada máquina. O visual e os lembretes são restaurados ao reabrir, após salvar suas alterações. O modo isolado usa `.local/dev-state` dentro do checkout; essa pasta não é versionada.
 
-Cada 250 ml registrados repõem 100% do nível do personagem: 100 ml repõem 40%, somando à água restante até o limite de 100%. O volume completo entra no total diário, mesmo quando o pet já está cheio. Do nível cheio ao vazio, o pet leva um intervalo; uma reposição parcial dura proporcionalmente menos. Registrar água reinicia o prazo do lembrete configurado. A meta diária é independente desse nível. As notificações pela bandeja dependem das configurações do Windows.
+Cada 200 ml registrados repõem 100% do nível do personagem: 100 ml repõem 50%, somando à água restante até o limite de 100%. O volume completo entra no total diário, mesmo quando o pet já está cheio. Do nível cheio ao vazio, o pet leva um intervalo; uma reposição parcial dura proporcionalmente menos. Registrar água reinicia o prazo do lembrete configurado. A meta diária é independente desse nível. As notificações pela bandeja dependem das configurações do Windows.
 
 ## Distribuição
 
