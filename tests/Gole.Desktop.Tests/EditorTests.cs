@@ -124,6 +124,16 @@ public sealed class EditorTests
                     Click(panel, HydrationExpression.Label(HydrationExpression.AtLevel(level)));
                     Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.Mood == HydrationExpression.AtLevel(level));
                 }
+                Click(panel, "Gota");
+                Click(panel, "Nenhum");
+                Click(panel, "Capa de herói");
+                Click(panel, "Orelhas de coelho");
+                Click(panel, "Varinha");
+                Assert.False(FindButton(panel, "Boia").IsEnabled);
+                Click(panel, "Salvar personalização");
+                var expandedStyle = store.Load(DateTime.UtcNow).State;
+                Assert.Equal(20, expandedStyle.Vessel);
+                Assert.Equal(new[] { 45, 35, 47 }, expandedStyle.Accessories);
                 RenderEveryModelAndAccessory();
 
                 panel.SelectPage(2);
@@ -267,7 +277,7 @@ public sealed class EditorTests
     {
         for (int model = 0; model < PetCatalog.Models.Count; model++)
             foreach (double level in new[] { 1, .7, .5, .3, .1, 0 })
-                Render(new Bottle { Vessel = model, Level = level, EquippedAccessories = new[] { 17, 15, 20 } });
+                Render(new Bottle { Vessel = model, Level = level, EquippedAccessories = model >= 13 ? new[] { 45, 35, 47 } : new[] { 17, 15, 20 } });
         for (int item = 1; item < PetCatalog.Accessories.Count; item++)
             Render(new Bottle { Vessel = 0, Level = .1, EquippedAccessories = new[] { item } });
     }

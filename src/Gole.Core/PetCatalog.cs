@@ -9,7 +9,8 @@ public static class PetCatalog
     } = Array.AsReadOnly(new[]
     {
         "Clássica", "Esportiva", "Térmica", "Jarra", "Copo", "Caneca", "Pote de vidro",
-        "Squeeze", "Slim", "Retrô", "Quadrada", "Arredondada", "Com alça"
+        "Squeeze", "Slim", "Retrô", "Quadrada", "Arredondada", "Com alça",
+        "Com canudo", "Dobrável", "Cantil", "Long neck", "Galão fitness", "Com capa", "Triangular", "Gota"
     });
     public static IReadOnlyList<string> Accessories
     {
@@ -20,7 +21,10 @@ public static class PetCatalog
         "Bigode", "Cílios", "Coroa", "Bandana", "Colar de pérolas", "Chapéu", "Tiara de gatinho",
         "Gravata", "Brincos", "Cachecol", "Asas de anjo", "Asas de morcego", "Mochila",
         "Auréola", "Óculos de grau", "Tapa-olho", "Presilha de estrela", "Fones sem fio", "Boina",
-        "Bolsa", "Saia", "Salto alto", "Vestido", "Batom", "Tiara floral", "Pulseiras"
+        "Bolsa", "Saia", "Salto alto", "Vestido", "Batom", "Tiara floral", "Pulseiras",
+        "Chapéu de bruxa", "Gorro", "Orelhas de coelho", "Tiara de coração", "Óculos de coração",
+        "Óculos futuristas", "Brincos de estrela", "Colar de coração", "Relógio", "Tênis", "Botas",
+        "Jaqueta", "Capa de herói", "Jetpack", "Varinha", "Balão de coração", "Boia", "Tiara de unicórnio"
     });
 
     public static List<int> Normalize(IEnumerable<int>? items) => (items ?? [])

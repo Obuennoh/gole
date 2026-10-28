@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace Gole.Desktop
 {
-    public class Bottle : FrameworkElement
+    public partial class Bottle : FrameworkElement
     {
         public static readonly string[] Models = PetCatalog.Models.ToArray();
         public static readonly string[] Accessories = PetCatalog.Accessories.ToArray();
@@ -73,7 +73,15 @@ namespace Gole.Desktop
    "M 90,40 L 130,40 L 130,81 Q 159,91 159,116 L 159,202 Q 159,222 138,222 L 82,222 Q 61,222 61,202 L 61,116 Q 61,91 90,81 Z",
    "M 84,49 L 136,49 L 136,70 L 158,82 Q 168,85 168,96 L 168,207 Q 168,222 153,222 L 67,222 Q 52,222 52,207 L 52,96 Q 52,85 62,82 L 84,70 Z",
    "M 86,51 L 134,51 L 134,74 C 197,102 184,222 135,222 L 85,222 C 36,222 23,102 86,74 Z",
-   "M 80,55 L 140,55 Q 160,56 160,79 L 160,202 Q 160,222 140,222 L 80,222 Q 60,222 60,202 L 60,79 Q 60,56 80,55 Z"
+   "M 80,55 L 140,55 Q 160,56 160,79 L 160,202 Q 160,222 140,222 L 80,222 Q 60,222 60,202 L 60,79 Q 60,56 80,55 Z",
+   "M 83,62 L 137,62 L 137,77 Q 158,82 160,105 L 156,203 Q 155,222 136,222 L 84,222 Q 65,222 64,203 L 60,105 Q 62,82 83,77 Z",
+   "M 82,55 L 138,55 L 138,72 L 157,83 L 163,104 L 153,114 L 163,133 L 153,144 L 163,162 L 153,174 L 160,194 Q 161,222 140,222 L 80,222 Q 59,222 60,194 L 67,174 L 57,162 L 67,144 L 57,133 L 67,114 L 57,104 L 63,83 L 82,72 Z",
+   "M 87,53 L 133,53 L 133,75 C 183,81 187,128 179,169 C 173,209 149,225 110,225 C 71,225 47,209 41,169 C 33,128 37,81 87,75 Z",
+   "M 95,40 L 125,40 L 125,83 Q 125,96 146,104 Q 163,111 163,131 L 163,204 Q 163,222 144,222 L 76,222 Q 57,222 57,204 L 57,131 Q 57,111 74,104 Q 95,96 95,83 Z",
+   "M 76,55 L 144,55 L 144,70 Q 178,74 179,103 L 179,197 Q 179,223 151,223 L 69,223 Q 41,223 41,197 L 41,103 Q 42,74 76,70 Z",
+   "M 84,50 L 136,50 L 136,69 Q 159,77 161,99 L 161,202 Q 161,222 140,222 L 80,222 Q 59,222 59,202 L 59,99 Q 61,77 84,69 Z",
+   "M 91,52 L 129,52 L 136,75 L 177,198 Q 185,222 158,222 L 62,222 Q 35,222 43,198 L 84,75 Z",
+   "M 94,49 L 126,49 C 128,79 165,97 174,147 C 184,198 157,226 110,226 C 63,226 36,198 46,147 C 55,97 92,79 94,49 Z"
   };
         protected override void OnRender(DrawingContext d)
         {
@@ -93,7 +101,7 @@ namespace Gole.Desktop
             if (equipped.Count == 0 && Accessory > 0)
                 equipped = new[] { Accessory };
             foreach (int item in equipped)
-                if (item is 17 or 18 or 19)
+                if (IsBackgroundAccessory(item))
                     DrawAccessory(d, line, item);
             Path(d, "M 84,216 Q 77,233 69,231 L 57,231 M 137,216 Q 144,233 152,231 L 163,231", null, line);
             if (level < .15)
@@ -105,6 +113,7 @@ namespace Gole.Desktop
                 Path(d, "M 161,88 C 217,79 221,169 166,177 L 164,160 C 198,152 195,107 163,107 Z", B("#E2F0F1"), line);
             if (model == 5)
                 Path(d, "M 162,105 C 214,94 215,173 163,173 L 163,155 C 192,156 191,122 163,123 Z", B("#E2F0F1"), line);
+            DrawExtendedBottleBack(d, model, line);
             Geometry body = Shape(bodies[model]);
             d.DrawGeometry(B(level == 0 ? "#F2EEE6" : "#F2FAFB"), null, body);
             d.PushClip(body);
@@ -175,7 +184,7 @@ namespace Gole.Desktop
             if (level > .18)
                 Path(d, "M 110,177 C 110,177 101,187 101,192 C 101,203 119,203 119,192 C 119,187 110,177 110,177 Z", B("#AAFFFFFF"), null);
             foreach (int item in equipped.OrderBy(id => id == 8 ? 0 : 1))
-                if (item is not (17 or 18 or 19))
+                if (!IsBackgroundAccessory(item))
                     DrawAccessory(d, line, item);
             if (level == 0 && !Paused)
                 d.Pop();
@@ -213,6 +222,9 @@ namespace Gole.Desktop
                     Path(d, "M 140,50 C 182,46 185,91 158,99 M 141,61 C 166,60 168,80 158,85", null, P("#4B6C82", 5));
                     d.DrawRoundedRectangle(B("#4B6C82"), line, new Rect(75, 34, 70, 25), 7, 7);
                     d.DrawRoundedRectangle(B("#B8D3DE"), null, new Rect(84, 41, 51, 8), 4, 4);
+                    break;
+                default:
+                    DrawExtendedBottleDetails(d, model, line);
                     break;
             }
         }
@@ -429,6 +441,9 @@ namespace Gole.Desktop
                     d.DrawEllipse(null, P("#C18CAB", 3), new Point(37, 142), 8, 5);
                     d.DrawEllipse(null, P("#D7B366", 4), new Point(183, 118), 8, 5);
                     d.DrawEllipse(null, P("#C18CAB", 3), new Point(181, 124), 8, 5);
+                    break;
+                default:
+                    DrawExtendedAccessory(d, line, accessory);
                     break;
             }
         }

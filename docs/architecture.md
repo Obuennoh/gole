@@ -12,7 +12,7 @@ flowchart LR
     DesktopTests[Testes STA sem janelas] --> Desktop
 ```
 
-**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 11 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
+**Core** não referencia WPF, Windows Forms, arquivos ou relógios globais. Os métodos recebem o instante UTC da operação, o que permite testar intervalos e retomadas sem esperar pelo tempo real. `HydrationState` representa o estado persistido; `HydrationSession` coordena registro, desfazer e emissão de lembretes. `ServingMl` define a quantidade de cada gole, inicialmente 200 ml e configurável de 1 a 6.000 ml. O registro não recebe uma quantidade pela interface: usa o valor salvo, soma ao histórico e repõe o pet inteiro. O schema 12 inicializa essa configuração sem alterar os registros antigos, as preferências nem os prazos.
 
 **Infrastructure** implementa `JsonStateStore`. A gravação usa arquivo temporário, flush e substituição atômica. O carregamento tenta o arquivo principal e depois a cópia anterior. Após recuperar um principal corrompido, o primeiro salvamento preserva o backup válido. Falhas de gravação são retornadas à interface; um schema futuro é rejeitado para evitar sobrescrita de dados incompatíveis.
 
@@ -86,3 +86,7 @@ A visão geral lista registros de todos os dias, ordenados do mais recente para 
 `ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
 
 A personalidade integra o rascunho do editor. A prévia usa o humor selecionado, sem mudar registros, tocar áudio ou emitir falas pelo pet real. **Outra frase** oferece um novo exemplo. Salvar aplica e persiste a escolha; descartar recupera o estilo salvo. A mudança de personalidade não reinicia o nível ou os prazos de hidratação. Instalações anteriores recebem o modo aleatório sem perder preferências ou histórico.
+
+### Catálogo visual
+
+O catálogo mantém IDs anteriores e acrescenta oito silhuetas de garrafinha e dezoito acessórios. `Bottle.ExtendedStyles.cs` concentra os novos detalhes e usa as mesmas geometrias, pincéis e canetas compartilhadas. Capa de herói e jetpack são desenhados antes do corpo; os demais itens são desenhados à frente. Todos os modelos usam o mesmo nível de água e as seis expressões. As combinações continuam limitadas a três itens distintos.

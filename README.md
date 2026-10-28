@@ -24,8 +24,8 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
 - Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Desfaça o último gole ou qualquer registro do histórico, sem limite de tempo, inclusive após reabrir.
 - Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
-- Treze modelos, incluindo garrafinhas squeeze, slim, retrô, quadrada, arredondada e com alça.
-- Trinta e dois acessórios para combinar até três itens, incluindo bolsa, saia, salto alto, vestido, batom e tiara floral.
+- Vinte e um modelos, incluindo garrafinhas com canudo, dobrável, cantil, long neck, galão fitness, com capa, triangular e em formato de gota.
+- Cinquenta acessórios para combinar até três itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
 - Nove personalidades: debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica e pirata, além do modo **Aleatória**.

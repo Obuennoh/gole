@@ -1,5 +1,10 @@
 Gole para Windows x64, com instalação por usuário e runtime .NET incluído.
 
+- **Oito garrafinhas novas**: com canudo, dobrável, cantil, long neck, galão fitness, com capa, triangular e gota. Agora são 21 modelos.
+- **Dezoito acessórios novos**, incluindo chapéu de bruxa, gorro, orelhas de coelho, óculos de coração, tênis, botas, jaqueta, capa de herói, jetpack e tiara de unicórnio. Agora são 50 acessórios.
+- Combine até três acessórios e veja o resultado na prévia antes de salvar. As escolhas anteriores continuam preservadas.
+
+
 - **Personalizar → Personalidade**: debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica ou pirata. O modo **Aleatória** mistura os estilos.
 - **504 frases distintas**, adaptadas aos seis estados do pet, e elogios próprios de cada personalidade após beber.
 - Prévia da fala no editor, botão **Outra frase** e salvamento por **Salvar personalização**. A escolha é restaurada ao reabrir.
