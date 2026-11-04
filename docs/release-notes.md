@@ -1,10 +1,17 @@
 Gole para Windows x64, com instalação por usuário e runtime .NET incluído.
 
+- **Roupas ajustadas aos 21 modelos**: saias, vestido, jaqueta e peças novas acompanham o contorno do recipiente. Acessórios laterais acompanham o corpo e a posição dos braços.
+- **Cor e estampa por acessório** em **Personalizar**: escolha a peça vestida, uma das 20 cores e liso, bolinhas, listras, brilho, xadrez, estrelas ou corações. Confira a prévia e clique em **Salvar personalização**.
+- **16 opções novas**, totalizando **66 acessórios**: camiseta, moletom, jardineira, casaco, saia plissada, saia de tule, colete, poncho, chapéu de pescador, tiara de laço, óculos redondos, lenço de pescoço, cinto, broche de coração, bolsa transversal e chinelo.
+- Cores e estampas independentes nas combinações de até três peças, com camadas consistentes, restauração do estilo original e descarte do rascunho. O estilo é lembrado ao tirar e voltar a vestir a peça.
+- Prévia com espaço para o tamanho máximo do pet e enquadramento completo dos acessórios, inclusive chapéus e asas. Preferências e registros anteriores preservados.
+
+
 - **Personalidade Brava** em **Personalizar → Personalidade**, com 56 novas frases: broncas bem-humoradas para os seis estados e reações próprias após beber.
 - A Brava também participa do modo **Aleatória**. Agora são dez personalidades e 560 frases distintas, mantendo as opções anteriores e as preferências salvas.
 
 - **Oito garrafinhas novas**: com canudo, dobrável, cantil, long neck, galão fitness, com capa, triangular e gota. Agora são 21 modelos.
-- **Dezoito acessórios novos**, incluindo chapéu de bruxa, gorro, orelhas de coelho, óculos de coração, tênis, botas, jaqueta, capa de herói, jetpack e tiara de unicórnio. Agora são 50 acessórios.
+- **Dezoito acessórios novos**, incluindo chapéu de bruxa, gorro, orelhas de coelho, óculos de coração, tênis, botas, jaqueta, capa de herói, jetpack e tiara de unicórnio. O catálogo foi ampliado novamente nesta versão; veja as novidades acima.
 - Combine até três acessórios e veja o resultado na prévia antes de salvar. As escolhas anteriores continuam preservadas.
 
 

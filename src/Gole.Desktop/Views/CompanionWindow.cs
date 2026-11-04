@@ -181,6 +181,7 @@ namespace Gole.Desktop
             Art.Level = Data.Level(now);
             Art.Tint = Data.Color;
             Art.EquippedAccessories = Data.Accessories;
+            Art.AccessoryStyles = Data.AccessoryStyles;
             Art.Vessel = Data.Vessel;
             Art.Paused = Data.Paused(now);
             Art.Celebrate = now < happyUntil;

@@ -31,7 +31,8 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Seleção visual | Borda efetiva do template ao marcar e desmarcar repetidamente; foco separado da seleção |
 | Acessórios | Três itens simultâneos, bloqueio do quarto, remoção e limpeza |
 | Expressões | Seis faixas e seus limites exatos ao longo do esvaziamento |
-| Desenho | Renderização em memória de todos os modelos e expressões e de todos os acessórios |
+| Desenho | 2.772 renderizações: 66 acessórios × 21 modelos × poses cheia e vazia, sem corte nas bordas; roupas dentro do contorno e olhos livres; camadas independentes da ordem de seleção |
+| Estilos | Todas as estampas distintas por modelo; recoloração de peças escuras e neutras; cores e estampas independentes por peça, rascunho, descarte, restauração, salvamento e reabertura |
 | Integração do painel | Configuração de ml por gole, salvamento, bloqueio de valores inválidos, registro em um clique e desfazer por eventos reais dos botões |
 | Sons | Cinco recursos WAV válidos, volume aplicado apenas às amostras, silêncio a 0%, preview com o volume do rascunho e persistência da escolha, sem reprodução real durante testes |
 | Atualizador | Download automático sem configuração, falhas de rede com nova tentativa, aplicação ao sair e verificações serializadas |
@@ -54,3 +55,11 @@ Os testes de controles verificam comportamento e estado; não substituem a valid
 O job de release instala o pacote silenciosamente em um runner Windows descartável, verifica a versão instalada, gera uma segunda versão e aplica uma atualização real por feed local. Depois confere a versão final e o hash de um arquivo de preferências. O script se recusa a executar fora do GitHub Actions. A publicação só ocorre após esse teste; nenhuma instalação de teste é feita no computador de desenvolvimento.
 
 Após a publicação, o runner consulta o feed público real sem credenciais. Esse teste complementa a instalação e a aplicação ao sair usando as mesmas classes do aplicativo com um feed local controlado.
+
+## Folhas de encaixe
+
+```powershell
+dotnet run --project src/Gole.Desktop -- --render-fitting .local/fitting
+```
+
+Gera três folhas de roupas nos 21 modelos, três de combinações com poses cheia/vazia e um resumo das estampas. As imagens são geradas pelo componente WPF sem abrir janelas nem ler a área de trabalho.

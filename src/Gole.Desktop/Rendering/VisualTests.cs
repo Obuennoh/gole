@@ -11,6 +11,101 @@ namespace Gole.Desktop
 {
     static class VisualTests
     {
+        public static int RenderFitting(string folder)
+        {
+            Directory.CreateDirectory(folder);
+            int[] clothes = { 27, 29, 44, 51, 52, 53, 54, 55, 56, 57, 58 };
+            for (int page = 0; page < 3; page++)
+            {
+                var canvas = new Canvas { Width = 1400, Height = 60 + clothes.Length * 190, Background = Theme.B("#F1F5F7") };
+                for (int column = 0; column < 7; column++)
+                {
+                    int model = page * 7 + column;
+                    Add(canvas, Theme.Text(PetCatalog.Models[model], 15, Theme.Ink), column * 200 + 20, 15);
+                    for (int row = 0; row < clothes.Length; row++)
+                    {
+                        int item = clothes[row];
+                        Add(canvas, new Bottle
+                        {
+                            Vessel = model,
+                            Accessory = item,
+                            Width = 180,
+                            Height = 158,
+                            AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = item, Color = row % 2 == 0 ? "#D875B3" : "#3C82D5", Pattern = row % 7 } }
+                        }, column * 200 + 10, 45 + row * 190);
+                        Add(canvas, Theme.Text(PetCatalog.Accessories[item], 12, Theme.Ink), column * 200 + 20, 207 + row * 190);
+                    }
+                }
+                Save(canvas, Path.Combine(folder, "roupas-" + (page + 1) + ".png"));
+            }
+            for (int page = 0; page < 3; page++)
+            {
+                var canvas = new Canvas { Width = 1400, Height = 60 + 10 * 190, Background = Theme.B("#F1F5F7") };
+                int[][] outfits = { new[] { 29, 11, 33 }, new[] { 51, 42, 5 }, new[] { 52, 38, 46 }, new[] { 55, 44, 61 }, new[] { 56, 40, 35 },
+                    new[] { 53, 59, 26 }, new[] { 54, 16, 43 }, new[] { 58, 62, 66 }, new[] { 49, 1, 47 }, new[] { 27, 32, 48 } };
+                for (int column = 0; column < 7; column++)
+                {
+                    int model = page * 7 + column;
+                    Add(canvas, Theme.Text(PetCatalog.Models[model], 15, Theme.Ink), column * 200 + 20, 15);
+                    for (int row = 0; row < outfits.Length; row++)
+                    {
+                        var items = outfits[row];
+                        Add(canvas, new Bottle
+                        {
+                            Vessel = model,
+                            EquippedAccessories = items,
+                            Width = 180,
+                            Height = 170,
+                            Level = row % 2 == 0 ? 1 : 0,
+                            Phase = 1.5,
+                            AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = items[0], Color = "#D875B3", Pattern = row % 7 } }
+                        }, column * 200 + 10, 45 + row * 190);
+                    }
+                }
+                Save(canvas, Path.Combine(folder, "combinacoes-" + (page + 1) + ".png"));
+            }
+            var preview = new Canvas { Width = 1400, Height = 550, Background = Theme.B("#F1F5F7") };
+            Add(preview, Theme.Text("GOLE · cores e estampas por acessório", 24, Theme.Ink), 24, 16);
+            string[] colors = { "#D875B3", "#3C82D5", "#45A58C", "#6D69C9", "#DE7867", "#EDAA61", "#456477" };
+            for (int i = 0; i < AccessoryStyle.Patterns.Count; i++)
+            {
+                Add(preview, new Bottle
+                {
+                    Vessel = 4,
+                    Accessory = 27,
+                    Width = 180,
+                    Height = 175,
+                    AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = 27, Color = colors[i], Pattern = i } }
+                }, i * 200 + 10, 57);
+                Add(preview, Theme.Text(AccessoryStyle.Patterns[i], 14, Theme.Ink), i * 200 + 25, 237);
+                int item = 51 + i;
+                Add(preview, new Bottle
+                {
+                    Vessel = new[] { 0, 8, 19, 5, 15, 20, 14 }[i],
+                    Accessory = item,
+                    Width = 180,
+                    Height = 175,
+                    AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = item, Color = colors[6 - i], Pattern = i % 4 } }
+                }, i * 200 + 10, 292);
+                Add(preview, Theme.Text(PetCatalog.Accessories[item], 14, Theme.Ink), i * 200 + 25, 477);
+            }
+            Save(preview, Path.Combine(folder, "personalizacao.png"));
+            return 0;
+        }
+
+        static void Save(Canvas canvas, string path)
+        {
+            canvas.Measure(new Size(canvas.Width, canvas.Height));
+            canvas.Arrange(new Rect(0, 0, canvas.Width, canvas.Height));
+            canvas.UpdateLayout();
+            var bitmap = new RenderTargetBitmap((int)canvas.Width, (int)canvas.Height, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(canvas);
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            using var stream = File.Create(path);
+            encoder.Save(stream);
+        }
+
         public static int Render(string output)
         {
             try

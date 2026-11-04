@@ -17,6 +17,7 @@ namespace Gole.Desktop
         public string Tint = "#26B9C4";
         public int Accessory, Vessel;
         public IReadOnlyList<int> EquippedAccessories = Array.Empty<int>();
+        public IReadOnlyList<AccessoryStyle> AccessoryStyles = Array.Empty<AccessoryStyle>();
         public HydrationMood Mood => Celebrate ? HydrationMood.Happy : HydrationExpression.AtLevel(Level);
         public bool Paused, Celebrate;
         static readonly Dictionary<string, Geometry> paths = new Dictionary<string, Geometry>();
@@ -88,26 +89,42 @@ namespace Gole.Desktop
             base.OnRender(d);
             int model = Math.Clamp(Vessel, 0, bodies.Length - 1);
             double level = Math.Max(0, Math.Min(1, Level));
-            double scale = Math.Min(ActualWidth / 220, ActualHeight / 255);
-            d.PushTransform(new TranslateTransform((ActualWidth - 220 * scale) / 2, (ActualHeight - 255 * scale) / 2));
+            var scene = new DrawingGroup();
+            using (var context = scene.Open())
+                DrawCharacter(context, model, level);
+            var frame = scene.Bounds;
+            frame.Union(new Rect(0, 0, 220, 255));
+            // Reserve the same space for every animation phase and the empty pose.
+            frame.Union(new RotateTransform(-7, 110, 215).TransformBounds(frame));
+            frame.Inflate(4, 4);
+            double scale = Math.Min(ActualWidth / frame.Width, ActualHeight / frame.Height);
+            d.PushTransform(new TranslateTransform((ActualWidth - frame.Width * scale) / 2 - frame.X * scale,
+                (ActualHeight - frame.Height * scale) / 2 - frame.Y * scale));
             d.PushTransform(new ScaleTransform(scale, scale));
             double bob = Paused ? 0 : Math.Sin(Phase) * (level == 0 ? .6 : 2.3);
             d.DrawEllipse(B("#160B5056"), null, new Point(110, 238), 57 - bob, 7);
             d.PushTransform(new TranslateTransform(0, bob));
             if (level == 0 && !Paused)
                 d.PushTransform(new RotateTransform(-7, 110, 215));
+            d.DrawDrawing(scene);
+            if (level == 0 && !Paused)
+                d.Pop();
+            d.Pop();
+            d.Pop();
+            d.Pop();
+        }
+        void DrawCharacter(DrawingContext d, int model, double level)
+        {
+            var fit = Fit(model);
             var line = P("#234957", 3.3);
             IReadOnlyList<int> equipped = EquippedAccessories;
             if (equipped.Count == 0 && Accessory > 0)
                 equipped = new[] { Accessory };
+            equipped = PetCatalog.Normalize(equipped).OrderBy(AccessoryLayer).ThenBy(id => id).ToArray();
             foreach (int item in equipped)
                 if (IsBackgroundAccessory(item))
-                    DrawAccessory(d, line, item);
-            Path(d, "M 84,216 Q 77,233 69,231 L 57,231 M 137,216 Q 144,233 152,231 L 163,231", null, line);
-            if (level < .15)
-                Path(d, "M 57,129 Q 34,150 35,168 M 164,129 Q 185,150 183,168", null, line);
-            else
-                Path(d, "M 57,129 Q 35,128 31,151 M 163,129 Q 183,126 189,110", null, line);
+                    DrawFittedAccessory(d, model, item);
+            DrawLimbs(d, fit, level, line);
             // Separate handles make each silhouette a genuinely different vessel.
             if (model == 3)
                 Path(d, "M 161,88 C 217,79 221,169 166,177 L 164,160 C 198,152 195,107 163,107 Z", B("#E2F0F1"), line);
@@ -178,19 +195,16 @@ namespace Gole.Desktop
                     d.DrawLine(P("#A98F6C", 1.5), new Point(69 + i * 16, 57), new Point(69 + i * 16, 68));
             }
             DrawBottleDetails(d, model, line);
+            d.PushTransform(FaceTransform(fit));
             DrawFace(d);
             d.DrawEllipse(B("#85EE9DAA"), null, new Point(74, 141), 8, 4);
             d.DrawEllipse(B("#85EE9DAA"), null, new Point(146, 141), 8, 4);
             if (level > .18)
                 Path(d, "M 110,177 C 110,177 101,187 101,192 C 101,203 119,203 119,192 C 119,187 110,177 110,177 Z", B("#AAFFFFFF"), null);
-            foreach (int item in equipped.OrderBy(id => id == 8 ? 0 : 1))
+            d.Pop();
+            foreach (int item in equipped)
                 if (!IsBackgroundAccessory(item))
-                    DrawAccessory(d, line, item);
-            if (level == 0 && !Paused)
-                d.Pop();
-            d.Pop();
-            d.Pop();
-            d.Pop();
+                    DrawFittedAccessory(d, model, item);
         }
         void DrawBottleDetails(DrawingContext d, int model, Pen line)
         {
@@ -285,7 +299,7 @@ namespace Gole.Desktop
             }
         }
 
-        void DrawAccessory(DrawingContext d, Pen line, int accessory)
+        void DrawAccessoryRaw(DrawingContext d, Pen line, int accessory)
         {
             switch (accessory)
             {
@@ -351,8 +365,8 @@ namespace Gole.Desktop
                     d.DrawRoundedRectangle(B("#71606E"), line, new Rect(59, 77, 103, 11), 5, 5);
                     break;
                 case 13:
-                    Path(d, "M 62,101 Q 108,61 158,101 M 68,85 L 68,48 L 94,70 M 129,70 L 153,48 L 153,85", null, P("#785C78", 6));
-                    Path(d, "M 74,76 L 74,59 L 85,70 M 138,70 L 147,59 L 147,76", null, P("#E9A5BB", 4));
+                    Path(d, "M 62,101 Q 108,61 158,101 M 68,94 L 68,57 L 94,83 M 129,83 L 153,57 L 153,94", null, P("#785C78", 6));
+                    Path(d, "M 74,85 L 74,68 L 85,79 M 138,79 L 147,68 L 147,85", null, P("#E9A5BB", 4));
                     break;
                 case 14:
                     Path(d, "M 104,158 L 116,158 L 120,166 L 114,173 L 122,199 L 110,210 L 98,199 L 106,173 L 100,166 Z", B("#687FB5"), P("#415274", 2));
@@ -405,19 +419,9 @@ namespace Gole.Desktop
                     d.DrawRoundedRectangle(B("#E7C681"), P("#AD894F", 1), new Rect(182, 169, 10, 7), 2, 2);
                     Path(d, "M 171,164 Q 187,181 203,164", null, P("#EFC9DE", 2));
                     break;
-                case 27:
-                    Path(d, "M 64,180 Q 110,194 157,180 L 177,215 Q 110,237 44,215 Z", B("#D996B2"), P("#9F617D", 2.5));
-                    Path(d, "M 64,180 Q 110,194 157,180", null, P("#9F617D", 6));
-                    Path(d, "M 82,188 L 75,222 M 109,192 L 109,225 M 137,188 L 146,222", null, P("#B66F90", 2));
-                    break;
                 case 28:
                     Path(d, "M 51,225 L 65,225 L 71,235 L 81,237 Q 83,242 77,242 L 56,242 L 52,234 L 49,245 L 45,245 L 47,230 Z", B("#B45F83"), P("#7D3E60", 2));
                     Path(d, "M 169,225 L 155,225 L 149,235 L 139,237 Q 137,242 143,242 L 164,242 L 168,234 L 171,245 L 175,245 L 173,230 Z", B("#B45F83"), P("#7D3E60", 2));
-                    break;
-                case 29:
-                    Path(d, "M 79,156 L 95,156 Q 110,173 125,156 L 142,156 L 134,185 L 170,218 Q 110,236 50,218 L 86,185 Z", B("#A997D4"), P("#756295", 2.5));
-                    Path(d, "M 87,185 Q 110,191 134,185", null, P("#E8C4DB", 5));
-                    d.DrawEllipse(B("#EDCF91"), null, new Point(111, 188), 4, 4);
                     break;
                 case 30:
                     Path(d, "M 98,147 Q 105,138 110,145 Q 115,138 122,147 Q 111,161 98,147 Z", B("#C86485"), P("#95435F", 1.5));
@@ -435,12 +439,6 @@ namespace Gole.Desktop
                         }
                         d.DrawEllipse(B("#D8B663"), null, new Point(x, y), 3, 3);
                     }
-                    break;
-                case 32:
-                    d.DrawEllipse(null, P("#D7B366", 4), new Point(35, 148), 8, 5);
-                    d.DrawEllipse(null, P("#C18CAB", 3), new Point(37, 142), 8, 5);
-                    d.DrawEllipse(null, P("#D7B366", 4), new Point(183, 118), 8, 5);
-                    d.DrawEllipse(null, P("#C18CAB", 3), new Point(181, 124), 8, 5);
                     break;
                 default:
                     DrawExtendedAccessory(d, line, accessory);

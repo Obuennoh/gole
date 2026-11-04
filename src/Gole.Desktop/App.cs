@@ -27,6 +27,8 @@ internal static class App
         System.Windows.Forms.Application.SetHighDpiMode(System.Windows.Forms.HighDpiMode.SystemAware);
         if (args.Length == 2 && args[0] == "--render-sheet")
             return VisualTests.Render(args[1]);
+        if (args.Length == 2 && args[0] == "--render-fitting")
+            return VisualTests.RenderFitting(args[1]);
         DevelopmentMode = args.Length == 2 && args[0] == "--development-data";
         if (args.Length != 0 && !DevelopmentMode)
             return 2;

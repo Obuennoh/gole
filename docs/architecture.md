@@ -90,3 +90,13 @@ A personalidade integra o rascunho do editor. A prévia usa o humor selecionado,
 ### Catálogo visual
 
 O catálogo mantém IDs anteriores e acrescenta oito silhuetas de garrafinha e dezoito acessórios. `Bottle.ExtendedStyles.cs` concentra os novos detalhes e usa as mesmas geometrias, pincéis e canetas compartilhadas. Capa de herói e jetpack são desenhados antes do corpo; os demais itens são desenhados à frente. Todos os modelos usam o mesmo nível de água e as seis expressões. As combinações continuam limitadas a três itens distintos.
+
+### Encaixe e estilo de acessórios
+
+O schema 14 acrescenta `AccessoryStyles`: ID estável da peça, cor opcional e ID da estampa. A ausência de estilo mantém o desenho original. Validação normaliza IDs, cores e estampas, elimina duplicatas e preserva estilos de peças fora do conjunto vestido. A migração mantém os registros e prazos de hidratação. O rascunho clona os estilos, evitando alterações no pet até salvar.
+
+`Bottle.Fitting.cs` mede o contorno vetorial de cada modelo por faixa horizontal. Roupas usam interseção geométrica com o recipiente; braços, acessórios laterais, óculos e chapéus usam pontos de encaixe específicos. Mangas e acessórios de mão acompanham as duas poses dos braços. Camisetas, moletons e ponchos encurtam na combinação com peças inferiores. Camadas são ordenadas por categoria e ID, independentemente da ordem dos cliques.
+
+`Bottle.Materials.cs` recolore as superfícies preservando diferenças de luminosidade e transparência. Estampas vetoriais repetidas preenchem a mesma geometria da peça, com recorte e contornos preservados. Desenhos são congelados e armazenados em cache limitado por modelo, peça, pose, combinação e estilo. O enquadramento inclui acessórios e reserva espaço para oscilação e inclinação do pet vazio. A prévia tem espaço para o tamanho máximo permitido.
+
+O catálogo mantém todos os IDs anteriores e acrescenta as peças 51–66. Até três itens continuam permitidos.

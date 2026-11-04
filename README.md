@@ -25,7 +25,10 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Desfaça o último gole ou qualquer registro do histórico, sem limite de tempo, inclusive após reabrir.
 - Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
 - Vinte e um modelos, incluindo garrafinhas com canudo, dobrável, cantil, long neck, galão fitness, com capa, triangular e em formato de gota.
-- Cinquenta acessórios para combinar até três itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
+- Sessenta e seis acessórios para combinar até três itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
+- Cor individual de cada acessório: 20 cores e sete acabamentos — liso, bolinhas, listras, brilho, xadrez, estrelas e corações.
+- Roupas ajustadas ao contorno de cada recipiente, com encaixe de acessórios, camadas estáveis e prévia sem cortes.
+- Novas peças: camiseta, moletom, jardineira, casaco, saias plissada e de tule, colete, poncho, chapéu de pescador, tiara de laço, óculos redondos, lenço, cinto, broche, bolsa transversal e chinelo.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
 - Dez personalidades: brava, debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica e pirata, além do modo **Aleatória**.
@@ -35,6 +38,14 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
 
 ![Modelos e acessórios do Gole](docs/images/characters.png)
+
+### Cores e estampas
+
+Em **Personalizar → Acessórios**, vista uma peça no **Guarda-roupa**. Em **Cor e estampa do acessório**, escolha a peça vestida, a cor e o acabamento. Confira a prévia e clique em **Salvar personalização**. Você pode combinar cores e estampas diferentes em até três itens. **Restaurar estilo do acessório** recupera o visual original só daquela peça. **Descartar alterações** desfaz o rascunho inteiro.
+
+Os estilos são lembrados mesmo ao tirar e voltar a vestir uma peça, e permanecem após reabrir o Gole.
+
+![Exemplos de cores, estampas e roupas](docs/images/customization.png)
 
 ## Desenvolvimento local
 

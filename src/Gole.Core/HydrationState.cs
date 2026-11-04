@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 13;
+    public const int CurrentVersion = 14;
     public const int DefaultServingMl = 200;
     public const int MinimumServingMl = 1;
     public const int MaximumServingMl = 6000;
@@ -21,6 +21,7 @@ public sealed class HydrationState
         get; set;
     }
     [DataMember] public List<int> Accessories { get; set; } = [];
+    [DataMember] public List<AccessoryStyle> AccessoryStyles { get; set; } = [];
     [DataMember]
     public long NextPhrase
     {
@@ -107,6 +108,7 @@ public sealed class HydrationState
         AlertVolume = SoundCatalog.DefaultVolume;
         Sips = [];
         Accessories = [];
+        AccessoryStyles = [];
     }
 
     public void Validate(DateTime utcNow)
@@ -121,6 +123,7 @@ public sealed class HydrationState
         if (Version < 3 && (Accessories is null || Accessories.Count == 0) && Accessory > 0)
             Accessories = [Accessory];
         Accessories = PetCatalog.Normalize(Accessories);
+        AccessoryStyles = AccessoryStyle.Normalize(AccessoryStyles);
         Accessory = 0;
         Version = CurrentVersion;
         Name = string.IsNullOrWhiteSpace(Name) ? "Gole" : Name.Trim()[..Math.Min(20, Name.Trim().Length)];

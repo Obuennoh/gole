@@ -24,7 +24,10 @@ public static class PetCatalog
         "Bolsa", "Saia", "Salto alto", "Vestido", "Batom", "Tiara floral", "Pulseiras",
         "Chapéu de bruxa", "Gorro", "Orelhas de coelho", "Tiara de coração", "Óculos de coração",
         "Óculos futuristas", "Brincos de estrela", "Colar de coração", "Relógio", "Tênis", "Botas",
-        "Jaqueta", "Capa de herói", "Jetpack", "Varinha", "Balão de coração", "Boia", "Tiara de unicórnio"
+        "Jaqueta", "Capa de herói", "Jetpack", "Varinha", "Balão de coração", "Boia", "Tiara de unicórnio",
+        "Camiseta", "Moletom", "Jardineira", "Casaco", "Saia plissada", "Saia de tule",
+        "Colete", "Poncho", "Chapéu de pescador", "Tiara de laço", "Óculos redondos", "Lenço de pescoço",
+        "Cinto", "Broche de coração", "Bolsa transversal", "Chinelo"
     });
 
     public static List<int> Normalize(IEnumerable<int>? items) => (items ?? [])

@@ -58,6 +58,7 @@ public sealed class EditorTests
                 Assert.False(panel.IsVisible);
                 Assert.False(pet.IsVisible);
                 AssertAccessoryBorderTracksSelection(panel);
+                AssertAccessoryStyleEditing(panel, state, store);
                 var personality = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade do pet");
                 Assert.Equal(11, personality.Items.Count);
                 personality.SelectedValue = 10;
@@ -248,6 +249,52 @@ public sealed class EditorTests
         var button = FindButton(root, label);
         Assert.True(button.IsEnabled, label);
         button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+    }
+
+    private static void AssertAccessoryStyleEditing(PanelWindow panel, HydrationState state, JsonStateStore store)
+    {
+        var target = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Acessório para personalizar");
+        var pattern = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Estampa do acessório");
+        Assert.False(target.IsEnabled);
+        Click(panel, "Saia");
+        Click(panel, "Cor do acessório: Rosa");
+        pattern.SelectedIndex = 1;
+        Click(panel, "Jaqueta");
+        Click(panel, "Cor do acessório: Azul");
+        pattern.SelectedIndex = 2;
+        Assert.Empty(state.AccessoryStyles);
+        Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.AccessoryStyles.Count == 2);
+        Click(panel, "Descartar alterações");
+        Assert.False(target.IsEnabled);
+        Assert.Empty(state.AccessoryStyles);
+        Click(panel, "Saia");
+        Click(panel, "Cor do acessório: Rosa");
+        pattern.SelectedIndex = 3;
+        Click(panel, "Jaqueta");
+        Click(panel, "Cor do acessório: Azul");
+        pattern.SelectedIndex = 2;
+        target.SelectedValue = 27;
+        Assert.Equal(3, pattern.SelectedIndex);
+        Click(panel, "Salvar personalização");
+        var saved = store.Load(DateTime.UtcNow).State;
+        Assert.Equal(new[] { 27, 44 }, saved.AccessoryStyles.Select(s => s.AccessoryId));
+        Assert.Equal("#D875B3", saved.AccessoryStyles[0].Color);
+        Assert.Equal("#3C82D5", saved.AccessoryStyles[1].Color);
+        Click(panel, "Saia");
+        Click(panel, "Saia");
+        Assert.Equal(3, pattern.SelectedIndex);
+        Click(panel, "Restaurar estilo do acessório");
+        Assert.Equal(0, pattern.SelectedIndex);
+        Click(panel, "Descartar alterações");
+        Assert.Equal(3, pattern.SelectedIndex);
+        // Leave the original editor scenario with an empty wardrobe and no custom styles.
+        Click(panel, "Restaurar estilo do acessório");
+        target.SelectedValue = 44;
+        Click(panel, "Restaurar estilo do acessório");
+        Click(panel, "Nenhum");
+        Click(panel, "Salvar personalização");
+        Assert.Empty(state.Accessories);
+        Assert.Empty(state.AccessoryStyles);
     }
 
     private static Button FindButton(DependencyObject root, string label) => Descendants(root).OfType<Button>()
