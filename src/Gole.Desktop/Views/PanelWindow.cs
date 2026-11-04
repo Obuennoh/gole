@@ -42,11 +42,7 @@ namespace Gole.Desktop
         CheckBox motionBox;
         string draftName, draftColor;
         int draftModel, draftPersonality;
-        ComboBox personalityChoice, accessoryStyleChoice, accessoryPatternChoice;
-        StackPanel accessoryStyleControls;
-        int editedAccessory;
-        List<AccessoryStyle> draftAccessoryStyles = new List<AccessoryStyle>();
-        List<Border> accessoryColorBorders = new List<Border>();
+        ComboBox personalityChoice;
         TextBlock personalityDescription, personalityMessage;
         readonly ReminderPhrases previewSpeech = new ReminderPhrases(new Random());
         int lastPreviewPersonality = -1;
@@ -155,7 +151,6 @@ namespace Gole.Desktop
                 live.Tint = data.Color;
                 live.Vessel = data.Vessel;
                 live.EquippedAccessories = data.Accessories;
-                live.AccessoryStyles = data.AccessoryStyles;
                 live.Paused = data.Paused(DateTime.UtcNow);
                 live.InvalidateVisual();
                 if (simulation.HasValue)
@@ -311,7 +306,6 @@ namespace Gole.Desktop
             draftModel = data.Vessel;
             draftPersonality = data.PersonalityId;
             draftAccessories = data.Accessories.ToList();
-            draftAccessoryStyles = data.AccessoryStyles.Select(s => s with { }).ToList();
             draftSize = data.Size;
             draftMotion = data.Motion;
         }
@@ -319,7 +313,7 @@ namespace Gole.Desktop
         {
             get
             {
-                return draftName != data.Name || draftColor != data.Color || draftModel != data.Vessel || draftPersonality != data.PersonalityId || !draftAccessories.SequenceEqual(data.Accessories) || !draftAccessoryStyles.SequenceEqual(data.AccessoryStyles) || Math.Abs(draftSize - data.Size) > .1 || draftMotion != data.Motion;
+                return draftName != data.Name || draftColor != data.Color || draftModel != data.Vessel || draftPersonality != data.PersonalityId || !draftAccessories.SequenceEqual(data.Accessories) || Math.Abs(draftSize - data.Size) > .1 || draftMotion != data.Motion;
             }
         }
         UIElement Editor()
@@ -392,15 +386,13 @@ namespace Gole.Desktop
             Label(controls, "Acessórios");
             accessoryCount = Theme.Text("", 12, Theme.Muted);
             controls.Children.Add(accessoryCount);
-            BuildAccessoryStyles(controls);
             var accessories = new WrapPanel();
             for (int i = 0; i < Bottle.Accessories.Length; i++)
             {
                 int accessory = i;
                 var b = Tile(Bottle.Accessories[i], draftModel, accessory, 118, 83, delegate
                 {
-                    if (PetCatalog.Toggle(draftAccessories, accessory) && draftAccessories.Contains(accessory))
-                        editedAccessory = accessory;
+                    PetCatalog.Toggle(draftAccessories, accessory);
                     UpdateEditor();
                 });
                 accessoryButtons.Add(b);
@@ -546,11 +538,9 @@ namespace Gole.Desktop
             preview.Tint = draftColor;
             preview.Vessel = draftModel;
             preview.EquippedAccessories = draftAccessories.ToArray();
-            preview.AccessoryStyles = draftAccessoryStyles;
             preview.Level = previewLevel;
             preview.Width = draftSize * 220 / 255;
             preview.Height = draftSize;
-            UpdateAccessoryStyles();
             preview.InvalidateVisual();
             previewName.Text = string.IsNullOrWhiteSpace(draftName) ? "Gole" : draftName;
             for (int i = 0; i < modelButtons.Count; i++)
@@ -559,13 +549,12 @@ namespace Gole.Desktop
             {
                 bool selected = i == 0 ? draftAccessories.Count == 0 : draftAccessories.Contains(i);
                 SelectTile(accessoryButtons[i], selected);
-                accessoryButtons[i].IsEnabled = i == 0 || selected || draftAccessories.Count < PetCatalog.MaximumAccessories;
+                accessoryButtons[i].IsEnabled = i == 0 || selected || PetCatalog.CanEquip(draftAccessories, i);
             }
-            accessoryCount.Text = draftAccessories.Count + " / " + PetCatalog.MaximumAccessories + " itens · clique para colocar ou remover";
+            accessoryCount.Text = draftAccessories.Count + " / " + PetCatalog.MaximumAccessories + " itens · peças do mesmo tipo são substituídas";
             for (int i = 0; i < thumbnails.Count; i++)
             {
                 thumbnails[i].Tint = draftColor;
-                thumbnails[i].AccessoryStyles = draftAccessoryStyles;
                 if (i >= Bottle.Models.Length)
                     thumbnails[i].Vessel = draftModel;
                 else
@@ -621,7 +610,6 @@ namespace Gole.Desktop
             data.Vessel = draftModel;
             data.PersonalityId = draftPersonality;
             data.Accessories = draftAccessories.ToList();
-            data.AccessoryStyles = draftAccessoryStyles.Select(s => s with { }).ToList();
             data.Accessory = 0;
             data.Size = draftSize;
             data.Motion = draftMotion;
@@ -630,87 +618,6 @@ namespace Gole.Desktop
             SyncControls();
             UpdateEditor();
             RefreshStats();
-        }
-        void BuildAccessoryStyles(StackPanel controls)
-        {
-            Label(controls, "Cor e estampa do acessório");
-            controls.Children.Add(Theme.Text("Vista uma peça e escolha abaixo qual personalizar. Cada item tem seu próprio estilo.", 12, Theme.Muted));
-            accessoryStyleChoice = new ComboBox { Height = 38, DisplayMemberPath = "Value", SelectedValuePath = "Key", Margin = new Thickness(0, 5, 0, 8) };
-            System.Windows.Automation.AutomationProperties.SetName(accessoryStyleChoice, "Acessório para personalizar");
-            accessoryStyleChoice.SelectionChanged += (_, _) =>
-            {
-                if (syncing || accessoryStyleChoice.SelectedValue is not int id)
-                    return;
-                editedAccessory = id;
-                UpdateAccessoryStyles();
-            };
-            controls.Children.Add(accessoryStyleChoice);
-            accessoryStyleControls = new StackPanel();
-            var palette = new WrapPanel();
-            string[] colors = Palette.Concat(new[] { "#F5F1E8", "#303645", "#E44958", "#FFFFFF" }).ToArray();
-            string[] names = ColorNames.Concat(new[] { "Creme", "Preto", "Vermelho", "Branco" }).ToArray();
-            for (int i = 0; i < colors.Length; i++)
-            {
-                string color = colors[i];
-                var button = Theme.Button("Cor do acessório: " + names[i], () => ChangeAccessoryStyle(color, null), false);
-                button.Background = Theme.B(color);
-                button.Width = button.Height = 28;
-                button.Margin = new Thickness(0);
-                button.Padding = new Thickness(0);
-                var border = new Border { Child = button, Tag = color, Padding = new Thickness(2), Margin = new Thickness(0, 0, 4, 4), BorderThickness = new Thickness(2), CornerRadius = new CornerRadius(7) };
-                accessoryColorBorders.Add(border);
-                palette.Children.Add(border);
-            }
-            accessoryStyleControls.Children.Add(palette);
-            accessoryPatternChoice = new ComboBox { ItemsSource = AccessoryStyle.Patterns, Height = 38, Margin = new Thickness(0, 6, 0, 6) };
-            System.Windows.Automation.AutomationProperties.SetName(accessoryPatternChoice, "Estampa do acessório");
-            accessoryPatternChoice.SelectionChanged += (_, _) =>
-            {
-                if (!syncing)
-                    ChangeAccessoryStyle(null, accessoryPatternChoice.SelectedIndex);
-            };
-            accessoryStyleControls.Children.Add(accessoryPatternChoice);
-            accessoryStyleControls.Children.Add(Theme.Button("Restaurar estilo do acessório", () =>
-            {
-                draftAccessoryStyles.RemoveAll(s => s.AccessoryId == editedAccessory);
-                UpdateEditor();
-            }, false));
-            controls.Children.Add(accessoryStyleControls);
-            Label(controls, "Guarda-roupa");
-        }
-        void ChangeAccessoryStyle(string color, int? pattern)
-        {
-            if (!draftAccessories.Contains(editedAccessory))
-                return;
-            var style = draftAccessoryStyles.FirstOrDefault(s => s.AccessoryId == editedAccessory)
-                ?? new AccessoryStyle { AccessoryId = editedAccessory };
-            style = style with
-            {
-                Color = color ?? style.Color,
-                Pattern = pattern ?? style.Pattern
-            };
-            draftAccessoryStyles.RemoveAll(s => s.AccessoryId == editedAccessory);
-            draftAccessoryStyles.Add(style);
-            draftAccessoryStyles = AccessoryStyle.Normalize(draftAccessoryStyles);
-            UpdateEditor();
-        }
-        void UpdateAccessoryStyles()
-        {
-            if (accessoryStyleChoice == null)
-                return;
-            syncing = true;
-            if (!draftAccessories.Contains(editedAccessory))
-                editedAccessory = draftAccessories.FirstOrDefault();
-            var ids = (accessoryStyleChoice.ItemsSource as IEnumerable<KeyValuePair<int, string>>)?.Select(p => p.Key);
-            if (ids == null || !ids.SequenceEqual(draftAccessories))
-                accessoryStyleChoice.ItemsSource = draftAccessories.Select(id => new KeyValuePair<int, string>(id, Bottle.Accessories[id])).ToList();
-            accessoryStyleChoice.SelectedValue = editedAccessory;
-            accessoryStyleChoice.IsEnabled = accessoryStyleControls.IsEnabled = editedAccessory > 0;
-            var style = draftAccessoryStyles.FirstOrDefault(s => s.AccessoryId == editedAccessory);
-            accessoryPatternChoice.SelectedIndex = style?.Pattern ?? 0;
-            foreach (var border in accessoryColorBorders)
-                border.BorderBrush = (string)border.Tag == style?.Color ? Theme.Teal : Brushes.Transparent;
-            syncing = false;
         }
         Grid NumberField(TextBox input, string unit)
         {

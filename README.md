@@ -28,8 +28,8 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
 - Vinte e um modelos, incluindo garrafinhas com canudo, dobrável, cantil, long neck, galão fitness, com capa, triangular e em formato de gota.
 - Sessenta e seis acessórios para combinar até três itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
-- Cor individual de cada acessório: 20 cores e sete acabamentos — liso, bolinhas, listras, brilho, xadrez, estrelas e corações.
-- Roupas ajustadas ao contorno de cada recipiente, com encaixe de acessórios, camadas estáveis e prévia sem cortes.
+- Roupas com cortes próprios: saias e vestidos com cintura ajustada e barra aberta, camisetas e moletons com mangas, jardineira com alças e bolsos, casacos e coletes abertos e poncho com ponta.
+- Até três itens compatíveis; vestir outra peça do mesmo tipo substitui a anterior. Roupas e acessórios usam suas cores originais.
 - Novas peças: camiseta, moletom, jardineira, casaco, saias plissada e de tule, colete, poncho, chapéu de pescador, tiara de laço, óculos redondos, lenço, cinto, broche, bolsa transversal e chinelo.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
@@ -47,13 +47,13 @@ Em **Personalizar**, marque **Animar personagem e acessórios** e clique em **Sa
 
 A animação usa tempo decorrido e tem limite de 30 quadros por segundo. O personagem permanece no lugar escolhido na tela. Os gestos ficam mais discretos com a sede; o gole dispara uma comemoração curta, com pulinhos e bolhas.
 
-### Cores e estampas
+### Roupas e acessórios
 
-Em **Personalizar → Acessórios**, vista uma peça no **Guarda-roupa**. Em **Cor e estampa do acessório**, escolha a peça vestida, a cor e o acabamento. Confira a prévia e clique em **Salvar personalização**. Você pode combinar cores e estampas diferentes em até três itens. **Restaurar estilo do acessório** recupera o visual original só daquela peça. **Descartar alterações** desfaz o rascunho inteiro.
+Em **Personalizar → Acessórios**, clique para vestir ou tirar uma peça e confira o resultado antes de **Salvar personalização**. Uma segunda peça do mesmo tipo substitui a anterior, incluindo saias, roupas de cima, óculos, chapéus, tiaras e calçados. Peças de tipos diferentes continuam combináveis, até três itens.
 
-Os estilos são lembrados mesmo ao tirar e voltar a vestir uma peça, e permanecem após reabrir o Gole.
+As roupas e acessórios usam cores próprias, sem controles de pintura ou estampa. A escolha de cor do recipiente continua disponível. Personalizações de acessórios feitas em versões anteriores retornam ao desenho original ao atualizar.
 
-![Exemplos de cores, estampas e roupas](docs/images/customization.png)
+![Roupas e acessórios com caimento próprio](docs/images/outfits.png)
 
 ## Desenvolvimento local
 

@@ -10,23 +10,29 @@ public sealed class StateStoreTests : IDisposable
     private JsonStateStore Store() => new(directory);
 
     [Fact]
-    public void Each_accessory_style_survives_restart_and_unequipping_without_changing_the_water_cycle()
+    public void Painted_accessories_migrate_to_original_art_without_losing_water_records_or_body_color()
     {
         var state = HydrationState.Fresh(Now);
+        state.Version = 14;
+        state.Color = "#D875B3";
         state.Accessories = [27, 44];
-        state.AccessoryStyles = [new() { AccessoryId = 27, Color = "#D875B3", Pattern = 1 }, new() { AccessoryId = 44, Color = "#3C82D5", Pattern = 3 }];
+        state.AccessoryStyles = [new() { AccessoryId = 27, Color = "#E44958", Pattern = 1 }, new() { AccessoryId = 44, Color = "#FFFFFF", Pattern = 3 }];
+        state.Sips.Add(new Sip { Utc = Now.Ticks, Ml = 200 });
         Assert.True(Store().Save(state));
         var loaded = Store().Load(Now.AddMinutes(10)).State;
-        Assert.Equal(state.AccessoryStyles, loaded.AccessoryStyles);
+        Assert.Equal(HydrationState.CurrentVersion, loaded.Version);
+        Assert.Empty(loaded.AccessoryStyles);
+        Assert.Equal(state.Accessories, loaded.Accessories);
+        Assert.Equal("#D875B3", loaded.Color);
+        Assert.Equal(200, loaded.Today(Now));
         Assert.Equal(state.NextReminder, loaded.NextReminder);
         Assert.Equal(2.0 / 3, loaded.Level(Now.AddMinutes(10)), 8);
-        loaded.Accessories.Clear();
         Assert.True(Store().Save(loaded));
-        Assert.Equal(state.AccessoryStyles, Store().Load(Now.AddMinutes(10)).State.AccessoryStyles);
+        Assert.Empty(Store().Load(Now.AddMinutes(10)).State.AccessoryStyles);
     }
 
     [Fact]
-    public void Old_preferences_without_styles_migrate_without_losing_the_outfit_or_records()
+    public void Old_preferences_without_styles_migrate_without_losing_the_outfit()
     {
         Directory.CreateDirectory(directory);
         File.WriteAllText(Store().FilePath, "{\"Version\":13,\"Accessories\":[27,28],\"Vessel\":19,\"Name\":\"Lulu\",\"AccessoryStyles\":null}");
@@ -36,20 +42,6 @@ public sealed class StateStoreTests : IDisposable
         Assert.Equal(new[] { 27, 28 }, loaded.Accessories);
         Assert.Equal(19, loaded.Vessel);
         Assert.Equal("Lulu", loaded.Name);
-    }
-
-    [Fact]
-    public void Invalid_styles_are_normalized_without_dropping_valid_pieces()
-    {
-        var state = HydrationState.Fresh(Now);
-        state.AccessoryStyles = [new() { AccessoryId = 27, Color = "#d875b3", Pattern = 2 },
-            new() { AccessoryId = 44, Color = "bad", Pattern = -9 }, new() { AccessoryId = 999, Color = "#FFFFFF" },
-            new() { AccessoryId = 27, Color = "#3c82d5", Pattern = 3 }, new() { AccessoryId = 52, Color = "#FFFFFF", Pattern = 999 }];
-        state.Validate(Now);
-        Assert.Equal(new[] { 27, 52 }, state.AccessoryStyles.Select(s => s.AccessoryId));
-        Assert.Equal("#3C82D5", state.AccessoryStyles[0].Color);
-        Assert.Equal(3, state.AccessoryStyles[0].Pattern);
-        Assert.Equal(0, state.AccessoryStyles[1].Pattern);
     }
 
     [Theory]

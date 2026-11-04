@@ -33,58 +33,43 @@ public sealed class AccessoryRenderingTests
     });
 
     [Fact]
-    public void Clothing_surfaces_follow_the_body_and_never_cover_the_eyes() => Sta(() =>
+    public void Skirts_have_a_fitted_waist_and_a_flared_hem_in_every_model() => Sta(() =>
     {
         for (int model = 0; model < PetCatalog.Models.Count; model++)
-        {
-            var fit = Bottle.Fit(model);
-            var bottle = new Bottle();
-            var garment = bottle.Garment(fit, "M 10,160 L 210,160 L 210,232 L 10,232 Z");
-            Assert.True(garment.GetArea() > 1500);
-            // Boolean geometry flattens curves; allow a quarter of a logical pixel at their edge.
-            var contour = fit.Body.GetWidenedPathGeometry(new Pen(Brushes.Black, .5));
-            var allowed = Geometry.Combine(fit.Body, contour, GeometryCombineMode.Union, null);
-            var outside = Geometry.Combine(garment, allowed, GeometryCombineMode.Exclude, null);
-            Assert.True(outside.GetArea() < .1, $"Model {model}: outside area {outside.GetArea()} of {garment.GetArea()}");
-            Assert.False(garment.FillContains(new Point(87, 126)));
-            Assert.False(garment.FillContains(new Point(133, 126)));
-        }
-    });
-
-    [Fact]
-    public void Layering_does_not_depend_on_selection_order_and_each_piece_keeps_its_style() => Sta(() =>
-    {
-        var styles = new[] { new AccessoryStyle { AccessoryId = 27, Color = "#D875B3", Pattern = 1 }, new AccessoryStyle { AccessoryId = 44, Color = "#3C82D5", Pattern = 2 } };
-        var a = Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 27, 44, 11 }, AccessoryStyles = styles });
-        var b = Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 11, 44, 27 }, AccessoryStyles = styles });
-        Assert.Equal(a, b);
-        Assert.NotEqual(a, Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 27, 44, 11 } }));
-    });
-
-    [Fact]
-    public void All_patterns_are_visible_and_neutral_and_dark_accessories_can_be_recolored() => Sta(() =>
-    {
-        for (int model = 0; model < PetCatalog.Models.Count; model++)
-        {
-            var previous = new List<byte[]>();
-            for (int pattern = 0; pattern < AccessoryStyle.Patterns.Count; pattern++)
+            foreach (int item in new[] { 27, 29, 55, 56 })
             {
-                var pixels = Render(new Bottle
-                {
-                    Vessel = model,
-                    Accessory = 29,
-                    AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = 29, Color = "#E44958", Pattern = pattern } }
-                });
-                Assert.All(previous, earlier => Assert.False(earlier.SequenceEqual(pixels)));
-                previous.Add(pixels);
+                var fit = Bottle.Fit(model);
+                var cut = Bottle.CutSkirt(fit, item);
+                Assert.True(cut.HemRight - cut.HemLeft >= cut.Right - cut.Left + 30);
+                Assert.InRange(Math.Abs(cut.Left - fit.Left(cut.WaistY)), 0, 2);
+                Assert.InRange(Math.Abs(cut.Right - fit.Right(cut.WaistY)), 0, 2);
+                var outline = cut.Outline();
+                var outside = Geometry.Combine(outline, fit.Body, GeometryCombineMode.Exclude, null);
+                Assert.True(outside.GetArea() > 400, "Skirt silhouette was reduced to a body fill in model " + model);
+                Assert.False(outline.FillContains(new Point(87, 126)));
+                Assert.False(outline.FillContains(new Point(133, 126)));
             }
-        }
-        foreach (int item in new[] { 2, 17, 21, 24, 35, 44, 51, 52, 66 })
+    });
+
+    [Fact]
+    public void Every_clothing_option_has_a_distinct_drawing_in_every_model() => Sta(() =>
+    {
+        int[] clothes = { 27, 29, 44, 51, 52, 53, 54, 55, 56, 57, 58 };
+        for (int model = 0; model < PetCatalog.Models.Count; model++)
         {
-            var original = Render(new Bottle { Accessory = item });
-            var colored = Render(new Bottle { Accessory = item, AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = item, Color = "#E44958" } } });
-            Assert.False(original.SequenceEqual(colored), "Accessory " + item + " did not change color.");
+            var drawings = clothes.Select(item => Render(new Bottle { Vessel = model, Accessory = item, MotionEnabled = false })).ToList();
+            for (int i = 0; i < drawings.Count; i++)
+                for (int j = i + 1; j < drawings.Count; j++)
+                    Assert.False(drawings[i].SequenceEqual(drawings[j]), $"Clothes {clothes[i]} and {clothes[j]} look identical on model {model}");
         }
+    });
+
+    [Fact]
+    public void Compatible_outfit_layers_do_not_depend_on_selection_order() => Sta(() =>
+    {
+        var a = Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 27, 44, 11 } });
+        var b = Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 11, 44, 27 } });
+        Assert.Equal(a, b);
     });
 
     static byte[] Render(Bottle art)

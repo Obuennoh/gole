@@ -76,7 +76,7 @@ public partial class Bottle
                 }
                 else
                 {
-                    var anchor = AccessoryTransform(fit, model, item).Transform(new Point(right ? 162 : 58, 132));
+                    var anchor = EarringAnchor(fit, right);
                     transform = new RotateTransform(IsAnimating ? Math.Sin(t * 2.2 + (right ? .5 : 0)) * 7 * energy : 0, anchor.X, anchor.Y);
                 }
                 d.PushTransform(transform);
@@ -148,17 +148,6 @@ public partial class Bottle
     {
         var drawing = AccessoryDrawing(model, item, part);
         d.DrawDrawing(drawing);
-        bool glitter = AccessoryStyles.Any(style => style.AccessoryId == item && style.Pattern == 3);
-        if (!IsAnimating || Level <= 0 || !glitter || drawing.Bounds.IsEmpty)
-            return;
-        var bounds = drawing.Bounds;
-        d.PushOpacityMask(SurfaceMask(drawing));
-        for (int i = 0; i < 4; i++)
-        {
-            var point = new Point(bounds.X + bounds.Width * (.2 + i % 2 * .6), bounds.Y + bounds.Height * (.2 + i / 2 * .6));
-            Sparkle(d, point, 3.5, .25 + .5 * (.5 + .5 * Math.Sin(MotionTime * 2 + i * 1.8)));
-        }
-        d.Pop();
     }
 
     void DrawAccessoryEffects(DrawingContext d, BodyFit fit, int model, int item)

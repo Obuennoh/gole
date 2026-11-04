@@ -36,7 +36,6 @@ namespace Gole.Desktop
                         Phase = seconds,
                         Celebrate = i == 5,
                         CelebrationSeconds = seconds % 4.8,
-                        AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = items[i][0], Color = i % 2 == 0 ? "#D875B3" : "#6D69C9", Pattern = i is 0 or 5 ? 3 : 0 } }
                     }, x + 10, y);
                     Add(canvas, Theme.Text(labels[i], 14, Theme.Ink), x + 28, y + 244);
                 }
@@ -65,7 +64,7 @@ namespace Gole.Desktop
                             Accessory = item,
                             Width = 180,
                             Height = 158,
-                            AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = item, Color = row % 2 == 0 ? "#D875B3" : "#3C82D5", Pattern = row % 7 } }
+                            MotionEnabled = false,
                         }, column * 200 + 10, 45 + row * 190);
                         Add(canvas, Theme.Text(PetCatalog.Accessories[item], 12, Theme.Ink), column * 200 + 20, 207 + row * 190);
                     }
@@ -92,38 +91,28 @@ namespace Gole.Desktop
                             Height = 170,
                             Level = row % 2 == 0 ? 1 : 0,
                             Phase = 1.5,
-                            AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = items[0], Color = "#D875B3", Pattern = row % 7 } }
                         }, column * 200 + 10, 45 + row * 190);
                     }
                 }
                 Save(canvas, Path.Combine(folder, "combinacoes-" + (page + 1) + ".png"));
             }
             var preview = new Canvas { Width = 1400, Height = 550, Background = Theme.B("#F1F5F7") };
-            Add(preview, Theme.Text("GOLE · cores e estampas por acessório", 24, Theme.Ink), 24, 16);
-            string[] colors = { "#D875B3", "#3C82D5", "#45A58C", "#6D69C9", "#DE7867", "#EDAA61", "#456477" };
-            for (int i = 0; i < AccessoryStyle.Patterns.Count; i++)
+            Add(preview, Theme.Text("GOLE · roupas com caimento próprio e cores originais", 24, Theme.Ink), 24, 16);
+            int[] examples = { 27, 55, 56, 29, 51, 52, 53, 44, 54, 57, 58, 15, 39, 17 };
+            for (int i = 0; i < examples.Length; i++)
             {
+                int column = i % 7, row = i / 7;
                 Add(preview, new Bottle
                 {
-                    Vessel = 4,
-                    Accessory = 27,
+                    Vessel = new[] { 4, 8, 19, 20, 0, 5, 15 }[column],
+                    Accessory = examples[i],
+                    MotionEnabled = false,
                     Width = 180,
-                    Height = 175,
-                    AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = 27, Color = colors[i], Pattern = i } }
-                }, i * 200 + 10, 57);
-                Add(preview, Theme.Text(AccessoryStyle.Patterns[i], 14, Theme.Ink), i * 200 + 25, 237);
-                int item = 51 + i;
-                Add(preview, new Bottle
-                {
-                    Vessel = new[] { 0, 8, 19, 5, 15, 20, 14 }[i],
-                    Accessory = item,
-                    Width = 180,
-                    Height = 175,
-                    AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = item, Color = colors[6 - i], Pattern = i % 4 } }
-                }, i * 200 + 10, 292);
-                Add(preview, Theme.Text(PetCatalog.Accessories[item], 14, Theme.Ink), i * 200 + 25, 477);
+                    Height = 175
+                }, column * 200 + 10, 57 + row * 235);
+                Add(preview, Theme.Text(PetCatalog.Accessories[examples[i]], 14, Theme.Ink), column * 200 + 25, 237 + row * 235);
             }
-            Save(preview, Path.Combine(folder, "personalizacao.png"));
+            Save(preview, Path.Combine(folder, "roupas-corrigidas.png"));
             return 0;
         }
 

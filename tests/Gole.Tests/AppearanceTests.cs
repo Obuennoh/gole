@@ -51,6 +51,25 @@ public sealed class AppearanceTests
         Assert.Empty(items);
     }
 
+    [Theory]
+    [InlineData(27, 55)]
+    [InlineData(29, 53)]
+    [InlineData(44, 52)]
+    [InlineData(21, 37)]
+    [InlineData(5, 33)]
+    [InlineData(42, 43)]
+    [InlineData(35, 50)]
+    public void Clothing_and_accessories_in_the_same_slot_replace_each_other_even_when_full(int oldItem, int newItem)
+    {
+        var items = new List<int> { oldItem, 11, 48 };
+        Assert.True(PetCatalog.CanEquip(items, newItem));
+        Assert.True(PetCatalog.Toggle(items, newItem));
+        Assert.Equal(3, items.Count);
+        Assert.DoesNotContain(oldItem, items);
+        Assert.Contains(newItem, items);
+        Assert.Equal(new[] { 11, 48, newItem }, PetCatalog.Normalize(new[] { oldItem, 11, 48, newItem }));
+    }
+
     [Fact]
     public void Invalid_or_duplicate_items_cannot_bypass_the_limit()
     {

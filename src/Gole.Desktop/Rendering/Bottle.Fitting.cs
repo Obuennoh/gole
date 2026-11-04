@@ -45,7 +45,7 @@ public partial class Bottle
     }
 
     static readonly Dictionary<int, BodyFit> fits = new();
-    static readonly Dictionary<(int Model, int Item, int Part, bool Relaxed, bool Layered, string Color, int Pattern), DrawingGroup> fittedAccessories = new();
+    static readonly Dictionary<(int Model, int Item, int Part, bool Relaxed, bool Layered), DrawingGroup> fittedAccessories = new();
     internal static BodyFit Fit(int model)
     {
         model = Math.Clamp(model, 0, bodies.Length - 1);
@@ -87,11 +87,8 @@ public partial class Bottle
 
     DrawingGroup AccessoryDrawing(int model, int item, int part)
     {
-        var style = AccessoryStyles.FirstOrDefault(s => s.AccessoryId == item);
-        string color = style != null && HydrationState.IsColor(style.Color) ? style.Color.ToUpperInvariant() : "";
-        int pattern = style != null && style.Pattern >= 0 && style.Pattern < AccessoryStyle.Patterns.Count ? style.Pattern : 0;
         bool layered = EquippedAccessories.Any(id => id is 27 or 29 or 53 or 55 or 56);
-        var key = (model, item, part, Level < .15, layered, color, pattern);
+        var key = (model, item, part, Level < .15, layered);
         if (!fittedAccessories.TryGetValue(key, out var drawing))
         {
             if (fittedAccessories.Count > 2048)
@@ -122,8 +119,6 @@ public partial class Bottle
                         context.Pop();
                 }
             }
-            if (color.Length > 0 || pattern > 0)
-                Restyle(drawing, color, pattern);
             drawing.Freeze();
             fittedAccessories[key] = drawing;
         }
@@ -135,12 +130,24 @@ public partial class Bottle
         bool right = part == 2;
         if (item is 44 or 51 or 52 or 54)
         {
-            DrawSleeve(d, fit, item, right, item == 52 ? "#C1848D" : "#647F9F", "#415F7D");
+            var colors = ClothColors(item);
+            DrawSleeve(d, fit, item, right, colors.Fill, colors.Outline);
             return;
         }
         if (item == 32)
         {
             DrawBracelet(d, fit, right);
+            return;
+        }
+        if (item is 15 or 39)
+        {
+            var anchor = EarringAnchor(fit, right);
+            double x = anchor.X + (right ? 4 : -4);
+            d.DrawLine(P("#BC9A55", 1.7), anchor, new Point(x, item == 15 ? 140 : 148));
+            if (item == 15)
+                d.DrawEllipse(null, P("#D4AE5B", 3), new Point(x, 147), 5.5, 8);
+            else
+                DrawStar(d, x, 155, 8, "#EACD80", "#B48D48");
             return;
         }
         d.PushTransform(AccessoryTransform(fit, model, item));
@@ -160,6 +167,8 @@ public partial class Bottle
         }
         d.Pop();
     }
+
+    static Point EarringAnchor(BodyFit fit, bool right) => new Point(right ? fit.Right(132) + 1 : fit.Left(132) - 1, 132);
 
     Transform AccessoryTransform(BodyFit fit, int model, int item)
     {
@@ -191,68 +200,6 @@ public partial class Bottle
 
     internal Geometry Garment(BodyFit fit, string path) => Geometry.Combine(fit.Body, Shape(path), GeometryCombineMode.Intersect, null, .1, ToleranceType.Absolute);
 
-    void DrawClothing(DrawingContext d, BodyFit fit, int item, bool layered)
-    {
-        bool skirt = item is 27 or 55 or 56;
-        string fill = skirt ? "#D996B2" : item is 29 or 53 ? "#A997D4" : item is 52 or 58 ? "#C1848D" : "#647F9F";
-        string outline = skirt ? "#9F617D" : item is 29 or 53 ? "#756295" : "#415F7D";
-        string path = skirt ? "M 20,180 Q 110,194 200,180 L 210,232 L 10,232 Z"
-            : item is 44 or 54 or 57 ? "M 20,128 L 75,142 L 92,159 L 99,181 L 94,218 L 15,218 Z M 200,128 L 145,142 L 128,159 L 121,181 L 126,218 L 205,218 Z"
-            : item == 29 ? "M 20,160 L 92,160 Q 110,190 128,160 L 200,160 L 210,232 L 10,232 Z"
-            : item == 53 ? "M 20,160 L 83,160 L 87,180 L 133,180 L 137,160 L 200,160 L 210,232 L 10,232 Z"
-            : item == 58 ? "M 10,155 L 91,155 Q 110,193 129,155 L 210,155 L 210,212 Q 110,228 10,212 Z"
-            : "M 10,132 L 75,142 L 92,159 Q 110,190 128,159 L 145,142 L 210,132 L 210,232 L 10,232 Z";
-        if (item == 54)
-            path = path.Replace("218", "232");
-        var garment = Garment(fit, path);
-        if (layered && item is 51 or 52 or 58)
-            garment = Geometry.Combine(garment, new RectangleGeometry(new Rect(0, 0, 220, 190)), GeometryCombineMode.Intersect, null);
-        d.DrawGeometry(B(fill), P(outline, 2.2), garment);
-        d.PushClip(garment);
-        if (skirt)
-        {
-            Path(d, "M 20,180 Q 110,194 200,180", null, P(outline, 6));
-            for (int i = 0; i < (item == 55 ? 11 : 5); i++)
-            {
-                double x = 45 + i * (item == 55 ? 13 : 32);
-                d.DrawLine(P("#B66F90", 1.8), new Point(x + (110 - x) * .15, 189), new Point(x, 227));
-            }
-            if (item == 56)
-                Path(d, "M 15,203 Q 110,220 205,203 M 15,212 Q 110,232 205,212", null, P("#F3D3E5", 4));
-        }
-        else if (item is 29 or 53)
-        {
-            Path(d, "M 20,185 Q 110,197 200,185", null, P("#E8C4DB", 5));
-            if (item == 29)
-                d.DrawEllipse(B("#EDCF91"), null, new Point(110, 191), 4, 4);
-            else
-            {
-                d.DrawRoundedRectangle(null, P(outline, 2), new Rect(97, 191, 26, 19), 5, 5);
-                d.DrawEllipse(B("#EDCF91"), null, new Point(87, 179), 3, 3);
-                d.DrawEllipse(B("#EDCF91"), null, new Point(133, 179), 3, 3);
-            }
-        }
-        else
-        {
-            if (item is 44 or 54 or 57)
-                Path(d, "M 81,160 L 94,180 L 80,189 M 139,160 L 126,180 L 140,189", null, P("#BCCDDC", 2));
-            if (item == 51)
-                d.DrawRoundedRectangle(null, P(outline, 1.5), new Rect(133, 177, 14, 13), 3, 3);
-            if (item == 58)
-                Path(d, "M 20,195 L 110,212 L 200,195", null, P("#E9C0C8", 4));
-            if (item == 52)
-            {
-                Path(d, "M 99,168 L 99,184 M 121,168 L 121,184", null, P("#F0D2D9", 2));
-                d.DrawRoundedRectangle(null, P(outline, 2), new Rect(88, 192, 44, 20), 8, 8);
-            }
-            if (item == 54)
-                for (int y = 182; y < 217; y += 12)
-                    d.DrawEllipse(B("#EDCF91"), null, new Point(132, y), 2.5, 2.5);
-            Path(d, "M 20,216 Q 110,230 200,216", null, P(outline, 2));
-        }
-        d.Pop();
-    }
-
     void DrawSleeve(DrawingContext d, BodyFit fit, int item, bool rightSide, string fill, string outline)
     {
         bool longSleeve = item is 44 or 52 or 54;
@@ -261,16 +208,16 @@ public partial class Bottle
         {
             d.PushTransform(new TranslateTransform(left - 57, 0));
             Path(d, Level < .15
-                ? longSleeve ? "M 59,125 Q 33,144 30,159 L 41,163 Q 44,146 64,139 Z" : "M 59,125 Q 45,134 39,143 L 50,151 L 64,139 Z"
-                : longSleeve ? "M 59,125 Q 33,124 28,142 L 40,148 Q 44,136 62,139 Z" : "M 59,125 Q 46,124 39,130 L 44,143 L 62,139 Z", B(fill), P(outline, 2));
+                ? longSleeve ? "M 59,125 Q 34,143 30,160 Q 33,166 41,164 Q 43,146 64,139 Z" : "M 59,125 Q 45,134 39,143 L 50,151 L 64,139 Z"
+                : longSleeve ? "M 60,125 Q 39,123 29,140 Q 27,145 36,149 L 43,143 Q 47,137 62,139 Z" : "M 59,125 Q 46,124 39,130 L 44,143 L 62,139 Z", B(fill), P(outline, 2));
             d.Pop();
         }
         else
         {
             d.PushTransform(new TranslateTransform(right - 163, 0));
             Path(d, Level < .15
-                ? longSleeve ? "M 161,125 Q 187,144 190,159 L 179,163 Q 176,146 156,139 Z" : "M 161,125 Q 175,134 181,143 L 170,151 L 156,139 Z"
-                : longSleeve ? "M 161,125 Q 178,124 184,114 L 195,119 Q 188,140 158,139 Z" : "M 161,125 Q 171,125 176,122 L 183,135 Q 173,141 158,139 Z", B(fill), P(outline, 2));
+                ? longSleeve ? "M 161,125 Q 186,143 190,160 Q 187,166 179,164 Q 177,146 156,139 Z" : "M 161,125 Q 175,134 181,143 L 170,151 L 156,139 Z"
+                : longSleeve ? "M 160,125 Q 175,125 181,115 Q 185,110 194,117 L 191,125 Q 181,142 158,139 Z" : "M 161,125 Q 171,125 176,122 L 183,135 Q 173,141 158,139 Z", B(fill), P(outline, 2));
             d.Pop();
         }
     }

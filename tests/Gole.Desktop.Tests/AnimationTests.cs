@@ -24,7 +24,6 @@ public sealed class AnimationTests
                     Celebrate = true,
                     CelebrationSeconds = .7,
                     Level = .7,
-                    AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = items[0], Pattern = 3 } }
                 };
                 var before = Render(art);
                 art.Phase = 9.9;
@@ -34,11 +33,11 @@ public sealed class AnimationTests
     });
 
     [Fact]
-    public void Accessory_motion_is_independent_of_body_bobbing_and_keeps_custom_materials() => Sta(() =>
+    public void Accessory_motion_is_independent_of_body_bobbing() => Sta(() =>
     {
         foreach (int item in new[] { 1, 2, 9, 15, 17, 18, 20, 23, 24, 26, 32, 35, 36, 37, 38, 39, 41, 45, 46, 47, 48, 50, 61, 64 })
         {
-            var art = new Bottle { Level = 1, AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = item, Color = "#E44958" } } };
+            var art = new Bottle { Level = 1 };
             var before = RenderAccessory(art, item);
             art.Phase = 1.1;
             Assert.False(before.SequenceEqual(RenderAccessory(art, item)), "No independent animation for item " + item);
@@ -53,7 +52,8 @@ public sealed class AnimationTests
     public void Animated_outfits_keep_a_stable_frame_and_stay_inside_the_viewport_in_all_models() => Sta(() =>
     {
         int[][] outfits = { new[] { 17, 35, 29 }, new[] { 18, 50, 47 }, new[] { 44, 32, 48 },
-            new[] { 51, 41, 26 }, new[] { 52, 15, 20 }, new[] { 54, 39, 38 }, new[] { 45, 46, 9 } };
+            new[] { 51, 41, 26 }, new[] { 52, 15, 20 }, new[] { 54, 39, 38 }, new[] { 45, 46, 9 }, new[] { 27, 1, 48 }, new[] { 55, 57, 21 },
+            new[] { 56, 41, 20 }, new[] { 53, 35, 26 }, new[] { 58, 40, 66 } };
         for (int model = 0; model < PetCatalog.Models.Count; model++)
             foreach (var outfit in outfits)
                 foreach (double level in new[] { 1.0, 0.0 })
@@ -64,7 +64,6 @@ public sealed class AnimationTests
                         Level = level,
                         EquippedAccessories = outfit,
                         Celebrate = level > 0,
-                        AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = outfit[0], Pattern = 3, Color = "#D875B3" } }
                     };
                     Rect? reference = null;
                     foreach (double seconds in new[] { 0, .6, 1.1, 2.8, 4.6 })

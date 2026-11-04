@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 14;
+    public const int CurrentVersion = 15;
     public const int DefaultServingMl = 200;
     public const int MinimumServingMl = 1;
     public const int MaximumServingMl = 6000;
@@ -123,7 +123,7 @@ public sealed class HydrationState
         if (Version < 3 && (Accessories is null || Accessories.Count == 0) && Accessory > 0)
             Accessories = [Accessory];
         Accessories = PetCatalog.Normalize(Accessories);
-        AccessoryStyles = AccessoryStyle.Normalize(AccessoryStyles);
+        AccessoryStyles = []; // Retired accessory painting; old preferences restore the original art.
         Accessory = 0;
         Version = CurrentVersion;
         Name = string.IsNullOrWhiteSpace(Name) ? "Gole" : Name.Trim()[..Math.Min(20, Name.Trim().Length)];

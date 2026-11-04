@@ -17,7 +17,6 @@ namespace Gole.Desktop
         public string Tint = "#26B9C4";
         public int Accessory, Vessel;
         public IReadOnlyList<int> EquippedAccessories = Array.Empty<int>();
-        public IReadOnlyList<AccessoryStyle> AccessoryStyles = Array.Empty<AccessoryStyle>();
         public HydrationMood Mood => Celebrate ? HydrationMood.Happy : HydrationExpression.AtLevel(Level);
         public bool Paused, Celebrate;
         static readonly Dictionary<string, Geometry> paths = new Dictionary<string, Geometry>();
