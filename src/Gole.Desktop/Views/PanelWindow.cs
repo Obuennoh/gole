@@ -4,6 +4,7 @@ using Gole.Desktop.Updates;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,6 +55,8 @@ namespace Gole.Desktop
         double draftSize, previewLevel = 1;
         bool draftMotion, syncing;
         double phase;
+        readonly Stopwatch animationClock = Stopwatch.StartNew(), previewCelebration = new();
+        Button previewDrink;
         DateTime? simulation;
         TextBlock previewName, previewState, accessoryCount, settingsMessage;
         List<Button> nav = new List<Button>();
@@ -138,15 +141,17 @@ namespace Gole.Desktop
             UpdateNavigation();
             RefreshStats();
             UpdateEditor();
-            animation = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+            animation = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
             animation.Tick += delegate
             {
                 if (!IsVisible || WindowState == WindowState.Minimized)
                     return;
-                if (data.Motion || draftMotion)
-                    phase += .15;
+                phase = animationClock.Elapsed.TotalSeconds;
                 live.Level = data.Level(DateTime.UtcNow);
-                live.Phase = data.Motion ? phase : 0;
+                live.Phase = phase;
+                live.MotionEnabled = data.Motion;
+                live.Celebrate = pet.Art.Celebrate;
+                live.CelebrationSeconds = pet.CelebrationAge;
                 live.Tint = data.Color;
                 live.Vessel = data.Vessel;
                 live.EquippedAccessories = data.Accessories;
@@ -161,7 +166,8 @@ namespace Gole.Desktop
                     UpdatePreviewLabel();
                 }
                 preview.Level = previewLevel;
-                preview.Phase = draftMotion ? phase : 0;
+                preview.Phase = phase;
+                UpdatePreviewMotion();
                 preview.InvalidateVisual();
             };
             animation.Start();
@@ -411,13 +417,15 @@ namespace Gole.Desktop
                 UpdateEditor();
             };
             controls.Children.Add(sizeSlider);
-            motionBox = new CheckBox { Content = "Animação suave", IsChecked = draftMotion, Margin = new Thickness(0, 15, 0, 12) };
+            motionBox = new CheckBox { Content = "Animar personagem e acessórios", IsChecked = draftMotion, Margin = new Thickness(0, 15, 0, 12) };
             motionBox.Click += delegate
             {
                 draftMotion = motionBox.IsChecked == true;
                 UpdateEditor();
             };
+            System.Windows.Automation.AutomationProperties.SetName(motionBox, "Animar personagem e acessórios");
             controls.Children.Add(motionBox);
+            controls.Children.Add(Theme.Text("Respiração, gestos, reação ao beber e movimentos dos acessórios. Desmarque para deixar o visual parado.", 12, Theme.Muted));
             grid.Children.Add(Scroll(controls));
             var previewColumn = new Grid();
             previewColumn.RowDefinitions.Add(new RowDefinition());
@@ -470,12 +478,22 @@ namespace Gole.Desktop
             }, false);
             test.FontSize = 12;
             previewContent.Children.Add(test);
+            previewDrink = Theme.Button("▶  Ver reação ao beber", delegate
+            {
+                previewCelebration.Restart();
+                UpdatePreviewMotion();
+                preview.InvalidateVisual();
+            }, false);
+            System.Windows.Automation.AutomationProperties.SetName(previewDrink, "Ver reação ao beber");
+            previewDrink.FontSize = 12;
+            previewContent.Children.Add(previewDrink);
             previewColumn.Children.Add(Scroll(Card(previewContent)));
             saveVisual = Theme.Button("Salvar personalização", SaveAppearance, true);
             saveVisual.Margin = new Thickness(0, 16, 0, 6);
             previewActions.Children.Add(saveVisual);
             var discard = Theme.Button("Descartar alterações", delegate
             {
+                previewCelebration.Reset();
                 ReadDraft();
                 SyncControls();
                 UpdateEditor();
@@ -491,7 +509,7 @@ namespace Gole.Desktop
         Button Tile(string label, int model, int accessory, double width, double height, Action action)
         {
             var content = new StackPanel();
-            var art = new Bottle { Vessel = model, Accessory = accessory, Tint = draftColor, Width = 59, Height = 60, Level = 1 };
+            var art = new Bottle { Vessel = model, Accessory = accessory, Tint = draftColor, Width = 59, Height = 60, Level = 1, MotionEnabled = false };
             thumbnails.Add(art);
             content.Children.Add(art);
             var text = Theme.Text(label, 11, Theme.Ink);
@@ -524,6 +542,7 @@ namespace Gole.Desktop
             if (preview == null)
                 return;
             personalityDescription.Text = PersonalityCatalog.Get(draftPersonality).Description;
+            UpdatePreviewMotion();
             preview.Tint = draftColor;
             preview.Vessel = draftModel;
             preview.EquippedAccessories = draftAccessories.ToArray();
@@ -568,6 +587,15 @@ namespace Gole.Desktop
             button.BorderBrush = selected ? Theme.Teal : Theme.B("#E1E7EC");
             button.BorderThickness = new Thickness(selected ? 2 : 1);
             button.Background = selected ? Theme.B("#EDF7F6") : Brushes.White;
+        }
+        void UpdatePreviewMotion()
+        {
+            preview.MotionEnabled = draftMotion;
+            preview.Phase = animationClock.Elapsed.TotalSeconds;
+            preview.CelebrationSeconds = previewCelebration.IsRunning ? previewCelebration.Elapsed.TotalSeconds : double.PositiveInfinity;
+            preview.Celebrate = draftMotion && preview.CelebrationSeconds < CharacterMotion.CelebrationDuration;
+            if (previewDrink != null)
+                previewDrink.IsEnabled = draftMotion;
         }
         void UpdatePersonalityPreview(bool force = false)
         {

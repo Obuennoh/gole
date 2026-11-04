@@ -11,6 +11,40 @@ namespace Gole.Desktop
 {
     static class VisualTests
     {
+        public static int RenderAnimation(string folder)
+        {
+            Directory.CreateDirectory(folder);
+            int[][] items = { new[] { 35, 27, 11 }, new[] { 17, 50, 29 }, new[] { 1, 51, 42 },
+                new[] { 44, 32, 48 }, new[] { 45, 46, 38 }, new[] { 29, 47, 9 } };
+            string[] labels = { "Respiração e orelhas", "Asas e brilhos", "Gestos e headphone", "Cansaço e balão", "Capa e jetpack", "Comemoração ao beber" };
+            int[] models = { 0, 5, 1, 8, 19, 4 };
+            for (int frame = 0; frame < 72; frame++)
+            {
+                double seconds = frame / 10.0;
+                var canvas = new Canvas { Width = 840, Height = 640, Background = Theme.B("#F1F5F7") };
+                Add(canvas, Theme.Text("GOLE · personagem e acessórios animados", 22, Theme.Ink), 24, 15);
+                for (int i = 0; i < items.Length; i++)
+                {
+                    double x = i % 3 * 280, y = 50 + i / 3 * 290;
+                    Add(canvas, new Bottle
+                    {
+                        Vessel = models[i],
+                        EquippedAccessories = items[i],
+                        Width = 260,
+                        Height = 235,
+                        Level = i == 3 ? .1 : 1,
+                        Phase = seconds,
+                        Celebrate = i == 5,
+                        CelebrationSeconds = seconds % 4.8,
+                        AccessoryStyles = new[] { new AccessoryStyle { AccessoryId = items[i][0], Color = i % 2 == 0 ? "#D875B3" : "#6D69C9", Pattern = i is 0 or 5 ? 3 : 0 } }
+                    }, x + 10, y);
+                    Add(canvas, Theme.Text(labels[i], 14, Theme.Ink), x + 28, y + 244);
+                }
+                Save(canvas, Path.Combine(folder, "frame-" + frame.ToString("D3") + ".png"));
+            }
+            return 0;
+        }
+
         public static int RenderFitting(string folder)
         {
             Directory.CreateDirectory(folder);

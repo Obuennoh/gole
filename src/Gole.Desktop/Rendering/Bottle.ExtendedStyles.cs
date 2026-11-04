@@ -105,10 +105,6 @@ public partial class Bottle
                 d.DrawRoundedRectangle(B("#A77991"), P("#8D657C", 2), new Rect(60, 76, 100, 18), 6, 6);
                 break;
             case 35:
-                d.DrawEllipse(B("#FCF4ED"), P("#B99AA8", 2.5), new Point(84, 49), 12, 38);
-                d.DrawEllipse(B("#FCF4ED"), P("#B99AA8", 2.5), new Point(136, 49), 12, 38);
-                d.DrawEllipse(B("#E9B5C8"), null, new Point(84, 48), 6, 28);
-                d.DrawEllipse(B("#E9B5C8"), null, new Point(136, 48), 6, 28);
                 Path(d, "M 61,100 Q 110,61 159,100", null, P("#B99AA8", 5));
                 break;
             case 36:
@@ -154,9 +150,9 @@ public partial class Bottle
                 Path(d, "M 64,123 L 43,207 M 156,123 L 177,207", null, P("#E5ACB1", 3));
                 break;
             case 46:
+                d.DrawRoundedRectangle(B("#6E8299"), null, new Rect(57, 120, 106, 56), 8, 8);
                 d.DrawRoundedRectangle(B("#889BAF"), P("#4E647C", 2.5), new Rect(32, 103, 31, 94), 10, 10);
                 d.DrawRoundedRectangle(B("#889BAF"), P("#4E647C", 2.5), new Rect(157, 103, 31, 94), 10, 10);
-                Path(d, "M 35,193 L 60,193 L 55,222 L 47,210 L 40,222 Z M 160,193 L 185,193 L 180,222 L 172,210 L 165,222 Z", B("#EBB568"), P("#C18B55", 1.5));
                 Path(d, "M 40,113 L 55,113 M 165,113 L 180,113", null, P("#D6E1EA", 4));
                 break;
             case 47:

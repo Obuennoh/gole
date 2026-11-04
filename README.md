@@ -21,6 +21,8 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 ## Funcionalidades
 
 - Pet sobre as outras janelas, com posição e tamanho ajustáveis.
+- Personagem animado: respiração, piscadas, gestos quando está bem, cansaço conforme a sede e comemoração ao registrar um gole.
+- Asas batendo, orelhas e brincos balançando, capa ao vento, balão flutuando, chama no jetpack, notas decorativas nos fones, reflexos nos óculos e brilhos nas peças. Roupas e acessórios de mão acompanham os gestos.
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
 - Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Desfaça o último gole ou qualquer registro do histórico, sem limite de tempo, inclusive após reabrir.
 - Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
@@ -38,6 +40,12 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
 
 ![Modelos e acessórios do Gole](docs/images/characters.png)
+
+### Animações
+
+Em **Personalizar**, marque **Animar personagem e acessórios** e clique em **Salvar personalização**. A opção **Ver reação ao beber** mostra a comemoração na prévia sem registrar água nem alterar o nível real. Desmarcar a animação deixa o corpo, as asas, os brilhos, as gotas e os demais acessórios parados. Preferências anteriores são respeitadas.
+
+A animação usa tempo decorrido e tem limite de 30 quadros por segundo. O personagem permanece no lugar escolhido na tela. Os gestos ficam mais discretos com a sede; o gole dispara uma comemoração curta, com pulinhos e bolhas.
 
 ### Cores e estampas
 

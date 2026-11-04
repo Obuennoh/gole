@@ -45,7 +45,7 @@ public partial class Bottle
     }
 
     static readonly Dictionary<int, BodyFit> fits = new();
-    static readonly Dictionary<(int Model, int Item, bool Relaxed, bool Layered, string Color, int Pattern), DrawingGroup> fittedAccessories = new();
+    static readonly Dictionary<(int Model, int Item, int Part, bool Relaxed, bool Layered, string Color, int Pattern), DrawingGroup> fittedAccessories = new();
     internal static BodyFit Fit(int model)
     {
         model = Math.Clamp(model, 0, bodies.Length - 1);
@@ -71,21 +71,27 @@ public partial class Bottle
         Path(d, "M 84,216 Q 77,233 69,231 L 57,231 M 137,216 Q 144,233 152,231 L 163,231", null, line);
         // Both poses use the same shoulder and wrist anchors as the accessories.
         double left = fit.Left(129) + 3, right = fit.Right(129) - 3;
+        d.PushTransform(ArmTransform(fit, false));
         d.PushTransform(new TranslateTransform(left - 57, 0));
         Path(d, level < .15 ? "M 57,129 Q 34,150 35,168" : "M 57,129 Q 35,128 31,151", null, line);
         d.Pop();
+        d.Pop();
+        d.PushTransform(ArmTransform(fit, true));
         d.PushTransform(new TranslateTransform(right - 163, 0));
         Path(d, level < .15 ? "M 164,129 Q 185,150 183,168" : "M 163,129 Q 183,126 189,110", null, line);
         d.Pop();
+        d.Pop();
     }
 
-    void DrawFittedAccessory(DrawingContext d, int model, int item)
+    internal void DrawFittedAccessory(DrawingContext d, int model, int item) => DrawAnimatedAccessory(d, model, item);
+
+    DrawingGroup AccessoryDrawing(int model, int item, int part)
     {
         var style = AccessoryStyles.FirstOrDefault(s => s.AccessoryId == item);
         string color = style != null && HydrationState.IsColor(style.Color) ? style.Color.ToUpperInvariant() : "";
         int pattern = style != null && style.Pattern >= 0 && style.Pattern < AccessoryStyle.Patterns.Count ? style.Pattern : 0;
         bool layered = EquippedAccessories.Any(id => id is 27 or 29 or 53 or 55 or 56);
-        var key = (model, item, Level < .15, layered, color, pattern);
+        var key = (model, item, part, Level < .15, layered, color, pattern);
         if (!fittedAccessories.TryGetValue(key, out var drawing))
         {
             if (fittedAccessories.Count > 2048)
@@ -94,7 +100,9 @@ public partial class Bottle
             using (var context = drawing.Open())
             {
                 var fit = Fit(model);
-                if (item is 27 or 29 or 44 or >= 51 and <= 58)
+                if (part > 0)
+                    DrawAccessoryPart(context, fit, model, item, part);
+                else if (item is 27 or 29 or 44 or >= 51 and <= 58)
                     DrawClothing(context, fit, item, layered);
                 else if (item == 32)
                     DrawBracelets(context, fit);
@@ -119,7 +127,38 @@ public partial class Bottle
             drawing.Freeze();
             fittedAccessories[key] = drawing;
         }
-        d.DrawDrawing(drawing);
+        return drawing;
+    }
+
+    void DrawAccessoryPart(DrawingContext d, BodyFit fit, int model, int item, int part)
+    {
+        bool right = part == 2;
+        if (item is 44 or 51 or 52 or 54)
+        {
+            DrawSleeve(d, fit, item, right, item == 52 ? "#C1848D" : "#647F9F", "#415F7D");
+            return;
+        }
+        if (item == 32)
+        {
+            DrawBracelet(d, fit, right);
+            return;
+        }
+        d.PushTransform(AccessoryTransform(fit, model, item));
+        if (item == 35)
+        {
+            double x = right ? 136 : 84;
+            d.DrawEllipse(B("#FCF4ED"), P("#B99AA8", 2.5), new Point(x, 49), 12, 38);
+            d.DrawEllipse(B("#E9B5C8"), null, new Point(x, 48), 6, 28);
+        }
+        else if (item == 46)
+            Path(d, "M 35,193 L 60,193 L 55,222 L 47,210 L 40,222 Z M 160,193 L 185,193 L 180,222 L 172,210 L 165,222 Z", B("#EBB568"), P("#C18B55", 1.5));
+        else
+        {
+            d.PushClip(new RectangleGeometry(new Rect(right ? 110 : -110, -100, 220, 500)));
+            DrawAccessoryRaw(d, P("#234957", 3.3), item);
+            d.Pop();
+        }
+        d.Pop();
     }
 
     Transform AccessoryTransform(BodyFit fit, int model, int item)
@@ -145,7 +184,7 @@ public partial class Bottle
             double width = Math.Clamp(fit.Width(100) / 106, .82, 1.15);
             return new MatrixTransform(width, 0, 0, 1, 110 * (1 - width), seat - baseline);
         }
-        double y = item is 1 or 24 ? 126 : item is 15 or 39 ? 143 : item is 6 or 11 or 14 or 16 or 40 or 62 or 63 or 64 ? 169 : item is 17 or 18 or 19 or 45 or 46 ? 135 : item == 20 ? 60 : 100;
+        double y = item == 46 ? 193 : item is 1 or 24 ? 126 : item is 15 or 39 ? 143 : item is 6 or 11 or 14 or 16 or 40 or 62 or 63 or 64 ? 169 : item is 17 or 18 or 19 or 45 or 46 ? 135 : item == 20 ? 60 : 100;
         double ratio = Math.Clamp(fit.Width(y) / 116, .65, 1.25);
         return new ScaleTransform(ratio, 1, 110, y);
     }
@@ -163,8 +202,6 @@ public partial class Bottle
             : item == 53 ? "M 20,160 L 83,160 L 87,180 L 133,180 L 137,160 L 200,160 L 210,232 L 10,232 Z"
             : item == 58 ? "M 10,155 L 91,155 Q 110,193 129,155 L 210,155 L 210,212 Q 110,228 10,212 Z"
             : "M 10,132 L 75,142 L 92,159 Q 110,190 128,159 L 145,142 L 210,132 L 210,232 L 10,232 Z";
-        if (item is 44 or 51 or 52 or 54)
-            DrawSleeves(d, fit, item, fill, outline);
         if (item == 54)
             path = path.Replace("218", "232");
         var garment = Garment(fit, path);
@@ -216,30 +253,40 @@ public partial class Bottle
         d.Pop();
     }
 
-    void DrawSleeves(DrawingContext d, BodyFit fit, int item, string fill, string outline)
+    void DrawSleeve(DrawingContext d, BodyFit fit, int item, bool rightSide, string fill, string outline)
     {
         bool longSleeve = item is 44 or 52 or 54;
         double left = fit.Left(129) + 3, right = fit.Right(129) - 3;
-        d.PushTransform(new TranslateTransform(left - 57, 0));
-        Path(d, Level < .15
-            ? longSleeve ? "M 59,125 Q 33,144 30,159 L 41,163 Q 44,146 64,139 Z" : "M 59,125 Q 45,134 39,143 L 50,151 L 64,139 Z"
-            : longSleeve ? "M 59,125 Q 33,124 28,142 L 40,148 Q 44,136 62,139 Z" : "M 59,125 Q 46,124 39,130 L 44,143 L 62,139 Z", B(fill), P(outline, 2));
-        d.Pop();
-        d.PushTransform(new TranslateTransform(right - 163, 0));
-        Path(d, Level < .15
-            ? longSleeve ? "M 161,125 Q 187,144 190,159 L 179,163 Q 176,146 156,139 Z" : "M 161,125 Q 175,134 181,143 L 170,151 L 156,139 Z"
-            : longSleeve ? "M 161,125 Q 178,124 184,114 L 195,119 Q 188,140 158,139 Z" : "M 161,125 Q 171,125 176,122 L 183,135 Q 173,141 158,139 Z", B(fill), P(outline, 2));
-        d.Pop();
+        if (!rightSide)
+        {
+            d.PushTransform(new TranslateTransform(left - 57, 0));
+            Path(d, Level < .15
+                ? longSleeve ? "M 59,125 Q 33,144 30,159 L 41,163 Q 44,146 64,139 Z" : "M 59,125 Q 45,134 39,143 L 50,151 L 64,139 Z"
+                : longSleeve ? "M 59,125 Q 33,124 28,142 L 40,148 Q 44,136 62,139 Z" : "M 59,125 Q 46,124 39,130 L 44,143 L 62,139 Z", B(fill), P(outline, 2));
+            d.Pop();
+        }
+        else
+        {
+            d.PushTransform(new TranslateTransform(right - 163, 0));
+            Path(d, Level < .15
+                ? longSleeve ? "M 161,125 Q 187,144 190,159 L 179,163 Q 176,146 156,139 Z" : "M 161,125 Q 175,134 181,143 L 170,151 L 156,139 Z"
+                : longSleeve ? "M 161,125 Q 178,124 184,114 L 195,119 Q 188,140 158,139 Z" : "M 161,125 Q 171,125 176,122 L 183,135 Q 173,141 158,139 Z", B(fill), P(outline, 2));
+            d.Pop();
+        }
     }
 
     void DrawBracelets(DrawingContext d, BodyFit fit)
     {
-        double left = fit.Left(129) - 19, right = fit.Right(129) + 17;
-        double ly = Level < .15 ? 162 : 148, ry = Level < .15 ? 162 : 118;
-        d.DrawEllipse(null, P("#D7B366", 4), new Point(left, ly), 7, 4);
-        d.DrawEllipse(null, P("#C18CAB", 3), new Point(left + 1, ly + 6), 7, 4);
-        d.DrawEllipse(null, P("#D7B366", 4), new Point(right, ry), 7, 4);
-        d.DrawEllipse(null, P("#C18CAB", 3), new Point(right - 1, ry + 6), 7, 4);
+        DrawBracelet(d, fit, false);
+        DrawBracelet(d, fit, true);
+    }
+
+    void DrawBracelet(DrawingContext d, BodyFit fit, bool right)
+    {
+        double x = right ? fit.Right(129) + 17 : fit.Left(129) - 19;
+        double y = Level < .15 ? 162 : right ? 118 : 148;
+        d.DrawEllipse(null, P("#D7B366", 4), new Point(x, y), 7, 4);
+        d.DrawEllipse(null, P("#C18CAB", 3), new Point(x + (right ? -1 : 1), y + 6), 7, 4);
     }
 
     void DrawFloat(DrawingContext d, BodyFit fit)

@@ -1,5 +1,12 @@
 Gole para Windows x64, com instalação por usuário e runtime .NET incluído.
 
+- **Personagem animado**: respiração, piscadas e gestos quando está bem, movimentos de cansaço conforme a sede e comemoração com pulinhos e bolhas ao beber.
+- **Acessórios com movimentos próprios**: asas, orelhas de coelho, brincos, capa, balão, auréola e jetpack; notas decorativas nos fones, reflexos nos óculos e brilhos em tiaras, coroa, varinha e estampas de brilho.
+- **Mangas e acessórios de mão acompanham os braços**, mantendo os encaixes; cores e estampas preservadas. Asas ficam visíveis à frente das alças e o jetpack acompanha a largura dos modelos.
+- **Ver reação ao beber** em **Personalizar** testa a comemoração sem adicionar um gole. **Animar personagem e acessórios** liga ou desliga todos os movimentos e efeitos, com escolha salva por máquina.
+- Animação por tempo decorrido, limitada a 30 quadros por segundo e com enquadramento estável. O pet fica na posição escolhida na tela; preferências e histórico preservados.
+
+
 - **Roupas ajustadas aos 21 modelos**: saias, vestido, jaqueta e peças novas acompanham o contorno do recipiente. Acessórios laterais acompanham o corpo e a posição dos braços.
 - **Cor e estampa por acessório** em **Personalizar**: escolha a peça vestida, uma das 20 cores e liso, bolinhas, listras, brilho, xadrez, estrelas ou corações. Confira a prévia e clique em **Salvar personalização**.
 - **16 opções novas**, totalizando **66 acessórios**: camiseta, moletom, jardineira, casaco, saia plissada, saia de tule, colete, poncho, chapéu de pescador, tiara de laço, óculos redondos, lenço de pescoço, cinto, broche de coração, bolsa transversal e chinelo.

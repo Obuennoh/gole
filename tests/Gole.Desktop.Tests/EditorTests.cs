@@ -59,6 +59,7 @@ public sealed class EditorTests
                 Assert.False(pet.IsVisible);
                 AssertAccessoryBorderTracksSelection(panel);
                 AssertAccessoryStyleEditing(panel, state, store);
+                AssertAnimationPreviewAndSaving(panel, pet, state, store);
                 var personality = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade do pet");
                 Assert.Equal(11, personality.Items.Count);
                 personality.SelectedValue = 10;
@@ -249,6 +250,38 @@ public sealed class EditorTests
         var button = FindButton(root, label);
         Assert.True(button.IsEnabled, label);
         button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+    }
+
+    private static void AssertAnimationPreviewAndSaving(PanelWindow panel, CompanionWindow pet, HydrationState state, JsonStateStore store)
+    {
+        var motion = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Animar personagem e acessórios");
+        var preview = Descendants(panel).OfType<Bottle>().Single(b => b.Height > 100);
+        motion.IsChecked = false;
+        motion.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+        Assert.False(preview.MotionEnabled);
+        Assert.True(state.Motion);
+        Assert.False(FindButton(panel, "Ver reação ao beber").IsEnabled);
+        Click(panel, "Salvar personalização");
+        Assert.False(state.Motion);
+        Assert.False(pet.Art.MotionEnabled);
+        Assert.False(store.Load(DateTime.UtcNow).State.Motion);
+        motion.IsChecked = true;
+        motion.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+        Click(panel, "Ver reação ao beber");
+        Assert.True(preview.Celebrate);
+        Assert.InRange(preview.CelebrationSeconds, 0, 1);
+        Assert.Empty(state.Sips);
+        Assert.False(pet.Art.Celebrate);
+        Assert.False(state.Motion);
+        Click(panel, "Descartar alterações");
+        Assert.False(preview.Celebrate);
+        Assert.False(preview.MotionEnabled);
+        motion.IsChecked = true;
+        motion.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+        Click(panel, "Salvar personalização");
+        Assert.True(state.Motion);
+        Assert.True(pet.Art.MotionEnabled);
+        Assert.True(store.Load(DateTime.UtcNow).State.Motion);
     }
 
     private static void AssertAccessoryStyleEditing(PanelWindow panel, HydrationState state, JsonStateStore store)

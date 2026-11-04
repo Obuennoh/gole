@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -43,7 +44,10 @@ namespace Gole.Desktop
         public Bottle Art;
         Forms.NotifyIcon tray;
         DispatcherTimer clock;
-        DateTime bubbleUntil, happyUntil, lastFrame;
+        DateTime bubbleUntil, happyUntil;
+        readonly Stopwatch animationClock = Stopwatch.StartNew(), drinkAnimation = new();
+        double lastAnimationFrame;
+        internal double CelebrationAge => drinkAnimation.IsRunning ? drinkAnimation.Elapsed.TotalSeconds : double.PositiveInfinity;
         Border bubble;
         TextBlock speech;
         StackPanel root;
@@ -79,7 +83,7 @@ namespace Gole.Desktop
             speech.Margin = new Thickness(0);
             bubble = new Border { Background = Theme.B("#FFFFF9"), CornerRadius = new CornerRadius(18, 18, 5, 18), Padding = new Thickness(15, 11, 15, 11), MaxWidth = 256, MinHeight = 62, Margin = new Thickness(9, 6, 9, 0), Child = speech, Opacity = 0 };
             root.Children.Add(bubble);
-            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para abrir as ações · botão direito para opções" };
+            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para abrir as ações · botão direito para opções" };
             System.Windows.Automation.AutomationProperties.SetName(Art, "Garrafinha Gole. Clique para registrar água ou arraste para mover.");
             Art.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
             {
@@ -172,12 +176,14 @@ namespace Gole.Desktop
         void Render(object sender, EventArgs args)
         {
             DateTime now = DateTime.UtcNow;
-            if ((now - lastFrame).TotalMilliseconds < 65 || !IsVisible)
+            double elapsed = animationClock.Elapsed.TotalSeconds;
+            if (elapsed - lastAnimationFrame < 1.0 / 30 || !IsVisible)
                 return;
-            lastFrame = now;
-            if (Data.Motion)
-                phase += .10;
+            lastAnimationFrame = elapsed;
+            phase = elapsed;
             Art.Phase = phase;
+            Art.MotionEnabled = Data.Motion;
+            Art.CelebrationSeconds = CelebrationAge;
             Art.Level = Data.Level(now);
             Art.Tint = Data.Color;
             Art.EquippedAccessories = Data.Accessories;
@@ -195,6 +201,7 @@ namespace Gole.Desktop
         }
         public void Apply()
         {
+            Art.MotionEnabled = Data.Motion;
             Art.Width = Data.Size * 220 / 255;
             Art.Height = Data.Size;
             Height = Data.Size + 122;
@@ -246,6 +253,12 @@ namespace Gole.Desktop
             DateTime now = DateTime.UtcNow;
             session.Drink(now);
             happyUntil = now.AddSeconds(7);
+            drinkAnimation.Restart();
+            Art.Level = 1;
+            Art.Celebrate = true;
+            Art.CelebrationSeconds = 0;
+            Art.MotionEnabled = Data.Motion;
+            Art.InvalidateVisual();
             Speak(drinkReactions.Next(Data.PersonalityId), 10);
             Save();
             if (panel != null)
@@ -277,6 +290,9 @@ namespace Gole.Desktop
         void HistoryChanged(string message)
         {
             happyUntil = DateTime.MinValue;
+            drinkAnimation.Reset();
+            Art.Celebrate = false;
+            Art.CelebrationSeconds = double.PositiveInfinity;
             Speak(message, 6);
             Save();
             if (panel != null)

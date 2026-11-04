@@ -92,23 +92,20 @@ namespace Gole.Desktop
             var scene = new DrawingGroup();
             using (var context = scene.Open())
                 DrawCharacter(context, model, level);
-            var frame = scene.Bounds;
-            frame.Union(new Rect(0, 0, 220, 255));
-            // Reserve the same space for every animation phase and the empty pose.
-            frame.Union(new RotateTransform(-7, 110, 215).TransformBounds(frame));
-            frame.Inflate(4, 4);
+            var frame = AnimationFrame(model);
             double scale = Math.Min(ActualWidth / frame.Width, ActualHeight / frame.Height);
             d.PushTransform(new TranslateTransform((ActualWidth - frame.Width * scale) / 2 - frame.X * scale,
                 (ActualHeight - frame.Height * scale) / 2 - frame.Y * scale));
             d.PushTransform(new ScaleTransform(scale, scale));
-            double bob = Paused ? 0 : Math.Sin(Phase) * (level == 0 ? .6 : 2.3);
-            d.DrawEllipse(B("#160B5056"), null, new Point(110, 238), 57 - bob, 7);
-            d.PushTransform(new TranslateTransform(0, bob));
-            if (level == 0 && !Paused)
-                d.PushTransform(new RotateTransform(-7, 110, 215));
+            var pose = Pose;
+            d.DrawEllipse(B("#160B5056"), null, new Point(110, 238), 57 + pose.Lift * .3, 7);
+            d.PushTransform(new TranslateTransform(0, pose.Lift));
+            d.PushTransform(new RotateTransform(pose.Lean, 110, 222));
+            d.PushTransform(new ScaleTransform(pose.ScaleX, pose.ScaleY, 110, 222));
             d.DrawDrawing(scene);
-            if (level == 0 && !Paused)
-                d.Pop();
+            DrawCelebration(d);
+            d.Pop();
+            d.Pop();
             d.Pop();
             d.Pop();
             d.Pop();
@@ -121,16 +118,16 @@ namespace Gole.Desktop
             if (equipped.Count == 0 && Accessory > 0)
                 equipped = new[] { Accessory };
             equipped = PetCatalog.Normalize(equipped).OrderBy(AccessoryLayer).ThenBy(id => id).ToArray();
-            foreach (int item in equipped)
-                if (IsBackgroundAccessory(item))
-                    DrawFittedAccessory(d, model, item);
-            DrawLimbs(d, fit, level, line);
             // Separate handles make each silhouette a genuinely different vessel.
             if (model == 3)
                 Path(d, "M 161,88 C 217,79 221,169 166,177 L 164,160 C 198,152 195,107 163,107 Z", B("#E2F0F1"), line);
             if (model == 5)
                 Path(d, "M 162,105 C 214,94 215,173 163,173 L 163,155 C 192,156 191,122 163,123 Z", B("#E2F0F1"), line);
             DrawExtendedBottleBack(d, model, line);
+            foreach (int item in equipped)
+                if (IsBackgroundAccessory(item))
+                    DrawFittedAccessory(d, model, item);
+            DrawLimbs(d, fit, level, line);
             Geometry body = Shape(bodies[model]);
             d.DrawGeometry(B(level == 0 ? "#F2EEE6" : "#F2FAFB"), null, body);
             d.PushClip(body);
@@ -144,7 +141,7 @@ namespace Gole.Desktop
                 using (var c = wave.Open())
                 {
                     c.BeginFigure(new Point(40, waterY), true, true);
-                    c.BezierTo(new Point(77, waterY - 10 + Math.Sin(Phase) * 4), new Point(125, waterY + 8), new Point(180, waterY), true, false);
+                    c.BezierTo(new Point(77, waterY - 10 + Math.Sin(MotionTime * 2) * 4), new Point(125, waterY + 8), new Point(180, waterY), true, false);
                     c.LineTo(new Point(180, 230), true, false);
                     c.LineTo(new Point(40, 230), true, false);
                 }
@@ -247,7 +244,7 @@ namespace Gole.Desktop
         {
             var mood = Mood;
             var ink = P("#234957", 3);
-            bool blink = Math.Sin(Phase * .57) > .993;
+            bool blink = Pose.Blink;
             if (Paused)
             {
                 Path(d, "M 80,125 Q 87,130 94,125 M 126,125 Q 133,130 140,125", null, ink);
@@ -263,7 +260,7 @@ namespace Gole.Desktop
             }
             if (mood == HydrationMood.Happy)
             {
-                Path(d, "M 80,128 Q 87,114 94,128 M 126,128 Q 133,114 140,128", null, ink);
+                Path(d, blink ? "M 80,125 Q 87,130 94,125 M 126,125 Q 133,130 140,125" : "M 80,128 Q 87,114 94,128 M 126,128 Q 133,114 140,128", null, ink);
                 Path(d, "M 98,143 Q 110,167 122,143 Z", B("#234957"), ink);
                 d.DrawEllipse(B("#EAA4AE"), null, new Point(110, 152), 6, 3);
                 return;
@@ -273,7 +270,7 @@ namespace Gole.Desktop
                 Path(d, "M 79,128 Q 87,119 95,128 M 125,128 Q 133,119 141,128 M 79,113 Q 88,118 96,110 M 124,110 Q 132,118 141,113", null, ink);
                 d.DrawRoundedRectangle(B("#8DBBDDFA"), null, new Rect(82, 129, 10, 32), 4, 4);
                 d.DrawRoundedRectangle(B("#8DBBDDFA"), null, new Rect(128, 129, 10, 32), 4, 4);
-                double drop = (Math.Sin(Phase * 1.5) + 1) * 4;
+                double drop = (Math.Sin(MotionTime * 3) + 1) * 4;
                 d.DrawEllipse(B("#77BFE7"), null, new Point(87, 166 + drop), 4, 5);
                 d.DrawEllipse(B("#77BFE7"), null, new Point(133, 171 - drop), 4, 5);
                 Path(d, "M 101,155 Q 110,139 119,155 Z", B("#46525A"), ink);

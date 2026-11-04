@@ -50,7 +50,7 @@ A navegação usa `ContentControl` para manter os controles ativos na árvore de
 
 ### Renderização e recursos
 
-Os recipientes e acessórios são vetores. Geometrias, canetas e pincéis estáticos são congelados e reutilizados. A onda usa uma geometria por quadro; não entra no cache. O desenho é limitado a aproximadamente 15 quadros por segundo, e o painel interrompe sua atualização quando não está visível.
+Os recipientes e acessórios são vetores. Geometrias, canetas e pincéis estáticos são congelados e reutilizados. A onda usa uma geometria por quadro; não entra no cache. O desenho é limitado a 30 quadros por segundo, e o painel interrompe sua atualização quando não está visível.
 
 ### Dados pessoais e distribuição
 
@@ -100,3 +100,11 @@ O schema 14 acrescenta `AccessoryStyles`: ID estável da peça, cor opcional e I
 `Bottle.Materials.cs` recolore as superfícies preservando diferenças de luminosidade e transparência. Estampas vetoriais repetidas preenchem a mesma geometria da peça, com recorte e contornos preservados. Desenhos são congelados e armazenados em cache limitado por modelo, peça, pose, combinação e estilo. O enquadramento inclui acessórios e reserva espaço para oscilação e inclinação do pet vazio. A prévia tem espaço para o tamanho máximo permitido.
 
 O catálogo mantém todos os IDs anteriores e acrescenta as peças 51–66. Até três itens continuam permitidos.
+
+### Animação do personagem
+
+`CharacterMotion` calcula uma pose determinística a partir do tempo decorrido, nível, preferência de movimento e idade da comemoração. Não usa relógio global nem altera registros. Respiração e inclinação afetam a cena inteira, mantendo roupas e corpo juntos. Os braços usam as mesmas transformações das mangas, pulseiras, relógio, bolsa, varinha e balão. Asas, orelhas, brincos e chama usam partes vetoriais estáticas separadas, congeladas e recoloridas no cache; o tempo não integra a chave do cache.
+
+`Bottle.Animation.cs` compõe as transformações e os efeitos. Máscaras de opacidade baseadas no desenho original recortam os reflexos e cintilações à superfície da peça. Um enquadramento calculado pela aparência reserva o envelope dos movimentos, evitando zoom a cada quadro. As alças são desenhadas antes das asas e dos demais acessórios de fundo. O jetpack usa a largura inferior do recipiente e uma placa de conexão entre os propulsores.
+
+As janelas usam `Stopwatch` para o tempo da animação, com atualização de no máximo 30 quadros por segundo e sem desenhar janelas ocultas. O gole reinicia a comemoração de 2,4 segundos, sem persistir estado transitório. O painel tem um relógio de prévia separado: **Ver reação ao beber** não chama o registro de água, não toca som e não altera a sessão real. `Motion` já existente controla tanto o corpo como todos os efeitos dos acessórios; seu valor salvo é preservado. Miniaturas do guarda-roupa permanecem paradas.
