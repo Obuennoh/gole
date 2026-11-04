@@ -37,6 +37,8 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Sons | Cinco recursos WAV válidos, volume aplicado apenas às amostras, silêncio a 0%, preview com o volume do rascunho e persistência da escolha, sem reprodução real durante testes |
 | Animação | Poses determinísticas e limitadas; retorno ao repouso após comemorar; movimento próprio de 24 acessórios; movimento desativado e pausa congelam corpo, água e efeitos; enquadramento estável e sem corte em doze combinações × 21 modelos × duas poses × cinco instantes |
 | Prévia de animação | Botão de reação sem alterar histórico ou pet real; desativação no rascunho, descarte, salvamento e restauração da escolha |
+| Posicionamento | Cantos e bordas sem limite da janela transparente; posições parciais e área da barra de tarefas; monitores com origem negativa, lacunas, recuperação do monitor removido, pixels escalados, persistência e migração única da janela antiga |
+| Falas flutuantes | Balão separado do viewport, quatro posições candidatas e ausência de deslocamento ou popup aberto nos testes de janelas ocultas |
 | Atualizador | Download automático sem configuração, falhas de rede com nova tentativa, aplicação ao sair e verificações serializadas |
 | Migração do atualizador | Remoção de credenciais antigas sem alterar as preferências |
 

@@ -20,7 +20,7 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 
 ## Funcionalidades
 
-- Pet sobre as outras janelas, com posição e tamanho ajustáveis.
+- Pet sobre as outras janelas, com posição livre e tamanho ajustável: arraste até os cantos e bordas da tela, com a posição lembrada ao reabrir. O balão de fala fica separado e não empurra o personagem.
 - Personagem animado: respiração, piscadas, gestos quando está bem, cansaço conforme a sede e comemoração ao registrar um gole.
 - Asas batendo, orelhas e brincos balançando, capa ao vento, balão flutuando, chama no jetpack, notas decorativas nos fones, reflexos nos óculos e brilhos nas peças. Roupas e acessórios de mão acompanham os gestos.
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
@@ -40,6 +40,12 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
 
 ![Modelos e acessórios do Gole](docs/images/characters.png)
+
+### Posição na tela
+
+Arraste o corpo do pet até onde quiser, inclusive junto às bordas e aos cantos. A posição é salva ao soltar e restaurada ao reabrir; o espaço transparente da janela e o balão de fala não limitam o arraste. Coordenadas negativas são permitidas para alcançar as bordas e usar monitores à esquerda ou acima do principal.
+
+O balão abre acima, abaixo ou ao lado, conforme o espaço disponível, sem mudar a posição do personagem. Se um monitor for removido e o pet ficar inacessível, ele é recuperado para um monitor conectado.
 
 ### Animações
 

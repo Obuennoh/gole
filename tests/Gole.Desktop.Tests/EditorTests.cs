@@ -194,7 +194,7 @@ public sealed class EditorTests
                 state.VisualAnchor = DateTime.UtcNow.AddHours(-1).Ticks;
                 Click(panel, "✓  Já bebi um gole");
                 Assert.Equal(333, state.Today(DateTime.UtcNow));
-                Assert.Contains(Descendants(pet).OfType<TextBlock>(), t => PersonalityCatalog.Reactions(6).Contains(t.Text));
+                Assert.Contains(pet.CurrentSpeech, PersonalityCatalog.Reactions(6));
                 Assert.Equal(1, state.Level(new DateTime(state.LastDrink, DateTimeKind.Utc)), 8);
                 panel.RefreshStats();
                 Click(panel, "Desfazer último gole");

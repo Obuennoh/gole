@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 15;
+    public const int CurrentVersion = 16;
     public const int DefaultServingMl = 200;
     public const int MinimumServingMl = 1;
     public const int MaximumServingMl = 6000;
@@ -125,6 +125,15 @@ public sealed class HydrationState
         Accessories = PetCatalog.Normalize(Accessories);
         AccessoryStyles = []; // Retired accessory painting; old preferences restore the original art.
         Accessory = 0;
+        if (Version < 16)
+        {
+            // Legacy windows reserved 276 DIPs across and 68 DIPs above the avatar.
+            double oldSize = double.IsFinite(Size) ? Math.Clamp(Size, 100, 280) : 180;
+            if (X != -99999 && double.IsFinite(X))
+                X += (276 - oldSize * 220 / 255) / 2;
+            if (Y != -99999 && double.IsFinite(Y))
+                Y += 68;
+        }
         Version = CurrentVersion;
         Name = string.IsNullOrWhiteSpace(Name) ? "Gole" : Name.Trim()[..Math.Min(20, Name.Trim().Length)];
         if (!IsColor(Color))

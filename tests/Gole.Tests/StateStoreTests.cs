@@ -10,6 +10,42 @@ public sealed class StateStoreTests : IDisposable
     private JsonStateStore Store() => new(directory);
 
     [Fact]
+    public void Legacy_window_coordinates_are_converted_once_to_the_avatar_origin()
+    {
+        var state = HydrationState.Fresh(Now);
+        state.Version = 15;
+        state.X = 100;
+        state.Y = 200;
+        state.Size = 180;
+        Assert.True(Store().Save(state));
+        var loaded = Store().Load(Now).State;
+        Assert.Equal(100 + (276 - 180 * 220.0 / 255) / 2, loaded.X, 8);
+        Assert.Equal(268, loaded.Y);
+        Assert.Equal(state.NextReminder, loaded.NextReminder);
+        Assert.True(Store().Save(loaded));
+        var reopened = Store().Load(Now).State;
+        Assert.Equal(loaded.X, reopened.X);
+        Assert.Equal(loaded.Y, reopened.Y);
+    }
+
+    [Fact]
+    public void Free_positions_survive_restart_and_default_positions_are_not_migrated()
+    {
+        var state = HydrationState.Fresh(Now);
+        state.X = -45;
+        state.Y = -60;
+        Assert.True(Store().Save(state));
+        var loaded = Store().Load(Now).State;
+        Assert.Equal(-45, loaded.X);
+        Assert.Equal(-60, loaded.Y);
+        state = HydrationState.Fresh(Now);
+        state.Version = 15;
+        state.Validate(Now);
+        Assert.Equal(-99999, state.X);
+        Assert.Equal(-99999, state.Y);
+    }
+
+    [Fact]
     public void Painted_accessories_migrate_to_original_art_without_losing_water_records_or_body_color()
     {
         var state = HydrationState.Fresh(Now);

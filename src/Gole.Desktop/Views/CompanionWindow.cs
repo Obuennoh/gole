@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -50,7 +51,9 @@ namespace Gole.Desktop
         internal double CelebrationAge => drinkAnimation.IsRunning ? drinkAnimation.Elapsed.TotalSeconds : double.PositiveInfinity;
         Border bubble;
         TextBlock speech;
-        StackPanel root;
+        Popup speechPopup;
+        internal bool IsSpeechOpen => speechPopup.IsOpen;
+        internal string CurrentSpeech => speech.Text;
         PanelWindow panel;
         bool dragged;
         Point start;
@@ -69,8 +72,8 @@ namespace Gole.Desktop
             this.session = session;
             Store = store;
             Title = "Gole · seu pet de água";
-            Width = 276;
-            Height = Data.Size + 122;
+            Width = Data.Size * 220 / 255;
+            Height = Data.Size;
             WindowStyle = WindowStyle.None;
             AllowsTransparency = true;
             Background = Brushes.Transparent;
@@ -78,12 +81,10 @@ namespace Gole.Desktop
             ShowInTaskbar = false;
             ResizeMode = ResizeMode.NoResize;
             FontFamily = new FontFamily("Segoe UI");
-            root = new StackPanel();
             speech = Theme.Text("", 13, Theme.Ink);
             speech.Margin = new Thickness(0);
-            bubble = new Border { Background = Theme.B("#FFFFF9"), CornerRadius = new CornerRadius(18, 18, 5, 18), Padding = new Thickness(15, 11, 15, 11), MaxWidth = 256, MinHeight = 62, Margin = new Thickness(9, 6, 9, 0), Child = speech, Opacity = 0 };
-            root.Children.Add(bubble);
-            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para abrir as ações · botão direito para opções" };
+            bubble = new Border { Background = Theme.B("#FFFFF9"), CornerRadius = new CornerRadius(18, 18, 5, 18), Padding = new Thickness(15, 11, 15, 11), MaxWidth = 256, MinHeight = 62, Child = speech, Opacity = 0 };
+            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Vessel = Data.Vessel, EquippedAccessories = Data.Accessories, Tint = Data.Color, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para abrir as ações · botão direito para opções" };
             System.Windows.Automation.AutomationProperties.SetName(Art, "Garrafinha Gole. Clique para registrar água ou arraste para mover.");
             Art.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
             {
@@ -128,8 +129,22 @@ namespace Gole.Desktop
             {
                 OpenMenu();
             };
-            root.Children.Add(Art);
-            Content = root;
+            Content = Art;
+            speech.FontFamily = FontFamily;
+            speechPopup = new Popup
+            {
+                Child = bubble,
+                PlacementTarget = Art,
+                Placement = PlacementMode.Custom,
+                CustomPopupPlacementCallback = SpeechPlacements,
+                AllowsTransparency = true,
+                StaysOpen = true,
+                Focusable = false,
+                IsHitTestVisible = false
+            };
+            LocationChanged += (_, _) => RepositionSpeech();
+            SizeChanged += (_, _) => RepositionSpeech();
+            IsVisibleChanged += (_, _) => { if (!IsVisible) speechPopup.IsOpen = false; };
             Loaded += delegate
             {
                 if (tray == null)
@@ -154,6 +169,7 @@ namespace Gole.Desktop
             Closed += delegate
             {
                 clock.Stop();
+                speechPopup.IsOpen = false;
                 this.waterSound.Dispose();
                 CompositionTarget.Rendering -= Render;
                 if (tray != null)
@@ -171,7 +187,7 @@ namespace Gole.Desktop
         }
         void DisplayChanged(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(KeepVisible));
+            Dispatcher.BeginInvoke(new Action(() => { KeepVisible(); Save(); }));
         }
         void Render(object sender, EventArgs args)
         {
@@ -203,8 +219,14 @@ namespace Gole.Desktop
             Art.MotionEnabled = Data.Motion;
             Art.Width = Data.Size * 220 / 255;
             Art.Height = Data.Size;
-            Height = Data.Size + 122;
+            Width = Art.Width;
+            Height = Art.Height;
+            Art.Vessel = Data.Vessel;
+            Art.EquippedAccessories = Data.Accessories;
+            Art.Tint = Data.Color;
+            Art.InvalidateVisual();
             KeepVisible();
+            RepositionSpeech();
             Save();
         }
         void Place()
@@ -216,23 +238,49 @@ namespace Gole.Desktop
         }
         public void KeepVisible()
         {
-            // WPF coordinates are DIPs. Keep the pet on a connected monitor after docking or DPI changes.
+            if (!IsLoaded)
+                return;
+            // Keep every chosen position while a small part of the body is reachable.
+            // Recovery is only for disconnected monitors or a completely lost pet.
+            var grip = Art.DragBounds;
+            var topLeft = Art.PointToScreen(grip.TopLeft);
+            var bottomRight = Art.PointToScreen(grip.BottomRight);
+            var screens = Forms.Screen.AllScreens.Select(screen =>
+                new Rect(screen.Bounds.X, screen.Bounds.Y, screen.Bounds.Width, screen.Bounds.Height)).ToArray();
             var source = PresentationSource.FromVisual(this);
-            var toDevice = source == null ? Matrix.Identity : source.CompositionTarget.TransformToDevice;
-            Point center = toDevice.Transform(new Point(Left + Width / 2, Top + Height / 2));
-            var screen = Forms.Screen.FromPoint(new System.Drawing.Point((int)center.X, (int)center.Y));
-            var area = screen.WorkingArea;
+            var toDevice = source?.CompositionTarget.TransformToDevice ?? Matrix.Identity;
+            var offset = DesktopPlacement.RecoveryOffset(new Rect(topLeft, bottomRight), screens, 8 * toDevice.M11);
+            if (offset.LengthSquared < .01)
+                return;
             var fromDevice = toDevice;
             fromDevice.Invert();
-            Point min = fromDevice.Transform(new Point(area.Left, area.Top));
-            Point max = fromDevice.Transform(new Point(area.Right, area.Bottom));
-            Left = Math.Max(min.X, Math.Min(Left, max.X - Width));
-            Top = Math.Max(min.Y, Math.Min(Top, max.Y - Height));
+            offset = fromDevice.Transform(offset);
+            Left += offset.X;
+            Top += offset.Y;
         }
+        internal static CustomPopupPlacement[] SpeechPlacements(Size popup, Size target, Point offset) => new[]
+        {
+            new CustomPopupPlacement(new Point((target.Width - popup.Width) / 2, -popup.Height - 6), PopupPrimaryAxis.Horizontal),
+            new CustomPopupPlacement(new Point((target.Width - popup.Width) / 2, target.Height + 6), PopupPrimaryAxis.Horizontal),
+            new CustomPopupPlacement(new Point(-popup.Width - 6, (target.Height - popup.Height) / 2), PopupPrimaryAxis.Vertical),
+            new CustomPopupPlacement(new Point(target.Width + 6, (target.Height - popup.Height) / 2), PopupPrimaryAxis.Vertical)
+        };
+
+        void RepositionSpeech()
+        {
+            if (!speechPopup.IsOpen)
+                return;
+            // WPF does not follow the owner window's movement automatically.
+            speechPopup.HorizontalOffset = .01;
+            speechPopup.HorizontalOffset = 0;
+        }
+
         public void ShowPet()
         {
             Show();
             KeepVisible();
+            if (DateTime.UtcNow < bubbleUntil)
+                speechPopup.IsOpen = true;
         }
         public void HidePet()
         {
@@ -243,6 +291,8 @@ namespace Gole.Desktop
             speech.Text = text;
             bubble.Opacity = 1;
             bubbleUntil = DateTime.UtcNow.AddSeconds(seconds);
+            speechPopup.IsOpen = IsVisible;
+            RepositionSpeech();
             if (Data.SpeechSound)
                 waterSound.Play(Data.AlertSoundId, Data.AlertVolume);
         }
@@ -339,7 +389,10 @@ namespace Gole.Desktop
         {
             DateTime now = DateTime.UtcNow;
             if (bubble.Opacity > 0 && now > bubbleUntil)
+            {
                 bubble.Opacity = 0;
+                speechPopup.IsOpen = false;
+            }
             var tick = session.Advance(now);
             if (tick.Notify)
             {

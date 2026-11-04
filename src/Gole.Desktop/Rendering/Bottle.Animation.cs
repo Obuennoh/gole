@@ -15,6 +15,18 @@ public partial class Bottle
     Rect viewFrame;
     static readonly ConditionalWeakTable<DrawingGroup, DrawingBrush> masks = new();
     internal Rect ViewFrame => viewFrame;
+    internal Rect DragBounds
+    {
+        get
+        {
+            var frame = AnimationFrame(Math.Clamp(Vessel, 0, bodies.Length - 1));
+            double width = ActualWidth > 0 ? ActualWidth : Width, height = ActualHeight > 0 ? ActualHeight : Height;
+            double scale = Math.Min(width / frame.Width, height / frame.Height);
+            // This central patch is inside every vessel and remains easy to grab in every pose.
+            return new Rect((width - frame.Width * scale) / 2 + (84 - frame.X) * scale,
+                (height - frame.Height * scale) / 2 + (112 - frame.Y) * scale, 52 * scale, 72 * scale);
+        }
+    }
     double MotionTime => MotionEnabled && !Paused && !suppressAnimation && double.IsFinite(Phase) ? Math.Max(0, Phase) : 0;
     bool IsAnimating => MotionEnabled && !Paused && !suppressAnimation;
     CharacterPose Pose => CharacterMotion.Sample(MotionTime, Level, IsAnimating, Paused, Celebrate, CelebrationSeconds);
