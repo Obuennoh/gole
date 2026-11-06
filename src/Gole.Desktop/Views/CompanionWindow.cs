@@ -56,6 +56,8 @@ namespace Gole.Desktop
         internal string CurrentSpeech => speech.Text;
         PanelWindow panel;
         bool dragged;
+        Point lastPetPoint;
+        double petDistance, lastPetTime;
         Point start;
         double phase;
         Random random = new Random();
@@ -84,8 +86,8 @@ namespace Gole.Desktop
             speech = Theme.Text("", 13, Theme.Ink);
             speech.Margin = new Thickness(0);
             bubble = new Border { Background = Theme.B("#FFFFF9"), CornerRadius = new CornerRadius(18, 18, 5, 18), Padding = new Thickness(15, 11, 15, 11), MaxWidth = 256, MinHeight = 62, Child = speech, Opacity = 0 };
-            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Vessel = Data.Vessel, EquippedAccessories = Data.Accessories, Tint = Data.Color, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para abrir as ações · botão direito para opções" };
-            System.Windows.Automation.AutomationProperties.SetName(Art, "Garrafinha Gole. Clique para registrar água ou arraste para mover.");
+            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Vessel = Data.Vessel, EquippedAccessories = Data.Accessories, Tint = Data.Color, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para acenar · passe o mouse para fazer carinho · botão direito para opções" };
+            System.Windows.Automation.AutomationProperties.SetName(Art, "Garrafinha Gole. Clique para acenar, arraste para mover e use o botão direito para registrar água.");
             Art.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
             {
                 start = PointToScreen(e.GetPosition(this));
@@ -96,7 +98,18 @@ namespace Gole.Desktop
             Art.MouseMove += delegate (object sender, MouseEventArgs e)
             {
                 if (e.LeftButton != MouseButtonState.Pressed || !Art.IsMouseCaptured)
+                {
+                    var current = e.GetPosition(Art);
+                    petDistance += (current - lastPetPoint).Length;
+                    lastPetPoint = current;
+                    if (petDistance > 100 && phase - lastPetTime > 3)
+                    {
+                        Art.Interact(PetInteraction.Pet);
+                        lastPetTime = phase;
+                        petDistance = 0;
+                    }
                     return;
+                }
                 Point point = PointToScreen(e.GetPosition(this));
                 double dx = point.X - start.X, dy = point.Y - start.Y;
                 var source = PresentationSource.FromVisual(this);
@@ -109,6 +122,7 @@ namespace Gole.Desktop
                 if (dragged || Math.Abs(dx) + Math.Abs(dy) > 4)
                 {
                     dragged = true;
+                    Art.IsDragging = true;
                     Left += dx;
                     Top += dy;
                     start = point;
@@ -116,15 +130,20 @@ namespace Gole.Desktop
             };
             Art.MouseLeftButtonUp += delegate
             {
+                Art.IsDragging = false;
                 Art.ReleaseMouseCapture();
                 if (dragged)
                 {
+                    Art.Interact(PetInteraction.Land);
                     KeepVisible();
                     Save();
                 }
                 else
-                    OpenMenu();
+                    Art.Interact(PetInteraction.Wave);
             };
+            Art.LostMouseCapture += (_, _) => { if (Art.IsDragging) { Art.IsDragging = false; Art.Interact(PetInteraction.Land); KeepVisible(); Save(); } };
+            Art.MouseEnter += (_, e) => { lastPetPoint = e.GetPosition(Art); petDistance = 0; };
+            Art.MouseLeave += (_, _) => { petDistance = 0; };
             Art.MouseRightButtonUp += delegate
             {
                 OpenMenu();
@@ -198,6 +217,10 @@ namespace Gole.Desktop
             lastAnimationFrame = elapsed;
             phase = elapsed;
             Art.Phase = phase;
+            var cursor = Forms.Cursor.Position;
+            var local = Art.PointFromScreen(new Point(cursor.X, cursor.Y));
+            Art.Gaze = new Vector((local.X - Art.ActualWidth / 2) / 50, (local.Y - Art.ActualHeight / 2) / 60);
+            Art.PersonalityId = Data.PersonalityId;
             Art.MotionEnabled = Data.Motion;
             Art.CelebrationSeconds = CelebrationAge;
             Art.Level = Data.Level(now);
@@ -216,6 +239,7 @@ namespace Gole.Desktop
         }
         public void Apply()
         {
+            Art.PersonalityId = Data.PersonalityId;
             Art.MotionEnabled = Data.Motion;
             Art.Width = Data.Size * 220 / 255;
             Art.Height = Data.Size;
@@ -306,6 +330,7 @@ namespace Gole.Desktop
             Art.Level = 1;
             Art.Celebrate = true;
             Art.CelebrationSeconds = 0;
+            Art.PersonalityId = Data.PersonalityId;
             Art.MotionEnabled = Data.Motion;
             Art.InvalidateVisual();
             Speak(drinkReactions.Next(Data.PersonalityId), 10);
@@ -430,6 +455,15 @@ namespace Gole.Desktop
         {
             var menu = new ContextMenu { FontFamily = FontFamily, FontSize = 14, PlacementTarget = Art };
             Item(menu, "✓  Já bebi um gole", Drink);
+            if (Data.Motion)
+            {
+                Item(menu, "Fazer carinho", () => Art.Interact(PetInteraction.Pet));
+                foreach (int item in Data.Accessories)
+                {
+                    int selected = item;
+                    Item(menu, "Brincar: " + PetCatalog.Accessories[item], () => Art.PlayAccessories(selected));
+                }
+            }
             Item(menu, "Abrir painel", delegate
             {
                 OpenPanel(0);

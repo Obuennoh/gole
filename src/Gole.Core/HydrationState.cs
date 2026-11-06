@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 16;
+    public const int CurrentVersion = 17;
     public const int DefaultServingMl = 200;
     public const int MinimumServingMl = 1;
     public const int MaximumServingMl = 6000;
@@ -21,6 +21,7 @@ public sealed class HydrationState
         get; set;
     }
     [DataMember] public List<int> Accessories { get; set; } = [];
+    [DataMember] public List<SavedLook> Looks { get; set; } = [];
     [DataMember] public List<AccessoryStyle> AccessoryStyles { get; set; } = [];
     [DataMember]
     public long NextPhrase
@@ -108,6 +109,7 @@ public sealed class HydrationState
         AlertVolume = SoundCatalog.DefaultVolume;
         Sips = [];
         Accessories = [];
+        Looks = [];
         AccessoryStyles = [];
     }
 
@@ -123,6 +125,7 @@ public sealed class HydrationState
         if (Version < 3 && (Accessories is null || Accessories.Count == 0) && Accessory > 0)
             Accessories = [Accessory];
         Accessories = PetCatalog.Normalize(Accessories);
+        Looks = Wardrobe.Normalize(Looks);
         AccessoryStyles = []; // Retired accessory painting; old preferences restore the original art.
         Accessory = 0;
         if (Version < 16)

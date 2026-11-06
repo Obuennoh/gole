@@ -120,3 +120,17 @@ Cada push em `main`, após passar nos testes, gera uma release pública versiona
 `scripts/package.ps1 -Version 0.1.1` gera o pacote localmente. `scripts/smoke-install-update.ps1` é exclusivo do CI e não executa no computador de desenvolvimento. Os builds de desenvolvimento não tentam substituir arquivos nem baixar atualizações.
 
 As fontes e licenças dos sons estão em [Créditos de áudio](docs/audio-credits.md).
+
+### Looks, busca e sugestões
+
+Em **Personalizar → Meus looks**, dê um nome ao visual da prévia e clique em **Guardar novo look**. Você pode guardar até 30 conjuntos, selecionar e **Usar look**, renomear ou excluir. Cada look guarda recipiente, cor da água e até cinco acessórios; personalidade, tamanho, movimento e posição continuam como você escolheu.
+
+**Monte um look** sugere conjuntos de cinco peças com paletas combinadas, mantendo o recipiente. A sugestão fica na prévia até salvar a personalização ou guardar o look. A busca por acessórios aceita nomes sem acentos e combina com o filtro de categoria. **Nenhum** continua disponível para tirar todas as peças.
+
+### Brincadeiras e personalidades
+
+Clique no personagem para receber um aceno; passe o mouse sobre ele para fazer carinho. Ele acompanha o cursor com o olhar, fica pendurado durante o arraste e faz um pouso suave ao soltar. O botão direito (ou Enter/Espaço com foco) abre as ações, incluindo **Já bebi um gole**, **Fazer carinho** e **Brincar** com cada peça equipada.
+
+O Nerd ajeita óculos e lê; o Emo ajeita a franja e acompanha um ritmo; a Brava cruza os braços; o Gamer pega um controle; o Pirata observa com uma luneta. As demais personalidades também têm gestos próprios. No modo Aleatória os gestos alternam. Os gestos especiais aparecem de tempos em tempos, sem mudar a posição na tela.
+
+O livrinho vira uma página, a varinha solta uma estrela, os balões balançam e os fones mostram notas. As demais peças recebem um brilho de resposta. Em Personalizar, use **Testar carinho** e **Brincar com acessórios** para experimentar sem registrar água. Desligar **Animar personagem e acessórios** congela também essas interações.

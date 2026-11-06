@@ -11,6 +11,45 @@ namespace Gole.Desktop.Tests;
 public sealed class AnimationTests
 {
     [Fact]
+    public void Every_personality_and_interaction_animates_and_respects_disabled_motion() => Sta(() =>
+    {
+        for (int personality = 1; personality <= 11; personality++)
+        {
+            var art = new Bottle { PersonalityId = personality, Phase = 3.5, Level = .7, EquippedAccessories = new[] { 68, 69, 67, 47, 42 } };
+            var active = Render(art);
+            art.MotionEnabled = false;
+            var still = Render(art);
+            Assert.False(active.SequenceEqual(still));
+            art.Phase = 7;
+            art.Gaze = new Vector(3, 2);
+            art.IsDragging = true;
+            art.Interact(PetInteraction.Pet);
+            art.PlayAccessories();
+            Assert.Equal(still, Render(art));
+            art.MotionEnabled = true;
+            art.IsDragging = false;
+            foreach (var interaction in new[] { PetInteraction.Wave, PetInteraction.Pet, PetInteraction.Land })
+            {
+                art.Interact(interaction);
+                art.Phase += .7;
+                Assert.True(art.InteractionActive);
+                Assert.False(still.SequenceEqual(Render(art)));
+                art.Phase += 3;
+                Assert.False(art.InteractionActive);
+            }
+        }
+        foreach (int item in new[] { 69, 47, 48, 82, 1, 24, 70, 55 })
+        {
+            var art = new Bottle { EquippedAccessories = new[] { item }, Phase = 0 };
+            art.PlayAccessories(item);
+            art.Phase = .8;
+            var active = RenderAccessory(art, item);
+            var normal = new Bottle { EquippedAccessories = new[] { item }, Phase = .8 };
+            Assert.False(active.SequenceEqual(RenderAccessory(normal, item)), "Interaction missing for " + item);
+        }
+    });
+
+    [Fact]
     public void Reduced_motion_and_pause_stop_all_motion_including_accessories_and_celebrations() => Sta(() =>
     {
         foreach (var items in new[] { new[] { 17, 35, 47 }, new[] { 44, 32, 48 }, new[] { 29, 46, 50 }, new[] { 1, 27, 15 },

@@ -60,6 +60,7 @@ public sealed class EditorTests
                 AssertAccessoryBorderTracksSelection(panel);
                 AssertOriginalAccessoriesAndReplacement(panel, state, store);
                 AssertAnimationPreviewAndSaving(panel, pet, state, store);
+                AssertWardrobe(panel, state, store);
                 var personality = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade do pet");
                 Assert.Equal(12, personality.Items.Count);
                 personality.SelectedValue = 11;
@@ -254,6 +255,45 @@ public sealed class EditorTests
         var button = FindButton(root, label);
         Assert.True(button.IsEnabled, label);
         button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+    }
+
+    private static void AssertWardrobe(PanelWindow panel, HydrationState state, JsonStateStore store)
+    {
+        var search = Descendants(panel).OfType<TextBox>().Single(c => AutomationProperties.GetName(c) == "Buscar acessórios");
+        var category = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Categoria de acessórios");
+        search.Text = "oculos";
+        Assert.Equal(Visibility.Visible, FindButton(panel, "Óculos com fita").Visibility);
+        Assert.Equal(Visibility.Collapsed, FindButton(panel, "Livrinho").Visibility);
+        category.SelectedItem = "Roupas";
+        Assert.Equal(Visibility.Collapsed, FindButton(panel, "Óculos com fita").Visibility);
+        search.Text = "";
+        category.SelectedItem = "Todos";
+        var originalColor = state.Color;
+        Click(panel, "Monte um look");
+        Assert.Empty(state.Accessories);
+        var art = Descendants(panel).OfType<Bottle>().Single(b => b.Height > 100);
+        Assert.Equal(5, art.EquippedAccessories.Count);
+        var items = art.EquippedAccessories.ToArray();
+        var name = Descendants(panel).OfType<TextBox>().Single(c => AutomationProperties.GetName(c) == "Nome do look");
+        name.Text = "Favorito";
+        Click(panel, "Guardar novo look");
+        Assert.Equal(items, Assert.Single(store.Load(DateTime.UtcNow).State.Looks).Accessories);
+        Assert.Empty(state.Accessories);
+        Click(panel, "Descartar alterações");
+        Assert.Empty(art.EquippedAccessories);
+        Click(panel, "Usar look");
+        Assert.Equal(items, state.Accessories);
+        Assert.Empty(state.Sips);
+        name.Text = "Meu favorito";
+        Click(panel, "Renomear look");
+        Assert.Equal("Meu favorito", Assert.Single(store.Load(DateTime.UtcNow).State.Looks).Name);
+        Click(panel, "Excluir look");
+        Assert.Empty(store.Load(DateTime.UtcNow).State.Looks);
+        Assert.Equal(items, state.Accessories);
+        Click(panel, "Nenhum");
+        Click(panel, "Cor Turquesa");
+        Click(panel, "Salvar personalização");
+        Assert.Equal(originalColor, state.Color);
     }
 
     private static void AssertAnimationPreviewAndSaving(PanelWindow panel, CompanionWindow pet, HydrationState state, JsonStateStore store)

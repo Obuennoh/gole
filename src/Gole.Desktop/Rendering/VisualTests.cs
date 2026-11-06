@@ -118,6 +118,15 @@ namespace Gole.Desktop
             }
             Save(preview, Path.Combine(folder, "roupas-corrigidas.png"));
             RenderCollection(folder);
+            var gestures = new Canvas { Width = 1100, Height = 900, Background = Theme.B("#F1F5F7") };
+            Add(gestures, Theme.Text("GOLE · gestos das personalidades", 24, Theme.Ink), 24, 15);
+            for (int id = 1; id <= 11; id++)
+            {
+                int x = (id - 1) % 4 * 275, y = 65 + (id - 1) / 4 * 270;
+                Add(gestures, new Bottle { Vessel = 0, PersonalityId = id, Phase = 3.5, Level = .7, Width = 250, Height = 220 }, x + 10, y);
+                Add(gestures, Theme.Text(PersonalityCatalog.Get(id).Name, 15, Theme.Ink), x + 90, y + 225);
+            }
+            Save(gestures, Path.Combine(folder, "personalidades-gestos.png"));
             return 0;
         }
 

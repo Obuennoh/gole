@@ -122,3 +122,7 @@ O schema 16 converte uma vez as posições salvas pela janela antiga de 276 DIPs
 ### Coleção ampliada
 
 Os IDs 21–28 acrescentam oito recipientes e os IDs 67–82 acrescentam dezesseis acessórios, desenhados em `Bottle.Collection.cs`. As peças usam os mesmos pontos de encaixe e gestos das anteriores. O limite é de cinco peças; fones, colares, brincos, broches, presilhas, mochilas e objetos da mesma mão também substituem seus equivalentes. A personalidade controla as falas sem alterar o visual escolhido. O formato de preferências permanece na versão 16.
+
+### Looks e interações
+
+Preferências versão 17 acrescentam `Looks`, com normalização de até 30 snapshots independentes de cor, modelo e acessórios. Versões anteriores começam com lista vazia. `Wardrobe` concentra categorias, busca sem acentos e sugestões curadas. O editor mantém sugestões no rascunho, mas guardar, renomear, excluir e usar um look são ações explícitas de persistência. `Bottle.Interactions.cs` compõe os gestos sobre a pose base e usa o relógio de animação para encerrar reações em 2,5 segundos. Nenhuma interação chama o registro de água. O arraste altera a posição apenas por movimento do usuário.

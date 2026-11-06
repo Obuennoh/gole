@@ -200,7 +200,9 @@ namespace Gole.Desktop
             }
             DrawBottleDetails(d, model, line);
             d.PushTransform(FaceTransform(fit));
+            d.PushTransform(new TranslateTransform(IsAnimating ? Math.Clamp(Gaze.X, -3, 3) : 0, IsAnimating ? Math.Clamp(Gaze.Y, -2, 2) : 0));
             DrawFace(d);
+            d.Pop();
             d.DrawEllipse(B("#85EE9DAA"), null, new Point(74, 141), 8, 4);
             d.DrawEllipse(B("#85EE9DAA"), null, new Point(146, 141), 8, 4);
             if (level > .18)
@@ -209,6 +211,7 @@ namespace Gole.Desktop
             foreach (int item in equipped)
                 if (!IsBackgroundAccessory(item))
                     DrawFittedAccessory(d, model, item);
+            DrawPersonality(d, fit);
         }
         void DrawBottleDetails(DrawingContext d, int model, Pen line)
         {

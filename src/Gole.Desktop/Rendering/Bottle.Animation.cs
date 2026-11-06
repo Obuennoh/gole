@@ -29,7 +29,7 @@ public partial class Bottle
     }
     double MotionTime => MotionEnabled && !Paused && !suppressAnimation && double.IsFinite(Phase) ? Math.Max(0, Phase) : 0;
     bool IsAnimating => MotionEnabled && !Paused && !suppressAnimation;
-    CharacterPose Pose => CharacterMotion.Sample(MotionTime, Level, IsAnimating, Paused, Celebrate, CelebrationSeconds);
+    CharacterPose Pose => InteractivePose(CharacterMotion.Sample(MotionTime, Level, IsAnimating, Paused, Celebrate, CelebrationSeconds));
 
     Rect AnimationFrame(int model)
     {
@@ -114,6 +114,10 @@ public partial class Bottle
         if (inHand)
             d.PushTransform(ArmTransform(fit, item is not (41 or 69)));
         Transform secondary = Transform.Identity;
+        if (ActingPersonality == 6 && item is 21 or 61 or 68)
+            secondary = new TranslateTransform(0, -Gesture * 3);
+        if (ActingPersonality == 11 && item == 67)
+            secondary = new RotateTransform(Gesture * 3, 110, 90);
         if (item == 45 && IsAnimating)
         {
             double shear = Math.Sin(t * 1.8) * .032 * energy;
@@ -122,7 +126,7 @@ public partial class Bottle
         if (item is 48 or 82 && IsAnimating)
         {
             var anchor = AccessoryTransform(fit, model, item).Transform(new Point(189, 110));
-            secondary = new RotateTransform(Math.Sin(t * 1.5) * 3 * energy, anchor.X, anchor.Y);
+            secondary = new RotateTransform(Math.Sin(t * 1.5) * (InteractionActive && activeAccessory == item ? 7 : 3) * energy, anchor.X, anchor.Y);
         }
         if (item == 20 && IsAnimating)
             secondary = new TranslateTransform(0, Math.Sin(t * 1.8) * 3 * energy);
@@ -165,6 +169,7 @@ public partial class Bottle
     void DrawAccessoryEffects(DrawingContext d, BodyFit fit, int model, int item)
     {
         double t = MotionTime;
+        DrawInteractiveAccessory(d, fit, model, item);
         if (item is 2 or 21 or 37 or 38 or 61 or 68)
         {
             var drawing = AccessoryDrawing(model, item, 0);

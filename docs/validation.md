@@ -77,3 +77,5 @@ dotnet run --project src/Gole.Desktop -- --render-animation .local/animation
 Exporta 72 quadros PNG, a 10 amostras por segundo, com seis exemplos. As imagens vêm do renderizador real do aplicativo, sem capturar a tela. A verificação automatizada de animação renderiza mais 2.520 quadros de combinações, além das 2.772 imagens individuais do catálogo. Os tempos são fornecidos aos testes, sem esperar as animações em tempo real.
 
 A expansão também verifica modelos distintos, visibilidade dos novos acessórios em todos os corpos, substituição de peças com cinco vagas ocupadas e reabertura com Emo e cinco itens. `--render-fitting` inclui `novos-estilos.png`, uma prévia dos oito modelos e seis conjuntos de cinco peças.
+
+Looks e interações: persistência de conjuntos e migração da versão 16, busca combinada com categoria e sem acentos, 300 sugestões compatíveis sem repetição imediata, fluxo do editor (guardar, descartar rascunho, usar, renomear e excluir), gestos das onze personalidades, duração das reações e respeito ao movimento desativado. 131 testes automatizados passam sem mostrar janelas.

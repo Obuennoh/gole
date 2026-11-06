@@ -17,7 +17,7 @@ using Forms = System.Windows.Forms;
 
 namespace Gole.Desktop
 {
-    public class PanelWindow : Window
+    public partial class PanelWindow : Window
     {
         CompanionWindow pet;
         HydrationState data;
@@ -145,6 +145,7 @@ namespace Gole.Desktop
                 phase = animationClock.Elapsed.TotalSeconds;
                 live.Level = data.Level(DateTime.UtcNow);
                 live.Phase = phase;
+                live.PersonalityId = data.PersonalityId;
                 live.MotionEnabled = data.Motion;
                 live.Celebrate = pet.Art.Celebrate;
                 live.CelebrationSeconds = pet.CelebrationAge;
@@ -332,6 +333,7 @@ namespace Gole.Desktop
                 UpdateEditor();
             };
             controls.Children.Add(nameBox);
+            AddWardrobe(controls);
             Label(controls, "Personalidade");
             personalityChoice = new ComboBox { ItemsSource = PersonalityCatalog.Options, DisplayMemberPath = "Name", SelectedValuePath = "Id", SelectedValue = draftPersonality, Height = 40, VerticalContentAlignment = VerticalAlignment.Center };
             System.Windows.Automation.AutomationProperties.SetName(personalityChoice, "Personalidade do pet");
@@ -386,6 +388,7 @@ namespace Gole.Desktop
             Label(controls, "Acessórios");
             accessoryCount = Theme.Text("", 12, Theme.Muted);
             controls.Children.Add(accessoryCount);
+            AddAccessoryFilters(controls);
             var accessories = new WrapPanel();
             for (int i = 0; i < Bottle.Accessories.Length; i++)
             {
@@ -462,6 +465,8 @@ namespace Gole.Desktop
             var anotherPhrase = Theme.Button("Outra frase", () => UpdatePersonalityPreview(true), false);
             anotherPhrase.FontSize = 12;
             previewContent.Children.Add(anotherPhrase);
+            previewContent.Children.Add(Theme.Button("Testar carinho", () => preview.Interact(PetInteraction.Pet), false));
+            previewContent.Children.Add(Theme.Button("Brincar com acessórios", () => preview.PlayAccessories(), false));
             var test = Theme.Button("▶  Simular ciclo", delegate
             {
                 previewLevel = 1;
@@ -579,6 +584,7 @@ namespace Gole.Desktop
         }
         void UpdatePreviewMotion()
         {
+            preview.PersonalityId = draftPersonality;
             preview.MotionEnabled = draftMotion;
             preview.Phase = animationClock.Elapsed.TotalSeconds;
             preview.CelebrationSeconds = previewCelebration.IsRunning ? previewCelebration.Elapsed.TotalSeconds : double.PositiveInfinity;
