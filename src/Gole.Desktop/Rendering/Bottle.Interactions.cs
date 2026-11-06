@@ -7,7 +7,7 @@ namespace Gole.Desktop;
 
 public enum PetInteraction
 {
-    None, Wave, Pet, Land, Accessory
+    None, Wave, Pet, Land, Accessory, Hop, Cheer
 }
 
 public partial class Bottle
@@ -15,6 +15,9 @@ public partial class Bottle
     public int PersonalityId;
     public bool IsDragging;
     public Vector Gaze;
+    public double DragLean;
+    int touchCount;
+    public void Touch() => Interact((touchCount++ % 3) switch { 0 => PetInteraction.Wave, 1 => PetInteraction.Hop, _ => PetInteraction.Cheer });
     PetInteraction interaction;
     double interactionStart = double.NegativeInfinity;
     int activeAccessory, accessoryIndex;
@@ -65,17 +68,20 @@ public partial class Bottle
         if (IsDragging)
             return styled with
             {
-                ScaleX = .97,
-                ScaleY = 1.03,
-                Lean = Math.Sin(t * 4) * 4,
-                LeftArm = -22,
-                RightArm = -25
+                ScaleX = .975 + Math.Sin(t * 5) * .006,
+                ScaleY = 1.025 - Math.Sin(t * 5) * .006,
+                Lean = Math.Clamp(DragLean + Math.Sin(t * 3) * 1.2, -8, 5),
+                Lift = -3 - Math.Sin(t * 4),
+                LeftArm = -25 + Math.Sin(t * 5) * 7,
+                RightArm = -27 - Math.Sin(t * 5) * 7
             };
         if (!InteractionActive)
             return styled;
         double envelope = Math.Sin(InteractionAge / 2.5 * Math.PI);
         return interaction switch
         {
+            PetInteraction.Hop => pose with { Lift = -Math.Abs(Math.Sin(InteractionAge * 6)) * 11 * envelope, LeftArm = -18 * envelope, RightArm = -20 * envelope },
+            PetInteraction.Cheer => pose with { Lean = Math.Sin(InteractionAge * 7) * 4 * envelope, LeftArm = -25 * envelope, RightArm = -25 * envelope, Blink = envelope > .8 },
             PetInteraction.Wave => pose with { RightArm = -15 + Math.Sin(InteractionAge * 12) * 18 * envelope },
             PetInteraction.Pet => pose with { Blink = true, Lean = Math.Sin(InteractionAge * 4) * 3, Lift = -envelope * 3 },
             PetInteraction.Land => pose with { ScaleX = 1 + .04 * envelope, ScaleY = 1 - .04 * envelope, Lift = -Math.Abs(Math.Sin(InteractionAge * 5)) * 4 * (1 - InteractionAge / 2.5) },
@@ -137,6 +143,8 @@ public partial class Bottle
         {
             d.PushOpacity(Math.Sin(InteractionAge / 2.5 * Math.PI));
             DrawHeart(d, 110, 92 - InteractionAge * 9, 9, "#E694A7", "#AE708E");
+            DrawHeart(d, 88 + Math.Sin(InteractionAge * 3) * 3, 102 - InteractionAge * 12, 5, "#D8ACD3", "#AE708E");
+            DrawHeart(d, 132 - Math.Sin(InteractionAge * 3) * 3, 99 - InteractionAge * 10, 5, "#E6C09F", "#AE708E");
             d.Pop();
         }
         if (InteractionActive && interaction == PetInteraction.Accessory && activeAccessory is not (69 or 47 or 48 or 82 or 1 or 24 or 70))

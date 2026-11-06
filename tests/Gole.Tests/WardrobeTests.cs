@@ -6,6 +6,24 @@ namespace Gole.Tests;
 public sealed class WardrobeTests
 {
     [Fact]
+    public void Touch_and_pet_phrases_match_every_personality_without_immediate_repeats()
+    {
+        var phrases = new InteractionPhrases(new Random(42));
+        for (int id = 0; id <= 11; id++)
+            foreach (bool pet in new[] { false, true })
+            {
+                string previous = "";
+                for (int i = 0; i < 20; i++)
+                {
+                    string next = phrases.Next(id, pet);
+                    Assert.InRange(next.Length, 1, 160);
+                    Assert.NotEqual(previous, next);
+                    previous = next;
+                }
+            }
+    }
+
+    [Fact]
     public void Suggestions_have_five_compatible_items_and_never_repeat_the_current_set()
     {
         var random = new Random(42);

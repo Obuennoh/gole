@@ -57,7 +57,8 @@ namespace Gole.Desktop
         PanelWindow panel;
         bool dragged;
         Point lastPetPoint;
-        double petDistance, lastPetTime;
+        double petDistance, lastPetTime, lastInteractionSpeech = -10;
+        readonly InteractionPhrases interactionPhrases = new(new Random());
         Point start;
         double phase;
         Random random = new Random();
@@ -104,7 +105,7 @@ namespace Gole.Desktop
                     lastPetPoint = current;
                     if (petDistance > 100 && phase - lastPetTime > 3)
                     {
-                        Art.Interact(PetInteraction.Pet);
+                        ReactToTouch(true);
                         lastPetTime = phase;
                         petDistance = 0;
                     }
@@ -123,6 +124,7 @@ namespace Gole.Desktop
                 {
                     dragged = true;
                     Art.IsDragging = true;
+                    Art.DragLean = Art.DragLean * .65 + Math.Clamp(-dx * .45, -7, 4) * .35;
                     Left += dx;
                     Top += dy;
                     start = point;
@@ -139,7 +141,7 @@ namespace Gole.Desktop
                     Save();
                 }
                 else
-                    Art.Interact(PetInteraction.Wave);
+                    ReactToTouch(false);
             };
             Art.LostMouseCapture += (_, _) => { if (Art.IsDragging) { Art.IsDragging = false; Art.Interact(PetInteraction.Land); KeepVisible(); Save(); } };
             Art.MouseEnter += (_, e) => { lastPetPoint = e.GetPosition(Art); petDistance = 0; };
@@ -150,6 +152,7 @@ namespace Gole.Desktop
             };
             Content = Art;
             speech.FontFamily = FontFamily;
+            ApplyNight();
             speechPopup = new Popup
             {
                 Child = bubble,
@@ -252,6 +255,22 @@ namespace Gole.Desktop
             KeepVisible();
             RepositionSpeech();
             Save();
+        }
+        void ReactToTouch(bool petting)
+        {
+            if (petting)
+                Art.Interact(PetInteraction.Pet);
+            else
+                Art.Touch();
+            if (phase - lastInteractionSpeech < 5)
+                return;
+            lastInteractionSpeech = phase;
+            Speak(interactionPhrases.Next(Data.PersonalityId, petting), 5);
+        }
+        public void ApplyNight()
+        {
+            bubble.Background = Theme.B(Data.NightMode ? "#24343F" : "#FFFFF9");
+            speech.Foreground = Theme.B(Data.NightMode ? "#E8F0F3" : "#18343D");
         }
         void Place()
         {
@@ -457,7 +476,7 @@ namespace Gole.Desktop
             Item(menu, "✓  Já bebi um gole", Drink);
             if (Data.Motion)
             {
-                Item(menu, "Fazer carinho", () => Art.Interact(PetInteraction.Pet));
+                Item(menu, "Fazer carinho", () => ReactToTouch(true));
                 foreach (int item in Data.Accessories)
                 {
                     int selected = item;

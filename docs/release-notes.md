@@ -1,12 +1,11 @@
 Gole para Windows x64.
 
-- Looks salvos: guarde até 30 conjuntos, use, renomeie e exclua pelo editor.
-- Gestos próprios das 11 personalidades e alternância no modo Aleatória.
-- Olhar acompanhando o mouse, aceno ao clicar, carinho, reação ao arrastar e pouso suave.
-- Busca por acessórios sem exigir acentos e filtros por categoria.
-- Monte um look: sugestões de cinco peças compatíveis com cores combinadas.
-- Brincadeiras com livros, varinhas, balões, fones e respostas nas demais peças.
-- Prévias sem registrar água e suporte à opção de desligar todas as animações.
-- Clique direito abre as ações de água e as brincadeiras. Histórico e posição preservados.
+- Looks refeitos: Criar look, nome, salvar/cancelar e galeria de cartões com foto. Clique na foto para vestir; edite ou exclua no próprio cartão.
+- Galeria vazia no início, rolagem independente e preservação dos looks existentes. Bloqueio de nomes duplicados.
+- Prévia maior para conferir as roupas, independente do tamanho do pet na tela.
+- Oito roupas novas e quatro recipientes novos: 90 acessórios e 33 modelos no total.
+- Arraste com inclinação suave e movimento do corpo; toque alternando entre aceno, pulinho e comemoração.
+- Carinho com corações e 44 falas novas de interação, adaptadas às personalidades e com intervalo para evitar repetição excessiva.
+- Modo noturno para painel e balões em Lembretes; preferência salva sem alterar as cores do personagem.
 
 Disponível pelo atualizador automático ou pelo instalador Gole-Setup.exe.

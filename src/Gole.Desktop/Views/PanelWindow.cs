@@ -180,6 +180,7 @@ namespace Gole.Desktop
             selectedPage = index;
             pageHost.Content = pages[index];
             UpdateNavigation();
+            Theme.ApplyNight(this, data.NightMode);
         }
         void UpdateNavigation()
         {
@@ -321,7 +322,7 @@ namespace Gole.Desktop
         {
             var grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition());
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(292) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(340) });
             var controls = new StackPanel { Margin = new Thickness(0, 0, 19, 0) };
             controls.Children.Add(Heading("Nome"));
             nameBox = new TextBox { Text = draftName, MaxLength = 20 };
@@ -432,7 +433,7 @@ namespace Gole.Desktop
             previewName.TextAlignment = TextAlignment.Center;
             previewName.FontWeight = FontWeights.SemiBold;
             previewContent.Children.Add(previewName);
-            var stage = new Grid { Height = 294, Background = Theme.B("#F0F6F7") };
+            var stage = new Grid { Height = 380, Background = Theme.B("#F0F6F7") };
             preview = new Bottle { Width = draftSize * 220 / 255, Height = draftSize, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             stage.Children.Add(preview);
             previewContent.Children.Add(new Border { Child = stage, CornerRadius = new CornerRadius(14), ClipToBounds = true, Margin = new Thickness(0, 4, 0, 15) });
@@ -544,8 +545,8 @@ namespace Gole.Desktop
             preview.Vessel = draftModel;
             preview.EquippedAccessories = draftAccessories.ToArray();
             preview.Level = previewLevel;
-            preview.Width = draftSize * 220 / 255;
-            preview.Height = draftSize;
+            preview.Width = 280;
+            preview.Height = 325;
             preview.InvalidateVisual();
             previewName.Text = string.IsNullOrWhiteSpace(draftName) ? "Gole" : draftName;
             for (int i = 0; i < modelButtons.Count; i++)
@@ -575,6 +576,7 @@ namespace Gole.Desktop
             }
             UpdatePreviewLabel();
             saveVisual.IsEnabled = Dirty;
+            Theme.ApplyNight(this, data.NightMode);
         }
         void SelectTile(Button button, bool selected)
         {
@@ -650,6 +652,10 @@ namespace Gole.Desktop
         UIElement Settings()
         {
             var page = new StackPanel();
+            var night = new CheckBox { Content = "Modo noturno", IsChecked = data.NightMode };
+            System.Windows.Automation.AutomationProperties.SetName(night, "Modo noturno");
+            night.Click += (_, _) => { data.NightMode = night.IsChecked == true; pet.Save(); Theme.ApplyNight(this, data.NightMode); pet.ApplyNight(); };
+            page.Children.Add(night);
             var timings = new StackPanel();
             timings.Children.Add(Heading("Intervalo do lembrete"));
             timings.Children.Add(Theme.Text("Falas do personagem a cada 5 minutos.", 12, Theme.Muted));

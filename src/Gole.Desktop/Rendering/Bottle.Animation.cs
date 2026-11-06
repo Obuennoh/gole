@@ -99,7 +99,7 @@ public partial class Bottle
                 DrawAccessorySurface(d, model, item, 0);
             return;
         }
-        if (item is 44 or 51 or 52 or 54 or 32)
+        if (item is 44 or 51 or 52 or 54 or 32 or >= 86 and <= 89)
         {
             for (int side = 1; side <= 2; side++)
             {

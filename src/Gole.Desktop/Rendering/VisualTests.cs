@@ -118,6 +118,7 @@ namespace Gole.Desktop
             }
             Save(preview, Path.Combine(folder, "roupas-corrigidas.png"));
             RenderCollection(folder);
+            RenderWardrobePanel(folder);
             var gestures = new Canvas { Width = 1100, Height = 900, Background = Theme.B("#F1F5F7") };
             Add(gestures, Theme.Text("GOLE · gestos das personalidades", 24, Theme.Ink), 24, 15);
             for (int id = 1; id <= 11; id++)
@@ -159,6 +160,35 @@ namespace Gole.Desktop
                 Add(canvas, Theme.Text(labels[i], 15, Theme.Ink), x + 60, y + 235);
             }
             Save(canvas, Path.Combine(folder, "novos-estilos.png"));
+        }
+
+        static void RenderWardrobePanel(string folder)
+        {
+            var state = HydrationState.Fresh(DateTime.UtcNow);
+            var store = new JsonStateStore(Path.Combine(folder, "preview-state"));
+            var pet = new CompanionWindow(new HydrationSession(state), store);
+            foreach (bool dark in new[] { false, true })
+            {
+                state.NightMode = dark;
+                state.Looks = new System.Collections.Generic.List<SavedLook>();
+                state.Looks.Add(new SavedLook { Name = "Nerd de biblioteca", Vessel = 30, Color = "#26B9C4", Accessories = new() { 68, 69, 89, 80, 81 } });
+                state.Looks.Add(new SavedLook { Name = "Saia de bolinhas", Vessel = 31, Color = "#D875B3", Accessories = new() { 83, 87, 60, 28, 40 } });
+                var panel = new PanelWindow(pet) { Resources = Theme.CreateResources() };
+                panel.SelectPage(1);
+                var content = (FrameworkElement)panel.Content;
+                ((Grid)content).Background = panel.Background;
+                content.Measure(new Size(1090, 800));
+                content.Arrange(new Rect(0, 0, 1090, 800));
+                content.UpdateLayout();
+                var bitmap = new RenderTargetBitmap(1090, 800, 96, 96, PixelFormats.Pbgra32);
+                bitmap.Render(content);
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmap));
+                using (var stream = File.Create(Path.Combine(folder, dark ? "looks-noturno.png" : "looks-claro.png")))
+                    encoder.Save(stream);
+                panel.Close();
+            }
+            pet.Close();
         }
 
         static void Save(Canvas canvas, string path)

@@ -11,7 +11,7 @@ public static class PetCatalog
         "Clássica", "Esportiva", "Térmica", "Jarra", "Copo", "Caneca", "Pote de vidro",
         "Squeeze", "Slim", "Retrô", "Quadrada", "Arredondada", "Com alça",
         "Com canudo", "Dobrável", "Cantil", "Long neck", "Galão fitness", "Com capa", "Triangular", "Gota",
-        "Bojudinha", "De laboratório", "De cristal", "Térmica com xícara", "Frasco de coração", "Copo bolha", "De bambu", "Xícara de chá"
+        "Bojudinha", "De laboratório", "De cristal", "Térmica com xícara", "Frasco de coração", "Copo bolha", "De bambu", "Xícara de chá", "Térmica de viagem", "Cápsula", "Cinturinha", "Latinha"
     });
     public static IReadOnlyList<string> Accessories
     {
@@ -31,15 +31,15 @@ public static class PetCatalog
         "Cinto", "Broche de coração", "Bolsa transversal", "Chinelo",
         "Franja emo", "Óculos com fita", "Livrinho", "Fone de gatinho", "Choker de lua", "Colar de estrelas",
         "Touca de sapinho", "Chapéu de mago", "Tiara de nuvem", "Presilha de cereja", "Mochila de gatinho",
-        "Bolsa de poções", "Patins", "Pantufas de coelho", "Broche de planeta", "Balão de estrela"
+        "Bolsa de poções", "Patins", "Pantufas de coelho", "Broche de planeta", "Balão de estrela", "Saia de bolinhas", "Saia xadrez", "Saia longa", "Blusa listrada", "Blusa de coração", "Suéter de estrelas", "Cardigã", "Vestido de bolinhas"
     });
 
     static int Slot(int id) => id switch
     {
         5 or 9 or 12 or 25 or 33 or 34 or 59 or 67 or 73 or 74 => 1,
         2 or 21 or 22 or 37 or 38 or 61 or 68 => 2,
-        27 or 29 or 53 or 55 or 56 => 3,
-        44 or 51 or 52 or 54 or 57 or 58 => 4,
+        27 or 29 or 53 or 55 or 56 or 83 or 84 or 85 or 90 => 3,
+        44 or 51 or 52 or 54 or 57 or 58 or 86 or 87 or 88 or 89 => 4,
         28 or 42 or 43 or 66 or 79 or 80 => 5,
         13 or 31 or 35 or 36 or 50 or 60 or 75 => 6,
         6 or 11 or 14 or 16 or 40 or 62 or 71 or 72 => 7,

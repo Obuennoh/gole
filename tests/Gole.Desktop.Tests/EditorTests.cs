@@ -115,7 +115,7 @@ public sealed class EditorTests
                 Assert.True(FindButton(panel, "Auréola").IsEnabled);
                 Click(panel, "Auréola");
                 Click(panel, "Descartar alterações");
-                Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.EquippedAccessories.SequenceEqual(new[] { 3, 15, 21, 69, 80 }));
+                Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.Tag as string != "Look thumbnail" && b.EquippedAccessories.SequenceEqual(new[] { 3, 15, 21, 69, 80 }));
                 Click(panel, "Nenhum");
                 Click(panel, "Salvar personalização");
                 Assert.Empty(state.Accessories);
@@ -131,7 +131,7 @@ public sealed class EditorTests
                 foreach (double level in new[] { 1, .7, .5, .3, .1, 0 })
                 {
                     Click(panel, HydrationExpression.Label(HydrationExpression.AtLevel(level)));
-                    Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.Mood == HydrationExpression.AtLevel(level));
+                    Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.Tag as string != "Look thumbnail" && b.Mood == HydrationExpression.AtLevel(level));
                 }
                 Click(panel, "Frasco de coração");
                 Click(panel, "Nenhum");
@@ -148,6 +148,15 @@ public sealed class EditorTests
                 RenderEveryModelAndAccessory();
 
                 panel.SelectPage(2);
+                var night = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Modo noturno");
+                night.IsChecked = true;
+                night.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+                Assert.True(store.Load(DateTime.UtcNow).State.NightMode);
+                Assert.Equal("#FF15232D", ((SolidColorBrush)panel.Background).Color.ToString());
+                night.IsChecked = false;
+                night.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+                Assert.False(store.Load(DateTime.UtcNow).State.NightMode);
+                Assert.Equal("#FFF5F7F9", ((SolidColorBrush)panel.Background).Color.ToString());
                 Assert.DoesNotContain(Descendants(panel).OfType<Button>(), b =>
                     (b.Content as string)?.Contains("Pausar") == true || (b.Content as string)?.Contains("Retomar") == true);
                 var interval = Descendants(panel).OfType<TextBox>().Single(t => AutomationProperties.GetName(t) == "Intervalo em minutos");
@@ -271,23 +280,27 @@ public sealed class EditorTests
         var originalColor = state.Color;
         Click(panel, "Monte um look");
         Assert.Empty(state.Accessories);
-        var art = Descendants(panel).OfType<Bottle>().Single(b => b.Height > 100);
+        var art = Descendants(panel).OfType<Bottle>().Single(b => b.Height > 100 && b.Tag as string != "Look thumbnail");
         Assert.Equal(5, art.EquippedAccessories.Count);
+        Assert.True(art.Height >= 320);
         var items = art.EquippedAccessories.ToArray();
         var name = Descendants(panel).OfType<TextBox>().Single(c => AutomationProperties.GetName(c) == "Nome do look");
+        Click(panel, "Criar look");
         name.Text = "Favorito";
-        Click(panel, "Guardar novo look");
+        Click(panel, "Salvar look");
         Assert.Equal(items, Assert.Single(store.Load(DateTime.UtcNow).State.Looks).Accessories);
         Assert.Empty(state.Accessories);
+        Assert.Single(Descendants(panel).OfType<Bottle>(), b => b.Tag as string == "Look thumbnail");
         Click(panel, "Descartar alterações");
         Assert.Empty(art.EquippedAccessories);
-        Click(panel, "Usar look");
+        Click(panel, "Vestir look: Favorito");
         Assert.Equal(items, state.Accessories);
         Assert.Empty(state.Sips);
+        Click(panel, "Editar look: Favorito");
         name.Text = "Meu favorito";
-        Click(panel, "Renomear look");
+        Click(panel, "Salvar look");
         Assert.Equal("Meu favorito", Assert.Single(store.Load(DateTime.UtcNow).State.Looks).Name);
-        Click(panel, "Excluir look");
+        Click(panel, "Excluir look: Meu favorito");
         Assert.Empty(store.Load(DateTime.UtcNow).State.Looks);
         Assert.Equal(items, state.Accessories);
         Click(panel, "Nenhum");
@@ -299,7 +312,7 @@ public sealed class EditorTests
     private static void AssertAnimationPreviewAndSaving(PanelWindow panel, CompanionWindow pet, HydrationState state, JsonStateStore store)
     {
         var motion = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Animar personagem e acessórios");
-        var preview = Descendants(panel).OfType<Bottle>().Single(b => b.Height > 100);
+        var preview = Descendants(panel).OfType<Bottle>().Single(b => b.Height > 100 && b.Tag as string != "Look thumbnail");
         motion.IsChecked = false;
         motion.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
         Assert.False(preview.MotionEnabled);
@@ -340,7 +353,7 @@ public sealed class EditorTests
         Click(panel, "Pantufas de coelho");
         Assert.True(FindButton(panel, "Saia plissada").IsEnabled);
         Click(panel, "Saia plissada");
-        Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.EquippedAccessories.Contains(55) && !b.EquippedAccessories.Contains(27));
+        Assert.Contains(Descendants(panel).OfType<Bottle>(), b => b.Height > 100 && b.Tag as string != "Look thumbnail" && b.EquippedAccessories.Contains(55) && !b.EquippedAccessories.Contains(27));
         Assert.Empty(state.Accessories);
         Click(panel, "Salvar personalização");
         Assert.Equal(new[] { 44, 21, 69, 80, 55 }, store.Load(DateTime.UtcNow).State.Accessories);

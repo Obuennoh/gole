@@ -126,3 +126,7 @@ Os IDs 21–28 acrescentam oito recipientes e os IDs 67–82 acrescentam dezesse
 ### Looks e interações
 
 Preferências versão 17 acrescentam `Looks`, com normalização de até 30 snapshots independentes de cor, modelo e acessórios. Versões anteriores começam com lista vazia. `Wardrobe` concentra categorias, busca sem acentos e sugestões curadas. O editor mantém sugestões no rascunho, mas guardar, renomear, excluir e usar um look são ações explícitas de persistência. `Bottle.Interactions.cs` compõe os gestos sobre a pose base e usa o relógio de animação para encerrar reações em 2,5 segundos. Nenhuma interação chama o registro de água. O arraste altera a posição apenas por movimento do usuário.
+
+### Galeria e tema
+
+Versão 18 acrescenta NightMode, preservando Looks da versão 17. Cartões renderizam snapshots com Bottle sem animação. Criar e editar usam o rascunho, salvar persiste o conjunto, vestir altera apenas aparência. A prévia mede 280×325 DIPs e o palco 380 DIPs. Theme.Night altera somente superfícies e texto da interface, excluindo Bottle e a paleta. Interações têm cooldown de cinco segundos para fala; 44 frases são locais e independentes dos registros.

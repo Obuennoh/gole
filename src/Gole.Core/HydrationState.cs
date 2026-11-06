@@ -6,7 +6,7 @@ namespace Gole.Core;
 [DataContract]
 public sealed class HydrationState
 {
-    public const int CurrentVersion = 17;
+    public const int CurrentVersion = 18;
     public const int DefaultServingMl = 200;
     public const int MinimumServingMl = 1;
     public const int MaximumServingMl = 6000;
@@ -51,6 +51,11 @@ public sealed class HydrationState
         get; set;
     }
     [DataMember] public bool Notifications { get; set; } = true;
+    [DataMember]
+    public bool NightMode
+    {
+        get; set;
+    }
     [DataMember] public bool Motion { get; set; } = true;
     [DataMember] public bool SpeechSound { get; set; } = true;
     [DataMember]

@@ -23,8 +23,8 @@ public static class Wardrobe
     public static readonly string[] Categories = ["Todos", "Vestidos", "Roupas", "Cabeça", "Rosto", "Calçados", "Joias", "Objetos", "Costas"];
     public static string Category(int id) => id switch
     {
-        29 => "Vestidos",
-        27 or 44 or >= 51 and <= 58 or 63 => "Roupas",
+        29 or 90 => "Vestidos",
+        27 or 44 or >= 51 and <= 58 or 63 or >= 83 and <= 89 => "Roupas",
         28 or 42 or 43 or 66 or 79 or 80 => "Calçados",
         17 or 18 or 19 or 45 or 46 or 77 => "Costas",
         2 or 7 or 8 or 21 or 22 or 30 or 37 or 38 or 61 or 68 => "Rosto",

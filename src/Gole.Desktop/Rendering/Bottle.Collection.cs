@@ -19,6 +19,7 @@ public partial class Bottle
 
     void DrawCollectionBottleDetails(DrawingContext d, int model, Pen line)
     {
+        DrawNewVesselDetails(d, model, line);
         switch (model)
         {
             case 21:

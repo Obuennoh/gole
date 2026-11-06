@@ -26,8 +26,8 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
 - Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Desfaça o último gole ou qualquer registro do histórico, sem limite de tempo, inclusive após reabrir.
 - Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
-- 29 modelos, incluindo bojudinha, laboratório, cristal, térmica com xícara, frasco de coração, copo bolha, bambu e xícara de chá.
-- 82 acessórios para combinar até cinco itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
+- 33 modelos, incluindo bojudinha, laboratório, cristal, térmica com xícara, frasco de coração, copo bolha, bambu e xícara de chá.
+- 90 acessórios para combinar até cinco itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
 - Roupas com cortes próprios: saias e vestidos com cintura ajustada e barra aberta, camisetas e moletons com mangas, jardineira com alças e bolsos, casacos e coletes abertos e poncho com ponta.
 - Até cinco itens compatíveis; vestir outra peça do mesmo tipo substitui a anterior. Roupas e acessórios usam suas cores originais.
 - Novas peças: franja emo, óculos com fita, livrinho, fone de gatinho, choker de lua, colar de estrelas, touca de sapinho, chapéu de mago, tiara de nuvem, presilha de cereja, mochila de gatinho, bolsa de poções, patins, pantufas de coelho, broche de planeta e balão de estrela.
@@ -123,9 +123,13 @@ As fontes e licenças dos sons estão em [Créditos de áudio](docs/audio-credit
 
 ### Looks, busca e sugestões
 
-Em **Personalizar → Meus looks**, dê um nome ao visual da prévia e clique em **Guardar novo look**. Você pode guardar até 30 conjuntos, selecionar e **Usar look**, renomear ou excluir. Cada look guarda recipiente, cor da água e até cinco acessórios; personalidade, tamanho, movimento e posição continuam como você escolheu.
+Em **Personalizar → Meus looks**, clique em **Criar look**, escolha as roupas, dê um nome e use **Salvar look**. A galeria começa vazia e cada conjunto salvo ganha um cartão com nome e foto. Clique na foto para vestir; **Editar** muda o nome ou as peças e **Excluir** remove o cartão. **Cancelar look** descarta a edição e recupera o visual aplicado. Nomes duplicados não são aceitos. Os looks anteriores são preservados.
 
-**Monte um look** sugere conjuntos de cinco peças com paletas combinadas, mantendo o recipiente. A sugestão fica na prévia até salvar a personalização ou guardar o look. A busca por acessórios aceita nomes sem acentos e combina com o filtro de categoria. **Nenhum** continua disponível para tirar todas as peças.
+São até 30 conjuntos, com modelo, cor da água e cinco acessórios. Vestir um cartão mantém personalidade, nome do pet, tamanho e posição. A galeria tem rolagem própria. **Monte um look** sugere um conjunto para a prévia. A busca aceita nomes sem acentos e combina com categorias.
+
+A prévia usa tamanho ampliado, independente do tamanho escolhido para o pet na área de trabalho. Em **Lembretes → Modo noturno**, alterne o tema do painel e dos balões. A preferência é salva; as cores do personagem e das roupas são mantidas.
+
+Novidades do catálogo: saias de bolinhas, xadrez e longa; blusa listrada, blusa de coração, suéter de estrelas, cardigã e vestido de bolinhas. Novos recipientes: térmica de viagem, cápsula, cinturinha e latinha.
 
 ### Brincadeiras e personalidades
 
@@ -134,3 +138,5 @@ Clique no personagem para receber um aceno; passe o mouse sobre ele para fazer c
 O Nerd ajeita óculos e lê; o Emo ajeita a franja e acompanha um ritmo; a Brava cruza os braços; o Gamer pega um controle; o Pirata observa com uma luneta. As demais personalidades também têm gestos próprios. No modo Aleatória os gestos alternam. Os gestos especiais aparecem de tempos em tempos, sem mudar a posição na tela.
 
 O livrinho vira uma página, a varinha solta uma estrela, os balões balançam e os fones mostram notas. As demais peças recebem um brilho de resposta. Em Personalizar, use **Testar carinho** e **Brincar com acessórios** para experimentar sem registrar água. Desligar **Animar personagem e acessórios** congela também essas interações.
+
+Toques alternam entre aceno, pulinho e comemoração. O carinho exibe corações e falas de cada personalidade, com intervalo mínimo de cinco segundos entre falas de interação. O arraste inclina suavemente o personagem conforme o movimento e termina com um pouso. As brincadeiras não registram água.

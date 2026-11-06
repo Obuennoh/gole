@@ -28,7 +28,7 @@ public sealed class AnimationTests
             Assert.Equal(still, Render(art));
             art.MotionEnabled = true;
             art.IsDragging = false;
-            foreach (var interaction in new[] { PetInteraction.Wave, PetInteraction.Pet, PetInteraction.Land })
+            foreach (var interaction in new[] { PetInteraction.Wave, PetInteraction.Pet, PetInteraction.Land, PetInteraction.Hop, PetInteraction.Cheer })
             {
                 art.Interact(interaction);
                 art.Phase += .7;

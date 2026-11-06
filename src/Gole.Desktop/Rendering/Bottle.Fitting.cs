@@ -57,8 +57,8 @@ public partial class Bottle
     internal static int AccessoryLayer(int id) => id switch
     {
         17 or 18 or 19 or 45 or 46 or 77 => 0,
-        27 or 29 or 55 or 56 => 10,
-        44 or 51 or 52 or 53 or 54 or 57 or 58 => 20,
+        27 or 29 or 55 or 56 or 83 or 84 or 85 or 90 => 10,
+        44 or 51 or 52 or 53 or 54 or 57 or 58 or 86 or 87 or 88 or 89 => 20,
         8 => 30,
         11 or 14 or 16 or 40 or 62 or 63 or 65 or 71 or 72 => 40,
         _ => 50
@@ -87,7 +87,7 @@ public partial class Bottle
 
     DrawingGroup AccessoryDrawing(int model, int item, int part)
     {
-        bool layered = EquippedAccessories.Any(id => id is 27 or 29 or 53 or 55 or 56);
+        bool layered = EquippedAccessories.Any(id => id is 27 or 29 or 53 or 55 or 56 or 83 or 84 or 85 or 90);
         var key = (model, item, part, Level < .15, layered);
         if (!fittedAccessories.TryGetValue(key, out var drawing))
         {
@@ -99,6 +99,8 @@ public partial class Bottle
                 var fit = Fit(model);
                 if (part > 0)
                     DrawAccessoryPart(context, fit, model, item, part);
+                else if (item >= 83)
+                    DrawExpandedClothing(context, fit, item, layered);
                 else if (item is 27 or 29 or 44 or >= 51 and <= 58)
                     DrawClothing(context, fit, item, layered);
                 else if (item == 32)
@@ -128,6 +130,12 @@ public partial class Bottle
     void DrawAccessoryPart(DrawingContext d, BodyFit fit, int model, int item, int part)
     {
         bool right = part == 2;
+        if (item is >= 86 and <= 89)
+        {
+            var colors = NewClothColors(item);
+            DrawSleeve(d, fit, item is 88 or 89 ? 54 : 51, right, colors.Fill, colors.Ink);
+            return;
+        }
         if (item is 44 or 51 or 52 or 54)
         {
             var colors = ClothColors(item);
@@ -194,7 +202,7 @@ public partial class Bottle
         if (item is 5 or 9 or 12 or 25 or 33 or 34 or 59 or 73 or 74)
         {
             double[] seats = { 52, 60, 63, 70, 77, 87, 74, 54, 47, 43, 53, 55, 59, 66, 58, 58, 44, 62, 55, 57, 54,
-                60, 53, 58, 65, 58, 84, 59, 94 };
+                60, 53, 58, 65, 58, 84, 59, 94, 62, 55, 56, 68 };
             double seat = seats[model];
             double baseline = item == 9 ? 70 : item == 25 ? 85 : 87;
             double width = Math.Clamp(fit.Width(100) / 106, .82, 1.15);
