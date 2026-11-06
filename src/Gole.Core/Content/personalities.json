@@ -1090,5 +1090,278 @@
       "Evento de gole recebido e processado com sucesso. 🤓",
       "Anotação no diário de bordo: você fez uma pausa. Excelente execução. 🔬"
     ]
+  },
+  {
+    "id": 13,
+    "name": "Dorameiro",
+    "description": "Fã de doramas e anime: tímido, emotivo, com dedinhos juntinhos e pequenas cenas dramáticas. 😊",
+    "reminders": [
+      [
+        "Onii-chan! Hoje meu sorriso ganhou episódio especial. 😊",
+        "Kyaa! Água em dia e coração fazendo doki-doki. 💖",
+        "Se isso fosse um dorama, agora entrava a música feliz.",
+        "Ganbatte! Nosso arco de cuidado tá ficando bonito. ✨",
+        "Hoje eu tô mais contente que protagonista no festival. 🌸",
+        "Senpai percebeu minha garrafinha! Cena salva. 🥰",
+        "Meu opening de hoje tem você e um copo de água.",
+        "Yatta! Que vontade de fazer um coração com as mãos. 🫶",
+        "Tô juntando os dedinhos de felicidade... 👉👈",
+        "Final feliz do episódio: nós dois sorrindo por aqui."
+      ],
+      [
+        "Onii-chan... cabe uma pausa pra água? 👉👈",
+        "Senpai, o copo tá esperando sua cena de entrada. 😊",
+        "Intervalo do episódio! Hora de visitar a garrafinha.",
+        "Posso pedir um gole bem baixinho? Onegai... 🥺",
+        "A próxima cena tem água, uma pausa e nenhum mal-entendido.",
+        "Doki-doki... fiquei tímido até pra lembrar do copo. 💗",
+        "Pausa no anime, play na água? 🥤",
+        "Nem todo arco precisa de batalha. Esse pode ter descanso.",
+        "Me nota, senpai! Sou o lembrete no cantinho da tela. 🌸",
+        "Preparei uma trilha fofinha pra nossa pausa."
+      ],
+      [
+        "O episódio avançou, mas o gole ficou no recap. 👀",
+        "Senpai, não pula a cena do copo!",
+        "Ainda esperando a água aparecer nos créditos... 😶",
+        "Onii-chan, esse suspense já passou do intervalo.",
+        "Minha expressão séria ganhou close dramático. 🎬",
+        "O roteiro diz pausa pra água. Vamos seguir essa parte?",
+        "O copo virou personagem secundário sem fala. 🥺",
+        "Tem um gole pendente no arco dessa tarde.",
+        "Meu olhar atravessa a tela e encontra... o copo esquecido.",
+        "Até o narrador tá esperando você buscar água. 💧"
+      ],
+      [
+        "Hoje minha trilha virou piano triste. Fica um pouco? 🌧️",
+        "Juntei os dedinhos, mas faltou coragem pra pedir a pausa. 👉👈",
+        "Senpai... meu sorriso foi pro intervalo.",
+        "Cadê o episódio de conforto quando a gente precisa? 🥺",
+        "O copo tá aqui e eu tô fazendo minha carinha de saudade.",
+        "Essa cena precisa de uma pausa, não de outro desencontro.",
+        "Queria um gole e um arco sem tanto drama hoje. 💙",
+        "Minha florzinha murchou no cantinho do quadro. 🌸",
+        "Pausa o próximo episódio e vem respirar comigo?",
+        "Tá tocando a música lenta. Você conhece essa cena."
+      ],
+      [
+        "Onii-chan... até os dedinhos ficaram tristes. 👉👈🥺",
+        "Kyaa, meu olho brilhou e era lágrima de desenho. 😭",
+        "Não era pra esse episódio ser o triste!",
+        "A chuva da cena combinou demais com minha expressão. 🌧️",
+        "Senpai, vamos interromper esse arco pra uma pausa?",
+        "Meu monólogo dramático aceita um copo como resposta.",
+        "Cadê o abraço do episódio especial? Primeiro, nossa água. 💧",
+        "Meu lenço imaginário pediu reforço.",
+        "A câmera aproximou e eu só queria companhia. 🥺",
+        "Prometo guardar o drama durante sua pausa pro gole."
+      ],
+      [
+        "Tela de encerramento. Me chama depois do gole. 💤",
+        "Meu personagem entrou no arco do repouso.",
+        "Onii-chan, vou cochilar até nossa próxima cena. 🌙",
+        "To be continued... depois da pausa pra água.",
+        "Guardei meus dedinhos e fui descansar o coração.",
+        "Esse episódio terminou quietinho no cantinho da tela.",
+        "Senpai, deixei um bilhete perto do copo. 💌",
+        "Meu ending tá tocando. A garrafinha espera.",
+        "Modo descanso de protagonista secundário ativado. 😴",
+        "O próximo capítulo começa quando você voltar da pausa."
+      ]
+    ],
+    "reactions": [
+      "Yatta! Esse gole mereceu um final de temporada feliz. 😊",
+      "Arigatou! Juntei os dedinhos de alegria. 👉👈💖",
+      "Senpai lembrou! Agora deixa eu comemorar baixinho.",
+      "Kyaa! Meu coração fez doki-doki de novo. 🥰",
+      "Cena aprovada: água, sorriso e trilha animada.",
+      "Onii-chan, esse foi meu momento favorito do episódio. 🌸",
+      "Gole recebido! Já quero guardar esse capítulo.",
+      "Ganhei um motivo pra fazer coraçãozinho com as mãos. 🫶",
+      "Esse cuidado valeu um episódio especial de fofura.",
+      "Yatta! Pode subir os créditos com nossa música feliz."
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Detetive",
+    "description": "Observador e espirituoso: transforma lembretes em pistas, casos e pequenas deduções. 🕵️",
+    "reminders": [
+      [
+        "Caso resolvido: água em dia, pet sorridente. 🔎",
+        "As evidências apontam um excelente cuidado com a garrafinha.",
+        "Encontrei a origem do sorriso: você lembrou do copo. 😊",
+        "Nenhum mistério neste bom humor. O gole deixou pistas.",
+        "Relatório do caso: companhia agradável e água por perto.",
+        "Minha lupa detectou uma tarde promissora. 🕵️",
+        "O suspeito do meu sorriso confessou: foi seu cuidado.",
+        "Arquivo encerrado com uma observação feliz.",
+        "A dedução de hoje veio acompanhada de um sorriso. ✨",
+        "Pistas conferidas. Podemos apreciar essa tranquilidade."
+      ],
+      [
+        "Pista número um: o copo está ao alcance da mão. 🔍",
+        "Investigação rápida: quando foi sua última pausa?",
+        "Há uma garrafa na cena e um gole esperando participação.",
+        "Meu informante diz que cabe uma pausa agora. 🕵️",
+        "Vamos seguir a pista que termina no seu copo?",
+        "A evidência é líquida e está bem perto de você. 💧",
+        "Caso da tarde: localizar a água e fazer um intervalo.",
+        "Nenhum interrogatório. Só um lembrete discreto.",
+        "Observei uma oportunidade de pausa entre essas tarefas.",
+        "Seu copo pediu pra depor. Podemos ouvi-lo? 👀"
+      ],
+      [
+        "O gole desaparecido segue sem explicação. 🔎",
+        "Reconstituí seus passos: você abriu outra aba.",
+        "A garrafa estava na mesa durante todo o ocorrido.",
+        "Essa pausa sumiu em circunstâncias muito suspeitas. 🤔",
+        "Meu quadro de pistas agora tem um copo no centro.",
+        "O caso ficou sério quando a água virou decoração.",
+        "Há contradições entre planejar o gole e pegar o copo.",
+        "Abri uma diligência até a cozinha. Você acompanha?",
+        "Procura-se: intervalo breve visto pela última vez de manhã.",
+        "A testemunha ocular sou eu. Vi a água sendo adiada. 👀"
+      ],
+      [
+        "O caso esfriou e meu sorriso também. 🌧️",
+        "Preciso de uma pausa antes de analisar outra pista.",
+        "A lupa ficou embaçada de desânimo. Vamos ao copo?",
+        "Minha investigação encontrou saudade da nossa pausa.",
+        "O relatório tá curto: tarde longa, copo esquecido.",
+        "Um detetive também descansa entre uma dedução e outra. 🔍",
+        "As pistas levam a um intervalo que ainda não aconteceu.",
+        "Arquivei a pressa por um instante. Vem comigo?",
+        "Vou observar a chuva enquanto você busca água.",
+        "Nem todo mistério precisa ser resolvido antes da pausa."
+      ],
+      [
+        "A prova molhou. Desta vez fui eu chorando. 😢",
+        "Meu lenço virou peça central da investigação.",
+        "Até a lupa pede uma pausa nesse caso. 🔎",
+        "O copo segue disponível. Essa é a pista mais útil agora.",
+        "Interrompi o interrogatório das abas pra chamar você.",
+        "Relatório emotivo: o detetive quer companhia. 🥺",
+        "Não vou deduzir mais nada sem um intervalo.",
+        "Encontrei o gole pendente sob uma pilha de tarefas.",
+        "O caso ganhou drama demais. Vamos buscar água?",
+        "Minhas anotações pedem pausa entre duas lágrimas."
+      ],
+      [
+        "Investigação suspensa até o próximo gole. 💤",
+        "Deixei a lupa na mesa e entrei em repouso.",
+        "O arquivo continua aberto; o detetive foi descansar.",
+        "Caso da garrafa: retomada após uma pausa. 🌙",
+        "Minha silhueta ficou quietinha no escritório.",
+        "Fui tirar um cochilo sem perder as pistas.",
+        "O copo guarda a próxima evidência. Me chama depois.",
+        "A agência fechou por alguns instantes. 😴",
+        "Anotação final: descansar também faz parte do trabalho.",
+        "Meu próximo relatório espera sua volta da pausa."
+      ]
+    ],
+    "reactions": [
+      "Caso do gole resolvido com sucesso! 🔎",
+      "Evidência recebida. Era você cuidando da água. 😊",
+      "Minha dedução estava certa: essa pausa ia acontecer.",
+      "Arquivo atualizado com um sorriso satisfeito.",
+      "A testemunha aqui agradece sua colaboração. 🕵️",
+      "Excelente trabalho, parceiro de investigação!",
+      "Gole confirmado. Nenhum mistério restante neste instante.",
+      "O relatório ganhou uma estrelinha de comemoração. ⭐",
+      "Operação copo concluída. Podemos guardar a lupa.",
+      "Esse cuidado foi a melhor pista do dia."
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Caótico",
+    "description": "Inventivo, imprevisível e brincalhão: humor absurdo e pequenas festas no cantinho da tela. 🪩",
+    "reminders": [
+      [
+        "Bom dia pro meu chapéu invisível e pra sua água! 🪩",
+        "A garrafinha tá feliz. Repito: liberaram o pequeno carnaval.",
+        "Meu sorriso abriu uma empresa e contratou confete. 🎉",
+        "Hoje eu acordei com energia de colher dançando.",
+        "Água em dia! O conselho dos patinhos aprovou. 🦆",
+        "Vou comemorar sem solicitar licença ao calendário.",
+        "Meu humor tá fazendo pirueta em câmera lenta. 🤸",
+        "Um brinde ao copo e à gravidade que segura ele.",
+        "A felicidade chegou de patinete imaginário.",
+        "Hoje minha trilha sonora é plim-plim e um solo de pato. ✨"
+      ],
+      [
+        "Interrompemos o nada para um anúncio: água! 📣",
+        "Seu copo não vai levantar sozinho e fazer entrevista.",
+        "Pausa pro gole antes que eu invente uma coreografia.",
+        "O conselho das tampinhas convocou você. 🦆",
+        "Tenho um plano: você pega água e eu finjo ser discreto.",
+        "Aviso do departamento de pequenas distrações: pausa!",
+        "O gole tá pronto pra estrear no seu dia. 🎉",
+        "Se eu piscar em código de pato, você pega o copo?",
+        "A água não tem botão de play, mas você entendeu.",
+        "Um intervalo entrou na sala usando óculos de festa. 🪩"
+      ],
+      [
+        "Seu copo virou uma instalação artística e ninguém me avisou.",
+        "A pausa fugiu de chinelo. Vou chamar ela de volta. 👀",
+        "Tenho três teorias e todas terminam em pegar água.",
+        "O lembrete vestiu uma capa pra tentar chamar atenção.",
+        "Até meu pato imaginário percebeu esse adiamento. 🦆",
+        "Queria fazer um discurso, mas só escrevi GOLE.",
+        "A tarefa da água tá me olhando de volta.",
+        "Minha sobrancelha imaginária subiu dois andares. 🤨",
+        "O copo pediu um empresário. Eu sugeri uma pausa.",
+        "Preciso de um intervalo antes de criar outro departamento."
+      ],
+      [
+        "Minha festa virou reunião de condomínio. 🌧️",
+        "O confete pousou e esqueceu como voa.",
+        "Hoje meu pato imaginário tá andando devagar. 🦆",
+        "Um gole caberia nesse intervalo entre dois suspiros.",
+        "Minha dancinha pediu licença pra sentar.",
+        "A alegria saiu pra comprar pão. Vamos esperar com água?",
+        "Meu megafone encolheu até virar um sussurro.",
+        "A playlist tocou barulho de chuva e eu respeitei. 💙",
+        "O circo fechou pra uma pausa pequenininha.",
+        "Vou guardar os malabarismos enquanto você pega o copo."
+      ],
+      [
+        "Meu confete molhou. Não era esse o efeito especial. 😭",
+        "O departamento de drama invadiu a festa.",
+        "Até o pato imaginário trouxe um lencinho. 🦆",
+        "Pausa urgente na bagunça: vamos cuidar do nosso cantinho.",
+        "Tô chorando em estéreo, mas o pedido é simples: água.",
+        "Minha coreografia virou dois suspiros e uma lágrima.",
+        "A garrafinha pediu intervalo no próprio espetáculo. 🥺",
+        "Alguém desligou minha máquina de pequenas alegrias.",
+        "O palco escorregou no drama. Melhor fazer uma pausa.",
+        "Guardei o megafone pra te chamar bem baixinho."
+      ],
+      [
+        "Fechei a fábrica de confete pra manutenção. 💤",
+        "Meu pato imaginário assumiu a portaria enquanto durmo.",
+        "O caos entrou em modo soneca. Aproveita o silêncio.",
+        "O próximo espetáculo começa depois do gole. 🪩",
+        "Deitei dentro da minha ideia e fiquei por lá.",
+        "A bagunça foi arquivada numa gaveta fofinha.",
+        "Minha energia tirou férias de três suspiros.",
+        "O circo dormiu com as luzes apagadinhas. 🌙",
+        "Fui cochilar antes de inventar um problema de papelão.",
+        "Me acorda quando a pausa pro copo terminar. 😴"
+      ]
+    ],
+    "reactions": [
+      "ATENÇÃO: o gole chegou usando uma coroa invisível! 🎉",
+      "O conselho dos patinhos bateu palmas. 🦆",
+      "Uma salva de plim-plim pra esse cuidado!",
+      "Você bebeu e minha festa recuperou o alvará. 🪩",
+      "Gole confirmado. Soltem o confete imaginário!",
+      "Esse momento merece uma dança sem ensaio.",
+      "Vou guardar essa vitória num potinho de glitter. ✨",
+      "A água entrou em cena e roubou meu espetáculo.",
+      "Parabéns! Seu prêmio é uma garrafinha toda boba. 😊",
+      "Meu pato imaginário declarou feriado de comemoração."
+    ]
   }
 ]

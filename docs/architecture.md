@@ -1,4 +1,4 @@
-﻿# Arquitetura
+# Arquitetura
 
 ## Limites entre projetos
 
@@ -81,7 +81,7 @@ A visão geral lista registros de todos os dias, ordenados do mais recente para 
 
 ### Personalidades e falas
 
-`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam doze estilos; o ID zero mantém o modo aleatório. Cada estilo contém dez frases para cada expressão e dez respostas após beber, totalizando 840 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
+`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam quinze estilos; o ID zero mantém o modo aleatório. Cada estilo contém dez frases para cada expressão e dez respostas após beber, totalizando 1.050 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
 
 `ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
 
@@ -138,3 +138,11 @@ Referência de aplicação e reinício: [Velopack](https://docs.velopack.io/inte
 O ID 6 mantém o Nerd fofo e o ID 12 acrescenta Nerd técnico. Nenhum dos dois desenha um livro como gesto: o item 69 continua optativo. IDs 91–99 acrescentam maquiagem e acessórios; o slot 14 torna batons mutuamente exclusivos. Esfumado e blush são desenhados antes dos olhos. As peças novas usam as transformações de rosto e corpo existentes, sem mudar o schema de preferências.
 
 `SpeakGesture` usa a duração do balão (até 12 segundos), entrada e saída suaves e variação de braços por personalidade. Falas carinhosas recebem expressão suave. Cliques, carinho, arrasto e comemorações têm prioridade. O estado é transitório e o relógio de animação controla o término. O movimento espontâneo alterna três variações por ciclo; `TrackDrag` usa deslocamento horizontal e vertical com amortecimento quando o cursor para. `EndDrag` inicia o pouso. As antigas ações explícitas sobre acessórios foram removidas do editor, do menu e do renderizador.
+
+### Mistura de vozes e emoji em cores
+
+Preferências versão 19 acrescentam `PersonalityIds`. O ID principal legado é preservado, fica em primeiro lugar e participa do limite total de três IDs válidos distintos. ID principal zero limpa a mistura e usa todas as vozes. `PersonalityMix` escolhe apenas entre as vozes selecionadas e evita repetir o último estilo quando há mais de uma opção. A seleção é salva separadamente dos looks e participa do rascunho do editor.
+
+As falas de lembrete, gole e toque usam o mesmo seletor por pet; `activePersonality` preserva o estilo sorteado durante o gesto. IDs 13–15 são Dorameiro, Detetive e Caótico. O Dorameiro desenha mãos à frente do corpo durante falas e gestos tímidos, preservando a pose habitual quando há um objeto ocupado na mão.
+
+`EmojiTextBlock` segmenta Unicode por grafemas e intercala texto e imagens Twemoji em `InlineUIContainer`. As 74 imagens PNG são recursos incorporados e congelados em cache. O texto Unicode original continua disponível no componente e na descrição de acessibilidade. Nenhuma imagem é buscada em rede em execução. A licença e os créditos acompanham o pacote na pasta Emoji.

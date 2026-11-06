@@ -26,6 +26,10 @@ namespace Gole.Desktop
             return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
         }
         public static Brush Ink = B("#18343D"), Muted = B("#6A8086"), Teal = B("#087F83");
+        public static EmojiTextBlock EmojiText(string value, double size, Brush brush)
+        {
+            return new EmojiTextBlock { FontSize = size, Foreground = brush, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8), Text = value };
+        }
         public static TextBlock Text(string value, double size, Brush brush)
         {
             return new TextBlock { Text = value, FontSize = size, Foreground = brush, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8) };

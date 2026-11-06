@@ -117,10 +117,11 @@ namespace Gole.Desktop
                 Add(preview, Theme.Text(PetCatalog.Accessories[examples[i]], 14, Theme.Ink), column * 200 + 25, 237 + row * 235);
             }
             Save(preview, Path.Combine(folder, "roupas-corrigidas.png"));
+            RenderMix(folder);
             RenderStyles(folder);
             RenderCollection(folder);
             RenderWardrobePanel(folder);
-            var gestures = new Canvas { Width = 1100, Height = 900, Background = Theme.B("#F1F5F7") };
+            var gestures = new Canvas { Width = 1100, Height = 65 + ((PersonalityCatalog.Options.Count - 2) / 4 + 1) * 270, Background = Theme.B("#F1F5F7") };
             Add(gestures, Theme.Text("GOLE · gestos das personalidades", 24, Theme.Ink), 24, 15);
             for (int id = 1; id < PersonalityCatalog.Options.Count; id++)
             {
@@ -130,6 +131,28 @@ namespace Gole.Desktop
             }
             Save(gestures, Path.Combine(folder, "personalidades-gestos.png"));
             return 0;
+        }
+
+        static void RenderMix(string folder)
+        {
+            var canvas = new Canvas { Width = 1200, Height = 760, Background = Theme.B("#F1F5F7") };
+            Add(canvas, Theme.Text("GOLE · Dorameiro + Nerd fofo + Emo", 26, Theme.Ink), 25, 15);
+            string[] phrases = { "Onii-chan! Você me notou... 👉👈😊", "Meu coraçãozinho fez um beep. 🤓💗", "Playlist triste, coração quentinho. 🖤" };
+            int[] ids = { 13, 6, 11 };
+            for (int i = 0; i < 3; i++)
+            {
+                var pet = new Bottle { Vessel = 0, PersonalityId = ids[i], Width = 370, Height = 320, Level = .7 };
+                pet.SpeakGesture(phrases[i], 6);
+                pet.Phase = 1.5;
+                Add(canvas, pet, 15 + i * 400, 65);
+                var text = Theme.EmojiText(phrases[i], 19, Theme.Ink);
+                text.Width = 350;
+                Add(canvas, text, 25 + i * 400, 395);
+            }
+            var dark = new Border { Width = 1150, Height = 160, CornerRadius = new CornerRadius(15), Background = Theme.B("#24343F"), Padding = new Thickness(24) };
+            dark.Child = Theme.EmojiText("Emojis coloridos também no modo noturno: 😊 🥰 🤓 👉👈 💖 🦆 🕵️ 🏴‍☠️\nOs três estilos se alternam nas falas e nos gestos.", 23, Theme.B("#E8F0F3"));
+            Add(canvas, dark, 25, 535);
+            Save(canvas, Path.Combine(folder, "personalidades-mistura-emojis.png"));
         }
 
         static void RenderStyles(string folder)
@@ -149,7 +172,7 @@ namespace Gole.Desktop
                 Add(canvas, new Bottle { Vessel = new[] { 0, 8, 4, 31, 28 }[i % 5], Accessory = 91 + i, Width = 225, Height = 215, MotionEnabled = false }, x, y);
                 Add(canvas, Theme.Text(PetCatalog.Accessories[91 + i], 14, Theme.Ink), x + 20, y + 220);
             }
-            var text = Theme.Text("O-oi! Meu coraçãozinho fez um beep. 🤓💗   |   Evento de gole recebido. 🔬", 18, Theme.Ink);
+            var text = Theme.EmojiText("O-oi! Meu coraçãozinho fez um beep. 🤓💗   |   Evento de gole recebido. 🔬", 18, Theme.Ink);
             text.FontFamily = new FontFamily("Segoe UI, Segoe UI Emoji");
             Add(canvas, text, 25, 970);
             Save(canvas, Path.Combine(folder, "emo-nerds-maquiagem.png"));
@@ -201,6 +224,8 @@ namespace Gole.Desktop
         static void RenderWardrobePanel(string folder)
         {
             var state = HydrationState.Fresh(DateTime.UtcNow);
+            state.PersonalityId = 13;
+            state.PersonalityIds = new() { 13, 6, 11 };
             var store = new JsonStateStore(Path.Combine(folder, "preview-state"));
             var pet = new CompanionWindow(new HydrationSession(state), store);
             foreach (bool dark in new[] { false, true })

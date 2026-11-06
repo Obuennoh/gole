@@ -17,17 +17,26 @@ public partial class Bottle
     public Vector Gaze;
     public double DragLean;
     int touchCount;
-    public void Touch() => Interact((touchCount++ % 8) switch
+    public void Touch()
     {
-        0 => PetInteraction.Wave,
-        1 => PetInteraction.Hop,
-        2 => PetInteraction.Cheer,
-        3 => PetInteraction.Dance,
-        4 => PetInteraction.Shy,
-        5 => PetInteraction.Bow,
-        6 => PetInteraction.Wiggle,
-        _ => PetInteraction.Stretch
-    });
+        int index = touchCount++;
+        if (ActingPersonality == 13 && index % 2 == 0)
+        {
+            Interact(PetInteraction.Shy);
+            return;
+        }
+        Interact((index % 8) switch
+        {
+            0 => PetInteraction.Wave,
+            1 => PetInteraction.Hop,
+            2 => PetInteraction.Cheer,
+            3 => PetInteraction.Dance,
+            4 => PetInteraction.Shy,
+            5 => PetInteraction.Bow,
+            6 => PetInteraction.Wiggle,
+            _ => PetInteraction.Stretch
+        });
+    }
     PetInteraction interaction;
     double interactionStart = double.NegativeInfinity;
     double dragVertical, dragSpeed, lastDrag = double.NegativeInfinity;
@@ -72,6 +81,12 @@ public partial class Bottle
     double Gesture => IsAnimating && Level > 0 && !Celebrate && !IsDragging && !InteractionActive
         && MotionTime % 14 is > 2 and < 5 ? Math.Sin((MotionTime % 14 - 2) / 3 * Math.PI) : 0;
 
+    double BashfulGesture => IsAnimating && ActingPersonality == 13 && !IsDragging && !Celebrate
+        && !EquippedAccessories.Any(id => id is 26 or 41 or 47 or 48 or 69 or 78 or 82)
+        ? InteractionActive ? interaction is PetInteraction.Shy or PetInteraction.Pet ? Math.Sin(InteractionAge / 2.5 * Math.PI) : 0
+        : Math.Max(Gesture, Phase >= speechStart && Phase < speechUntil ? Math.Min(1, (Phase - speechStart) / .3) * Math.Min(1, (speechUntil - Phase) / .4) : 0)
+        : 0;
+
     CharacterPose InteractivePose(CharacterPose pose)
     {
         if (!IsAnimating)
@@ -94,6 +109,9 @@ public partial class Bottle
             9 => pose with { RightArm = pose.RightArm - g * 25, Lean = pose.Lean - g * 3 },
             10 => pose with { LeftArm = pose.LeftArm - g * 20, RightArm = pose.RightArm + g * 20, Lift = pose.Lift - g * Math.Abs(Math.Sin(t * 9)) * 2 },
             11 => pose with { Lean = pose.Lean + g * Math.Sin(t * 3) * 3, RightArm = pose.RightArm - g * 22 },
+            13 => pose with { Lean = pose.Lean - g * 3, ScaleX = 1 - g * .01, ScaleY = 1 + g * .01, Blink = g > .85 },
+            14 => pose with { Lean = pose.Lean + g * 3, RightArm = pose.RightArm - g * 20 },
+            15 => pose with { Lean = pose.Lean + Math.Sin(t * 6) * g * 4, Lift = pose.Lift - g * 3, LeftArm = Math.Sin(t * 7) * g * 20 },
             _ => pose
         };
         if (!speaking && g > 0)
@@ -186,6 +204,20 @@ public partial class Bottle
             }
             d.Pop();
             d.Pop();
+        }
+        if (BashfulGesture > .05)
+        {
+            // Hands come forward from the shoulders; fingertips meet in a shy gesture.
+            double gap = 3 + (1 - BashfulGesture) * 12;
+            d.PushTransform(new ScaleTransform(Math.Min(1, fit.Width(169) / 110), 1, 110, 169));
+            Path(d, "M 57,135 Q 66,165 89,173 M 163,135 Q 154,165 131,173", null, P("#234957", 3.3));
+            d.DrawEllipse(B("#D7EFF0"), P("#234957", 2), new Point(96 - gap, 174), 9, 7);
+            d.DrawEllipse(B("#D7EFF0"), P("#234957", 2), new Point(124 + gap, 174), 9, 7);
+            d.DrawLine(P("#234957", 4), new Point(97 - gap, 169), new Point(110 - gap / 2, 170));
+            d.DrawLine(P("#234957", 4), new Point(123 + gap, 169), new Point(110 + gap / 2, 170));
+            d.Pop();
+            if (warmSpeech || interaction == PetInteraction.Pet)
+                DrawHeart(d, 110, 94, 6 * BashfulGesture, "#E694A7", "#AE708E");
         }
         if (InteractionActive && interaction == PetInteraction.Pet)
         {

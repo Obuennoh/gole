@@ -43,7 +43,12 @@ namespace Gole.Desktop
         string draftName, draftColor;
         int draftModel, draftPersonality;
         ComboBox personalityChoice;
-        TextBlock personalityDescription, personalityMessage;
+        TextBlock personalityDescription;
+        EmojiTextBlock personalityMessage;
+        List<int> draftPersonalities = new();
+        readonly PersonalityMix previewMix = new(new Random());
+        readonly List<CheckBox> mixChoices = new();
+        int previewVoice;
         readonly ReminderPhrases previewSpeech = new ReminderPhrases(new Random());
         int lastPreviewPersonality = -1;
         HydrationMood? lastPreviewMood;
@@ -307,6 +312,7 @@ namespace Gole.Desktop
             draftColor = data.Color;
             draftModel = data.Vessel;
             draftPersonality = data.PersonalityId;
+            draftPersonalities = data.SelectedPersonalities;
             draftAccessories = data.Accessories.ToList();
             draftSize = data.Size;
             draftMotion = data.Motion;
@@ -315,7 +321,7 @@ namespace Gole.Desktop
         {
             get
             {
-                return draftName != data.Name || draftColor != data.Color || draftModel != data.Vessel || draftPersonality != data.PersonalityId || !draftAccessories.SequenceEqual(data.Accessories) || Math.Abs(draftSize - data.Size) > .1 || draftMotion != data.Motion;
+                return draftName != data.Name || draftColor != data.Color || draftModel != data.Vessel || draftPersonality != data.PersonalityId || !draftPersonalities.SequenceEqual(data.SelectedPersonalities) || !draftAccessories.SequenceEqual(data.Accessories) || Math.Abs(draftSize - data.Size) > .1 || draftMotion != data.Motion;
             }
         }
         UIElement Editor()
@@ -342,13 +348,37 @@ namespace Gole.Desktop
             {
                 if (syncing || personalityChoice.SelectedValue is not int id)
                     return;
+                var extras = draftPersonalities.Where(other => other != draftPersonality).ToList();
                 draftPersonality = id;
+                draftPersonalities = PersonalityMix.Normalize(extras, id);
+                lastPreviewPersonality = -1;
                 UpdateEditor();
             };
             controls.Children.Add(personalityChoice);
             personalityDescription = Theme.Text("", 12, Theme.Muted);
             personalityDescription.Margin = new Thickness(0, 8, 0, 0);
             controls.Children.Add(personalityDescription);
+            controls.Children.Add(Theme.Text("Misture com até mais duas personalidades. As falas e os gestos alternam entre as escolhidas.", 12, Theme.Muted));
+            var mixPanel = new WrapPanel();
+            foreach (var option in PersonalityCatalog.Options.Where(p => p.Id > 0))
+            {
+                int choice = option.Id;
+                var check = new CheckBox { Content = option.Name, Tag = choice, Width = 140, Margin = new Thickness(0, 4, 8, 4) };
+                System.Windows.Automation.AutomationProperties.SetName(check, "Misturar " + option.Name);
+                check.Click += (_, _) =>
+                {
+                    if (check.IsChecked == true && draftPersonalities.Count < PersonalityMix.Maximum)
+                        draftPersonalities.Add(choice);
+                    else if (choice != draftPersonality)
+                        draftPersonalities.Remove(choice);
+                    draftPersonalities = PersonalityMix.Normalize(draftPersonalities, draftPersonality);
+                    lastPreviewPersonality = -1;
+                    UpdateEditor();
+                };
+                mixChoices.Add(check);
+                mixPanel.Children.Add(check);
+            }
+            controls.Children.Add(mixPanel);
             Label(controls, "Modelo");
             var models = new WrapPanel();
             for (int i = 0; i < Bottle.Models.Length; i++)
@@ -459,7 +489,7 @@ namespace Gole.Desktop
                 states.Children.Add(b);
             }
             previewContent.Children.Add(states);
-            personalityMessage = Theme.Text("", 12, Theme.Ink);
+            personalityMessage = Theme.EmojiText("", 12, Theme.Ink);
             personalityMessage.FontFamily = new FontFamily("Segoe UI, Segoe UI Emoji");
             personalityMessage.Margin = new Thickness(0);
             System.Windows.Automation.AutomationProperties.SetName(personalityMessage, "Prévia da fala");
@@ -540,7 +570,14 @@ namespace Gole.Desktop
         {
             if (preview == null)
                 return;
-            personalityDescription.Text = PersonalityCatalog.Get(draftPersonality).Description;
+            personalityDescription.Text = draftPersonality == 0 ? "Aleatória: usa todas as personalidades. Escolha uma para montar sua mistura." :
+                string.Join(" + ", draftPersonalities.Select(id => PersonalityCatalog.Get(id).Name)) + " · " + draftPersonalities.Count + "/3";
+            foreach (var check in mixChoices)
+            {
+                int choice = (int)check.Tag;
+                check.IsChecked = draftPersonalities.Contains(choice);
+                check.IsEnabled = draftPersonality != 0 && choice != draftPersonality && (check.IsChecked == true || draftPersonalities.Count < PersonalityMix.Maximum);
+            }
             UpdatePreviewMotion();
             preview.Tint = draftColor;
             preview.Vessel = draftModel;
@@ -587,7 +624,7 @@ namespace Gole.Desktop
         }
         void UpdatePreviewMotion()
         {
-            preview.PersonalityId = draftPersonality;
+            preview.PersonalityId = previewVoice;
             preview.MotionEnabled = draftMotion;
             preview.Phase = animationClock.Elapsed.TotalSeconds;
             preview.CelebrationSeconds = previewCelebration.IsRunning ? previewCelebration.Elapsed.TotalSeconds : double.PositiveInfinity;
@@ -602,7 +639,9 @@ namespace Gole.Desktop
             var mood = HydrationExpression.AtLevel(previewLevel);
             if (!force && lastPreviewPersonality == draftPersonality && lastPreviewMood == mood)
                 return;
-            personalityMessage.Text = previewSpeech.Next(mood, draftPersonality);
+            previewVoice = previewMix.Next(draftPersonalities);
+            preview.PersonalityId = previewVoice;
+            personalityMessage.Text = previewSpeech.Next(mood, previewVoice);
             preview.SpeakGesture(personalityMessage.Text, 6);
             lastPreviewPersonality = draftPersonality;
             lastPreviewMood = mood;
@@ -619,6 +658,7 @@ namespace Gole.Desktop
             data.Color = draftColor;
             data.Vessel = draftModel;
             data.PersonalityId = draftPersonality;
+            data.PersonalityIds = draftPersonalities.ToList();
             data.Accessories = draftAccessories.ToList();
             data.Accessory = 0;
             data.Size = draftSize;
@@ -761,6 +801,7 @@ namespace Gole.Desktop
             var updateCard = UpdateSettingsCard();
             updateCard.Margin = new Thickness(0, 18, 0, 0);
             page.Children.Add(updateCard);
+            page.Children.Add(Theme.Text("Emojis: Twemoji — Twitter, Inc. e colaboradores. CC BY 4.0. Créditos e licença na pasta Emoji do aplicativo.", 11, Theme.Muted));
             return Scroll(page);
         }
         Border UpdateSettingsCard()

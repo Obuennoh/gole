@@ -43,7 +43,7 @@ public sealed class PersonalityTests
             foreach (string message in PersonalityCatalog.Reactions(option.Id))
                 Assert.True(all.Add(message));
         }
-        Assert.True(all.Count >= 840);
+        Assert.True(all.Count >= 1050);
     }
 
     [Fact]

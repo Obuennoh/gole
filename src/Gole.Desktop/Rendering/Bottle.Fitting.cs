@@ -71,6 +71,8 @@ public partial class Bottle
     void DrawLimbs(DrawingContext d, BodyFit fit, double level, Pen line)
     {
         Path(d, "M 84,216 Q 77,233 69,231 L 57,231 M 137,216 Q 144,233 152,231 L 163,231", null, line);
+        if (BashfulGesture > .05)
+            return;
         // Both poses use the same shoulder and wrist anchors as the accessories.
         double left = fit.Left(129) + 3, right = fit.Right(129) - 3;
         d.PushTransform(ArmTransform(fit, false));

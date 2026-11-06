@@ -1,4 +1,4 @@
-﻿# Validação
+# Validação
 
 ## Rotina reproduzível
 
@@ -86,3 +86,7 @@ Atualização automática: inicialização sem clique, reinício só após pacot
 
 A expansão de personalidades e maquiagem verifica 840 mensagens únicas, no mínimo dez por expressão, ID 12 preservado, oito reações distintas ao clique, arrasto bidirecional com repouso e pouso, término do gesto de fala, respeito a movimento desativado e ausência de livro não equipado. `--render-fitting` acrescenta `emo-nerds-maquiagem.png` e `reacoes-clique.png`, sem abrir janelas ou alterar preferências reais.
 `scripts/check.ps1` concluiu com 139 testes aprovados (98 de regras e 41 de desktop), compilação sem avisos e formatação verificada. O teste do editor compartilha a coleção de renderização para evitar acesso concorrente aos caches WPF.
+
+Mistura e emojis: migração da versão 18 preserva a personalidade e a posição; limite de três estilos, limpeza de IDs inválidos e duplicados, persistência e retorno ao modo Aleatória. O teste do editor verifica seleção, limite, prévia, salvamento e descarte. O catálogo cobre 1.050 mensagens distintas. O teste de emojis verifica que todos os grafemas do catálogo possuem imagem incorporada e que o sorriso contém pixels amarelos nos dois temas. `personalidades-mistura-emojis.png` mostra os dedinhos e os emojis nos temas claro e escuro.
+
+Validação da versão de mistura: 143 testes aprovados (101 de regras e persistência, 42 de desktop).

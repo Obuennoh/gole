@@ -16,7 +16,10 @@ public sealed class InteractionPhrases(Random random)
         ["Arrr! Capitão no convés! Aceno a bombordo.", "Marujo, recebi seu sinal. Seguimos juntos nessa aventura!"],
         ["Tô aqui, criatura! Tá bom, vai um aceno.", "Chamou? Eu ouvi. Não espalha que fiquei contente."],
         ["Oi... afastei a franja só pra te ver melhor.", "Pausei a playlist. Esse toque mereceu minha atenção. 🖤"],
-        ["Interrupção recebida. Qual é a nova hipótese? 🤓", "Pausei a pesquisa pra responder ao seu sinal. 💻"]
+        ["Interrupção recebida. Qual é a nova hipótese? 🤓", "Pausei a pesquisa pra responder ao seu sinal. 💻"],
+        ["Onii-chan! Você me notou... 👉👈😊", "Kyaa! Essa cena mereceu uma trilha fofinha. 💖"],
+        ["Detectei um toque na cena. Era você! 🔎", "Parceiro, qual é a próxima pista? 🕵️"],
+        ["Chamaram a atração principal do pequeno caos? 🪩", "Você apertou o botão invisível de festa! 🎉"]
     ];
     static readonly string[][] Pet =
     [
@@ -31,7 +34,10 @@ public sealed class InteractionPhrases(Random random)
         ["Arrr... esse carinho vale mais que um baú de ouro.", "O capitão conquistou o coração da tripulação!"],
         ["Tá, pode continuar. Mas não conta que eu gostei.", "Minha bronca tirou uma folga. Esse carinho tá aprovado."],
         ["A franja escondeu meu sorriso... mas ele tá bem aqui.", "Playlist triste, coração quentinho. Culpa do seu carinho. 🖤"],
-        ["Experimento de carinho aprovado por revisão do próprio pet. 🧪", "Resultado curioso: meu sorriso aumentou com essa interação. 🤓"]
+        ["Experimento de carinho aprovado por revisão do próprio pet. 🧪", "Resultado curioso: meu sorriso aumentou com essa interação. 🤓"],
+        ["Doki-doki... fiquei juntando os dedinhos de vergonha. 👉👈🥰", "Arigatou, senpai! Essa cena virou meu episódio favorito. 💖"],
+        ["Mistério resolvido: eu gosto desse carinho. 😊", "Essa pista vai direto pro arquivo de momentos bons. 🔎"],
+        ["Derreti. Alguém busca uma colher de carinho? 🫠", "O conselho dos patinhos aprovou esse cafuné. 🦆💛"]
     ];
     public string Next(int personality, bool pet)
     {

@@ -277,6 +277,26 @@ public sealed class StateStoreTests : IDisposable
         }
     }
 
+    [Fact]
+    public void Personality_mix_survives_restart_and_legacy_single_voice_is_preserved()
+    {
+        Directory.CreateDirectory(directory);
+        var store = Store();
+        File.WriteAllText(store.FilePath, "{\"Version\":18,\"PersonalityId\":11,\"X\":123,\"Y\":456}");
+        var old = store.Load(Now).State;
+        Assert.Equal(new[] { 11 }, old.SelectedPersonalities);
+        Assert.Equal(123, old.X);
+        Assert.Equal(456, old.Y);
+        old.PersonalityId = 13;
+        old.PersonalityIds = new() { 13, 6, 11 };
+        Assert.True(store.Save(old));
+        Assert.Equal(new[] { 13, 6, 11 }, store.Load(Now).State.SelectedPersonalities);
+        old.PersonalityId = 0;
+        old.PersonalityIds.Clear();
+        Assert.True(store.Save(old));
+        Assert.Empty(store.Load(Now).State.SelectedPersonalities);
+    }
+
     public void Dispose()
     {
         var root = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "Gole.Tests")) + Path.DirectorySeparatorChar;

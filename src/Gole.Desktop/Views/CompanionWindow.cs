@@ -50,7 +50,10 @@ namespace Gole.Desktop
         double lastAnimationFrame;
         internal double CelebrationAge => drinkAnimation.IsRunning ? drinkAnimation.Elapsed.TotalSeconds : double.PositiveInfinity;
         Border bubble;
-        TextBlock speech;
+        EmojiTextBlock speech;
+        readonly PersonalityMix personalityMix = new(new Random());
+        int activePersonality;
+        int NextPersonality() => activePersonality = personalityMix.Next(Data.SelectedPersonalities);
         Popup speechPopup;
         internal bool IsSpeechOpen => speechPopup.IsOpen;
         internal string CurrentSpeech => speech.Text;
@@ -73,6 +76,7 @@ namespace Gole.Desktop
             drinkReactions = new DrinkReactions(random);
             reminderPhrases = new ReminderPhrases(random);
             this.session = session;
+            activePersonality = Data.PersonalityId;
             Store = store;
             Title = "Gole · seu pet de água";
             Width = Data.Size * 220 / 255;
@@ -84,7 +88,7 @@ namespace Gole.Desktop
             ShowInTaskbar = false;
             ResizeMode = ResizeMode.NoResize;
             FontFamily = new FontFamily("Segoe UI");
-            speech = Theme.Text("", 13, Theme.Ink);
+            speech = Theme.EmojiText("", 13, Theme.Ink);
             speech.Margin = new Thickness(0);
             bubble = new Border { Background = Theme.B("#FFFFF9"), CornerRadius = new CornerRadius(18, 18, 5, 18), Padding = new Thickness(15, 11, 15, 11), MaxWidth = 256, MinHeight = 62, Child = speech, Opacity = 0 };
             Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Vessel = Data.Vessel, EquippedAccessories = Data.Accessories, Tint = Data.Color, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para interagir · passe o mouse para fazer carinho · botão direito para opções" };
@@ -222,7 +226,7 @@ namespace Gole.Desktop
             var cursor = Forms.Cursor.Position;
             var local = Art.PointFromScreen(new Point(cursor.X, cursor.Y));
             Art.Gaze = new Vector((local.X - Art.ActualWidth / 2) / 50, (local.Y - Art.ActualHeight / 2) / 60);
-            Art.PersonalityId = Data.PersonalityId;
+            Art.PersonalityId = activePersonality;
             Art.MotionEnabled = Data.Motion;
             Art.CelebrationSeconds = CelebrationAge;
             Art.Level = Data.Level(now);
@@ -241,7 +245,8 @@ namespace Gole.Desktop
         }
         public void Apply()
         {
-            Art.PersonalityId = Data.PersonalityId;
+            activePersonality = Data.PersonalityId;
+            Art.PersonalityId = activePersonality;
             Art.MotionEnabled = Data.Motion;
             Art.Width = Data.Size * 220 / 255;
             Art.Height = Data.Size;
@@ -257,14 +262,17 @@ namespace Gole.Desktop
         }
         void ReactToTouch(bool petting)
         {
+            bool canSpeak = phase - lastInteractionSpeech >= 5;
+            if (canSpeak)
+                Art.PersonalityId = NextPersonality();
             if (petting)
                 Art.Interact(PetInteraction.Pet);
             else
                 Art.Touch();
-            if (phase - lastInteractionSpeech < 5)
+            if (!canSpeak)
                 return;
             lastInteractionSpeech = phase;
-            Speak(interactionPhrases.Next(Data.PersonalityId, petting), 5);
+            Speak(interactionPhrases.Next(activePersonality, petting), 5);
         }
         public void ApplyNight()
         {
@@ -330,7 +338,7 @@ namespace Gole.Desktop
         }
         public void Speak(string text, int seconds)
         {
-            Art.PersonalityId = Data.PersonalityId;
+            Art.PersonalityId = activePersonality;
             Art.SpeakGesture(text, seconds);
             speech.Text = text;
             bubble.Opacity = 1;
@@ -350,10 +358,10 @@ namespace Gole.Desktop
             Art.Level = 1;
             Art.Celebrate = true;
             Art.CelebrationSeconds = 0;
-            Art.PersonalityId = Data.PersonalityId;
+            Art.PersonalityId = activePersonality;
             Art.MotionEnabled = Data.Motion;
             Art.InvalidateVisual();
-            Speak(drinkReactions.Next(Data.PersonalityId), 10);
+            Speak(drinkReactions.Next(NextPersonality()), 10);
             Save();
             if (panel != null)
                 panel.RefreshStats();
@@ -428,7 +436,7 @@ namespace Gole.Desktop
         }
         string Phrase()
         {
-            return reminderPhrases.Next(HydrationExpression.AtLevel(Data.Level(DateTime.UtcNow)), Data.PersonalityId);
+            return reminderPhrases.Next(HydrationExpression.AtLevel(Data.Level(DateTime.UtcNow)), NextPersonality());
         }
         void Tick()
         {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -18,6 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Velopack" Version="1.2.161" />
+    <Content Include="Emoji/LICENSE-GRAPHICS.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../docs/emoji-credits.md" Link="Emoji/CREDITS.md" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="Emoji/*.png" LogicalName="Gole.Desktop.Emoji.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Audio/*.wav" LogicalName="Gole.Desktop.Audio.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

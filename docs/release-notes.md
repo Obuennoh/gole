@@ -1,11 +1,9 @@
 Gole para Windows x64.
 
-- Nerd técnico e Nerd fofo como personalidades separadas, com 840 falas e emojis conforme cada estilo.
-- Oito reações ao clique, movimentos espontâneos variados e gestos durante as falas.
-- Arrasto com resposta à direção e intensidade, amortecimento e pouso suave.
-- Remoção das ações de brincar diretamente com acessórios e do livro que aparecia sozinho.
-- Franja emo lateral com uma mecha roxa, olho esfumado, blush, delineado e novos batons.
-- Novos óculos, bolso com canetas, broche de átomo e corrente de cintura: 99 acessórios, até cinco por look.
-- Preferências, looks e registros preservados. As animações podem ser desligadas.
+- Dorameiro: falas inspiradas em anime e dorama, com dedinhos tímidos e gestos carinhosos.
+- Novas personalidades Detetive e Caótico. Agora são quinze estilos e 1.050 falas principais.
+- Misture até três personalidades; lembretes, respostas ao beber e interações alternam os estilos escolhidos.
+- Emojis realmente coloridos nos balões e na prévia, disponíveis offline nos temas claro e noturno.
+- Seleção anterior, looks, posição e histórico de água preservados.
 
-Disponível pelo atualizador automático ou pelo instalador Gole-Setup.exe.
+Em Personalizar, escolha uma personalidade principal, marque até outras duas e salve. Disponível pelo atualizador automático ou pelo instalador Gole-Setup.exe.
