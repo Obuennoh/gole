@@ -10,7 +10,9 @@ Instale uma vez. O instalador já inclui o runtime necessário e o download não
 
 ### Atualizações automáticas
 
-O Gole verifica novas versões ao abrir e a cada seis horas. Os pacotes são baixados em segundo plano e instalados silenciosamente ao encerrar pelo menu **Sair do Gole**. A próxima abertura usa a versão atualizada. Se uma atualização não puder ser aplicada ao sair, a abertura seguinte tenta novamente.
+O Gole procura e baixa atualizações automaticamente antes de abrir o painel. Se o download estiver pronto, instala e reinicia na versão nova sem pedir clique ou confirmação. A tentativa inicial tem limite de 15 segundos: se estiver offline ou a rede demorar, abre a versão disponível e tenta novamente em um minuto.
+
+Enquanto estiver aberto, verifica a cada 15 minutos. Downloads preparados durante o uso são instalados ao encerrar pelo menu **Sair do Gole**; na próxima abertura, a versão nova já estará instalada. Fechar apenas o painel mantém o pet funcionando na bandeja e não encerra o aplicativo. Pacotes pendentes também são aplicados automaticamente no início seguinte.
 
 Não é necessário conectar o GitHub, criar token ou configurar uma conta. O botão **Verificar agora**, em **Lembretes → Atualizações automáticas**, permite antecipar a consulta. Sem internet, o pet continua funcionando e tenta atualizar depois.
 

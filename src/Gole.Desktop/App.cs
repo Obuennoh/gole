@@ -20,7 +20,7 @@ internal static class App
     [STAThread]
     private static int Main(string[] args)
     {
-        VelopackApp.Build().Run();
+        VelopackApp.Build().SetAutoApplyOnStartup(true).Run();
         if (args.Length > 0 && args[0].StartsWith("--smoke-", StringComparison.Ordinal))
             return InstallationSmoke.Run(args);
         CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("pt-BR");
@@ -46,6 +46,9 @@ internal static class App
         }
         try
         {
+            using var updates = new DesktopUpdateService(new GithubUpdateBackend());
+            if (!DevelopmentMode && updates.PrepareLaunchAsync().GetAwaiter().GetResult())
+                return 0;
             var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
             Theme.Init(app);
             app.DispatcherUnhandledException += (_, e) =>
@@ -61,13 +64,12 @@ internal static class App
                 loaded.State.Resume(DateTime.UtcNow);
             var session = new HydrationSession(loaded.State);
             LegacyUpdateCredentials.Remove(folder);
-            using var updates = new DesktopUpdateService(new GithubUpdateBackend());
             var pet = new CompanionWindow(session, store, updates);
-            app.Exit += (_, _) => { pet.Save(); updates.ApplyOnExit(); updates.Dispose(); };
+            app.Exit += (_, _) => { pet.Save(); if (!DevelopmentMode) updates.ApplyOnExit(); updates.Dispose(); };
             pet.Show();
             pet.OpenPanel(DevelopmentMode ? 1 : 0);
             if (!DevelopmentMode)
-                _ = updates.RunAsync();
+                _ = updates.RunAsync(checkImmediately: false);
             return app.Run();
         }
         catch (Exception ex)

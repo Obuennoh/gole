@@ -7,7 +7,7 @@ public sealed class UpdateServiceTests
 {
     private sealed class Backend : IUpdateBackend
     {
-        public bool Installed = true, Fail;
+        public bool Installed = true, Fail, Stall;
         public string? Staged;
         public int Calls, Concurrent, MaximumConcurrent, ApplyCalls;
         public bool IsInstalled => Installed;
@@ -19,6 +19,8 @@ public sealed class UpdateServiceTests
             MaximumConcurrent = Math.Max(MaximumConcurrent, Concurrent);
             try
             {
+                if (Stall)
+                    await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
                 await Task.Yield();
                 cancellationToken.ThrowIfCancellationRequested();
                 if (Fail)
@@ -32,6 +34,76 @@ public sealed class UpdateServiceTests
             ApplyCalls++;
             if (Fail)
                 throw new IOException("apply failure");
+        }
+        public bool RestartToApply()
+        {
+            ApplyOnExit();
+            return Staged != null;
+        }
+    }
+
+    [Fact]
+    public async Task Launch_checks_and_schedules_restart_only_when_a_download_is_ready()
+    {
+        var backend = new Backend();
+        using var updates = new DesktopUpdateService(backend);
+        Assert.False(await updates.PrepareLaunchAsync());
+        Assert.Equal(1, backend.Calls);
+        Assert.Equal(0, backend.ApplyCalls);
+        backend.Staged = "0.2.99";
+        Assert.True(await updates.PrepareLaunchAsync());
+        Assert.Equal(1, backend.ApplyCalls);
+        Assert.Equal(UpdatePhase.Ready, updates.Phase);
+    }
+
+    [Fact]
+    public async Task Slow_startup_download_is_cancelled_without_blocking_the_app()
+    {
+        var backend = new Backend { Stall = true };
+        using var updates = new DesktopUpdateService(backend);
+        Assert.False(await updates.PrepareLaunchAsync(TimeSpan.FromMilliseconds(30)).WaitAsync(TimeSpan.FromSeconds(3)));
+        Assert.Equal(UpdatePhase.Unavailable, updates.Phase);
+        Assert.Equal(0, backend.ApplyCalls);
+        backend.Stall = false;
+        await updates.CheckAsync();
+        Assert.Equal(UpdatePhase.Current, updates.Phase);
+    }
+
+    [Fact]
+    public async Task Launch_failure_or_cancellation_opens_existing_version_without_restarting()
+    {
+        var backend = new Backend { Fail = true };
+        using var updates = new DesktopUpdateService(backend);
+        Assert.False(await updates.PrepareLaunchAsync());
+        Assert.Equal(UpdatePhase.Unavailable, updates.Phase);
+        Assert.Equal(0, backend.ApplyCalls);
+        updates.Dispose();
+        Assert.False(await updates.PrepareLaunchAsync());
+        Assert.Equal(1, backend.Calls);
+    }
+
+    [Fact]
+    public async Task Automatic_loop_retries_failed_startup_in_one_minute_without_a_button()
+    {
+        var backend = new Backend { Fail = true };
+        var waits = new List<TimeSpan>();
+        DesktopUpdateService? updates = null;
+        updates = new DesktopUpdateService(backend, (interval, token) =>
+        {
+            waits.Add(interval);
+            if (waits.Count == 1)
+                backend.Fail = false;
+            else
+                updates!.Dispose();
+            return Task.CompletedTask;
+        });
+        using (updates)
+        {
+            Assert.False(await updates.PrepareLaunchAsync());
+            await updates.RunAsync(checkImmediately: false);
+            Assert.Equal(new[] { TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(15) }, waits);
+            Assert.Equal(2, backend.Calls);
+            Assert.Equal(UpdatePhase.Current, updates.Phase);
         }
     }
 
@@ -56,6 +128,7 @@ public sealed class UpdateServiceTests
         using var updates = new DesktopUpdateService(backend);
         await updates.CheckAsync();
         await updates.RunAsync();
+        Assert.False(await updates.PrepareLaunchAsync());
         updates.ApplyOnExit();
         Assert.Equal(0, backend.Calls);
         Assert.Equal(0, backend.ApplyCalls);

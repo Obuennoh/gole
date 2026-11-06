@@ -36,4 +36,14 @@ internal sealed class GithubUpdateBackend(UpdateManager manager = null) : IUpdat
         if (pending != null)
             local.WaitExitThenApplyUpdates(pending, silent: true, restart: false);
     }
+
+    public bool RestartToApply()
+    {
+        var pending = local.UpdatePendingRestart;
+        if (pending == null)
+            return false;
+        // The caller returns from Main, releasing the single-instance mutex before relaunch.
+        local.WaitExitThenApplyUpdates(pending, silent: true, restart: true);
+        return true;
+    }
 }

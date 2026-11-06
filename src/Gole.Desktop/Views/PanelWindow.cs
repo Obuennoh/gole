@@ -790,7 +790,7 @@ namespace Gole.Desktop
             check.IsEnabled = updates?.IsInstalled == true;
             actions.Children.Add(check);
             content.Children.Add(actions);
-            content.Children.Add(Theme.Text("O Gole busca atualizações ao abrir e instala ao sair pelo menu. Sem conta nem configuração.", 12, Theme.Muted));
+            content.Children.Add(Theme.Text("Ao iniciar, o Gole procura, baixa e instala a atualização automaticamente. Downloads posteriores são aplicados ao sair. Verificar agora é opcional. Fechar só o painel mantém o pet aberto.", 12, Theme.Muted));
             return Card(content);
         }
         void RefreshHistory(bool force = false)

@@ -16,6 +16,7 @@ internal interface IUpdateBackend
     }
     Task<string> StageLatestAsync(CancellationToken cancellationToken);
     void ApplyOnExit();
+    bool RestartToApply();
 }
 
 internal enum UpdatePhase
@@ -23,7 +24,7 @@ internal enum UpdatePhase
     Development, Idle, Checking, Current, Ready, Unavailable
 }
 
-internal sealed class DesktopUpdateService(IUpdateBackend backend) : IDisposable
+internal sealed class DesktopUpdateService(IUpdateBackend backend, Func<TimeSpan, CancellationToken, Task> delay = null) : IDisposable
 {
     private readonly SemaphoreSlim gate = new(1, 1);
     private readonly CancellationTokenSource lifetime = new();
@@ -67,6 +68,41 @@ internal sealed class DesktopUpdateService(IUpdateBackend backend) : IDisposable
         finally { if (entered) gate.Release(); }
     }
 
+    internal async Task<bool> PrepareLaunchAsync(TimeSpan? timeout = null)
+    {
+        if (!backend.IsInstalled)
+            return false;
+        using var attempt = CancellationTokenSource.CreateLinkedTokenSource(lifetime.Token);
+        attempt.CancelAfter(timeout ?? TimeSpan.FromSeconds(15));
+        bool entered = false;
+        try
+        {
+            await gate.WaitAsync(attempt.Token).ConfigureAwait(false);
+            entered = true;
+            SetStatus(UpdatePhase.Checking, "Verificando atualizações antes de abrir…");
+            var version = await backend.StageLatestAsync(attempt.Token).ConfigureAwait(false);
+            if (version == null)
+            {
+                SetStatus(UpdatePhase.Current, "Você está na versão mais recente.");
+                return false;
+            }
+            SetStatus(UpdatePhase.Ready, "Versão " + version + " pronta para instalar automaticamente.");
+            return backend.RestartToApply();
+        }
+        catch (OperationCanceledException) when (attempt.IsCancellationRequested)
+        {
+            if (!lifetime.IsCancellationRequested)
+                SetStatus(UpdatePhase.Unavailable, "Abrindo o Gole. A atualização continuará automaticamente.");
+            return false;
+        }
+        catch (Exception)
+        {
+            SetStatus(UpdatePhase.Unavailable, "Abrindo o Gole. Vou tentar atualizar novamente automaticamente.");
+            return false;
+        }
+        finally { if (entered) gate.Release(); }
+    }
+
     internal void ApplyOnExit()
     {
         if (!backend.IsInstalled)
@@ -78,7 +114,7 @@ internal sealed class DesktopUpdateService(IUpdateBackend backend) : IDisposable
         catch (Exception) { /* Startup retries any staged update if applying on exit fails. */ }
     }
 
-    internal async Task RunAsync()
+    internal async Task RunAsync(bool checkImmediately = true)
     {
         if (!backend.IsInstalled)
             return;
@@ -86,8 +122,11 @@ internal sealed class DesktopUpdateService(IUpdateBackend backend) : IDisposable
         {
             while (!lifetime.IsCancellationRequested)
             {
-                await CheckAsync().ConfigureAwait(false);
-                await Task.Delay(TimeSpan.FromHours(6), lifetime.Token).ConfigureAwait(false);
+                if (checkImmediately)
+                    await CheckAsync().ConfigureAwait(false);
+                checkImmediately = true;
+                var interval = Phase == UpdatePhase.Unavailable ? TimeSpan.FromMinutes(1) : TimeSpan.FromMinutes(15);
+                await (delay == null ? Task.Delay(interval, lifetime.Token) : delay(interval, lifetime.Token)).ConfigureAwait(false);
             }
         }
         catch (OperationCanceledException) when (lifetime.IsCancellationRequested) { }

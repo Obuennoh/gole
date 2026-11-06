@@ -81,3 +81,5 @@ A expansão também verifica modelos distintos, visibilidade dos novos acessóri
 Looks e interações: persistência de conjuntos e migração da versão 16, busca combinada com categoria e sem acentos, 300 sugestões compatíveis sem repetição imediata, fluxo do editor (guardar, descartar rascunho, usar, renomear e excluir), gestos das onze personalidades, duração das reações e respeito ao movimento desativado. 131 testes automatizados passam sem mostrar janelas.
 
 Galeria: fluxo criar/salvar/vestir/editar/excluir, thumbnail correspondente ao look e prévia ampliada; modo noturno salvo e reversível, painel renderizado nos dois temas sem abrir janelas. Falas de toque/carinho nos 11 estilos sem repetição imediata. Catálogo ampliado renderizado nos 33 modelos.
+
+Atualização automática: inicialização sem clique, reinício só após pacote pronto, falha/cancelamento sem bloquear o aplicativo, download lento limitado e nova tentativa automática em um minuto. O ciclo de fundo segue em 15 minutos após sucesso.
