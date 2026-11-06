@@ -460,6 +460,7 @@ namespace Gole.Desktop
             }
             previewContent.Children.Add(states);
             personalityMessage = Theme.Text("", 12, Theme.Ink);
+            personalityMessage.FontFamily = new FontFamily("Segoe UI, Segoe UI Emoji");
             personalityMessage.Margin = new Thickness(0);
             System.Windows.Automation.AutomationProperties.SetName(personalityMessage, "Prévia da fala");
             previewContent.Children.Add(new Border { Child = personalityMessage, Background = Theme.B("#F0F6F7"), CornerRadius = new CornerRadius(10), Padding = new Thickness(12), Margin = new Thickness(0, 4, 0, 8) });
@@ -467,7 +468,7 @@ namespace Gole.Desktop
             anotherPhrase.FontSize = 12;
             previewContent.Children.Add(anotherPhrase);
             previewContent.Children.Add(Theme.Button("Testar carinho", () => preview.Interact(PetInteraction.Pet), false));
-            previewContent.Children.Add(Theme.Button("Brincar com acessórios", () => preview.PlayAccessories(), false));
+            previewContent.Children.Add(Theme.Button("Testar reação ao clique", () => preview.Touch(), false));
             var test = Theme.Button("▶  Simular ciclo", delegate
             {
                 previewLevel = 1;
@@ -602,6 +603,7 @@ namespace Gole.Desktop
             if (!force && lastPreviewPersonality == draftPersonality && lastPreviewMood == mood)
                 return;
             personalityMessage.Text = previewSpeech.Next(mood, draftPersonality);
+            preview.SpeakGesture(personalityMessage.Text, 6);
             lastPreviewPersonality = draftPersonality;
             lastPreviewMood = mood;
         }

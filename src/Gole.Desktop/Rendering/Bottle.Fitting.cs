@@ -60,6 +60,8 @@ public partial class Bottle
         27 or 29 or 55 or 56 or 83 or 84 or 85 or 90 => 10,
         44 or 51 or 52 or 53 or 54 or 57 or 58 or 86 or 87 or 88 or 89 => 20,
         8 => 30,
+        91 or 92 => 5,
+        98 => 40,
         11 or 14 or 16 or 40 or 62 or 63 or 65 or 71 or 72 => 40,
         _ => 50
     };
@@ -99,7 +101,7 @@ public partial class Bottle
                 var fit = Fit(model);
                 if (part > 0)
                     DrawAccessoryPart(context, fit, model, item, part);
-                else if (item >= 83)
+                else if (item is >= 83 and <= 90)
                     DrawExpandedClothing(context, fit, item, layered);
                 else if (item is 27 or 29 or 44 or >= 51 and <= 58)
                     DrawClothing(context, fit, item, layered);
@@ -180,7 +182,7 @@ public partial class Bottle
 
     Transform AccessoryTransform(BodyFit fit, int model, int item)
     {
-        if (item is 2 or 7 or 8 or 21 or 30 or 37 or 38 or 61 or 68)
+        if (item is 2 or 7 or 8 or 21 or 30 or 37 or 38 or 61 or 68 or >= 91 and <= 95 or 99)
             return FaceTransform(fit);
         if (item is 28 or 42 or 43 or 66 or 79 or 80)
             return Transform.Identity;
@@ -208,7 +210,7 @@ public partial class Bottle
             double width = Math.Clamp(fit.Width(100) / 106, .82, 1.15);
             return new MatrixTransform(width, 0, 0, 1, 110 * (1 - width), seat - baseline);
         }
-        double y = item == 46 ? 193 : item is 1 or 24 or 70 ? 126 : item is 15 or 39 ? 143 : item is 6 or 11 or 14 or 16 or 40 or 62 or 63 or 64 or 71 or 72 or 81 ? 169 : item is 17 or 18 or 19 or 45 or 46 or 77 ? 135 : item == 20 ? 60 : 100;
+        double y = item == 46 ? 193 : item is 1 or 24 or 70 ? 126 : item is 15 or 39 ? 143 : item is 6 or 11 or 14 or 16 or 40 or 62 or 63 or 64 or 71 or 72 or 81 or 96 or 97 or 98 ? 169 : item is 17 or 18 or 19 or 45 or 46 or 77 ? 135 : item == 20 ? 60 : 100;
         double ratio = Math.Clamp(fit.Width(y) / 116, .65, 1.25);
         return new ScaleTransform(ratio, 1, 110, y);
     }
@@ -266,6 +268,11 @@ public partial class Bottle
 
     void DrawNewAccessory(DrawingContext d, int item)
     {
+        if (item >= 91)
+        {
+            DrawStyleAccessory(d, item);
+            return;
+        }
         if (item >= 67)
         {
             DrawCollectionAccessory(d, item);

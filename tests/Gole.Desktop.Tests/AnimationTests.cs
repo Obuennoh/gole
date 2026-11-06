@@ -13,7 +13,7 @@ public sealed class AnimationTests
     [Fact]
     public void Every_personality_and_interaction_animates_and_respects_disabled_motion() => Sta(() =>
     {
-        for (int personality = 1; personality <= 11; personality++)
+        for (int personality = 1; personality < PersonalityCatalog.Options.Count; personality++)
         {
             var art = new Bottle { PersonalityId = personality, Phase = 3.5, Level = .7, EquippedAccessories = new[] { 68, 69, 67, 47, 42 } };
             var active = Render(art);
@@ -24,11 +24,10 @@ public sealed class AnimationTests
             art.Gaze = new Vector(3, 2);
             art.IsDragging = true;
             art.Interact(PetInteraction.Pet);
-            art.PlayAccessories();
             Assert.Equal(still, Render(art));
             art.MotionEnabled = true;
             art.IsDragging = false;
-            foreach (var interaction in new[] { PetInteraction.Wave, PetInteraction.Pet, PetInteraction.Land, PetInteraction.Hop, PetInteraction.Cheer })
+            foreach (var interaction in Enum.GetValues<PetInteraction>().Where(i => i != PetInteraction.None))
             {
                 art.Interact(interaction);
                 art.Phase += .7;
@@ -38,14 +37,69 @@ public sealed class AnimationTests
                 Assert.False(art.InteractionActive);
             }
         }
-        foreach (int item in new[] { 69, 47, 48, 82, 1, 24, 70, 55 })
+    });
+
+    [Fact]
+    public void Clicks_cycle_through_eight_distinct_reactions_and_speech_respects_motion() => Sta(() =>
+    {
+        var art = new Bottle { PersonalityId = 6, Level = .7 };
+        var seen = new HashSet<PetInteraction>();
+        var frames = new HashSet<string>();
+        for (int i = 0; i < 8; i++)
         {
-            var art = new Bottle { EquippedAccessories = new[] { item }, Phase = 0 };
-            art.PlayAccessories(item);
+            art.Phase = 0;
+            art.Touch();
+            Assert.True(seen.Add(art.CurrentInteraction));
             art.Phase = .8;
-            var active = RenderAccessory(art, item);
-            var normal = new Bottle { EquippedAccessories = new[] { item }, Phase = .8 };
-            Assert.False(active.SequenceEqual(RenderAccessory(normal, item)), "Interaction missing for " + item);
+            Assert.True(frames.Add(Convert.ToBase64String(Render(art))));
+        }
+        art.Touch();
+        Assert.Equal(PetInteraction.Wave, art.CurrentInteraction);
+        art.Phase = 20;
+        var idle = Render(art);
+        art.SpeakGesture("Um abraço pra você! 💗", 6);
+        art.Phase = 20.8;
+        var talking = Render(art);
+        Assert.False(talking.SequenceEqual(idle));
+        Assert.False(talking.SequenceEqual(Render(new Bottle { PersonalityId = 6, Level = .7, Phase = 20.8 })));
+        art.Phase = 27;
+        Assert.Equal(Render(new Bottle { PersonalityId = 6, Level = .7, Phase = 27 }), Render(art));
+        art.MotionEnabled = false;
+        var still = Render(art);
+        art.SpeakGesture("Oi!", 6);
+        art.Phase += .8;
+        art.TrackDrag(25, -20);
+        Assert.Equal(still, Render(art));
+    });
+
+    [Fact]
+    public void Drag_reacts_to_both_directions_then_settles_and_lands() => Sta(() =>
+    {
+        var left = new Bottle { Phase = 1, Level = .7 };
+        var right = new Bottle { Phase = 1, Level = .7 };
+        left.TrackDrag(-25, -25);
+        right.TrackDrag(25, 25);
+        Assert.False(Render(left).SequenceEqual(Render(right)));
+        left.Phase = right.Phase = 10;
+        Assert.Equal(Render(left), Render(right));
+        left.EndDrag();
+        Assert.False(left.IsDragging);
+        Assert.Equal(PetInteraction.Land, left.CurrentInteraction);
+        left.Phase += .7;
+        Assert.False(Render(left).SequenceEqual(Render(right)));
+    });
+
+    [Fact]
+    public void Nerds_never_spawn_an_unequipped_book() => Sta(() =>
+    {
+        foreach (int id in new[] { 6, 12 })
+        {
+            var art = new Bottle { PersonalityId = id, Phase = 3.5, Level = .7 };
+            var drawing = new DrawingGroup();
+            using (var context = drawing.Open())
+                art.DrawPersonality(context, Bottle.Fit(0));
+            Assert.True(drawing.Bounds.IsEmpty);
+            Assert.False(Render(art).SequenceEqual(Render(new Bottle { PersonalityId = id, Phase = 3.5, Level = .7, EquippedAccessories = new[] { 69 } })));
         }
     });
 
@@ -95,7 +149,7 @@ public sealed class AnimationTests
             new[] { 51, 41, 26 }, new[] { 52, 15, 20 }, new[] { 54, 39, 38 }, new[] { 45, 46, 9 }, new[] { 27, 1, 48 }, new[] { 55, 57, 21 },
             new[] { 56, 41, 20 }, new[] { 53, 35, 26 }, new[] { 58, 40, 66 },
             new[] { 67, 71, 55, 44, 79 }, new[] { 68, 69, 57, 80, 81 }, new[] { 73, 76, 77, 52, 42 },
-            new[] { 74, 75, 72, 78, 29 }, new[] { 70, 68, 82, 56, 80 } };
+            new[] { 74, 75, 72, 78, 29 }, new[] { 70, 68, 82, 56, 80 }, new[] { 67,91,93,98,43 }, new[] { 99,96,57,69,42 }, new[] { 68,92,87,80,97 } };
         for (int model = 0; model < PetCatalog.Models.Count; model++)
             foreach (var outfit in outfits)
                 foreach (double level in new[] { 1.0, 0.0 })

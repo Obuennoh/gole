@@ -10,12 +10,13 @@ public sealed class InteractionPhrases(Random random)
         ["Toca aqui, parceiro! Vamos no nosso ritmo.", "Time reunido! Uma comemoração pequenininha pra gente."],
         ["Um encontro breve no meio do dia. Que bom.", "Parei um instante pra te receber com calma."],
         ["Chamaram a protagonista? Preparem minha entrada!", "Luzes em mim! Esse aceno merece um primeiro plano."],
-        ["O-oi! Eu tava lendo, mas guardei a página pra falar com você.", "Você me chamou? Até ajeitei os óculos de alegria!"],
+        ["O-oi! Você chamou? Meu coraçãozinho até pulou. 🤓💖", "Até ajeitei os óculos de alegria! Oi, humano. ✨"],
         ["Convite de amizade recebido! Toca aqui, player.", "Emote de saudação equipado. Oi, parceiro!"],
         ["Um toque pode ser uma conversa bem pequena, não acha?", "Você passou por aqui e o instante ganhou companhia."],
         ["Arrr! Capitão no convés! Aceno a bombordo.", "Marujo, recebi seu sinal. Seguimos juntos nessa aventura!"],
         ["Tô aqui, criatura! Tá bom, vai um aceno.", "Chamou? Eu ouvi. Não espalha que fiquei contente."],
-        ["Oi... afastei a franja só pra te ver melhor.", "Pausei a playlist. Esse toque mereceu minha atenção."]
+        ["Oi... afastei a franja só pra te ver melhor.", "Pausei a playlist. Esse toque mereceu minha atenção. 🖤"],
+        ["Interrupção recebida. Qual é a nova hipótese? 🤓", "Pausei a pesquisa pra responder ao seu sinal. 💻"]
     ];
     static readonly string[][] Pet =
     [
@@ -24,12 +25,13 @@ public sealed class InteractionPhrases(Random random)
         ["Pausa de carinho também faz parte do plano!", "Energia de companheirismo renovada. Obrigado!"],
         ["Que tranquilidade... vou ficar aqui mais um instante.", "Esse carinho chegou como uma brisa leve."],
         ["Que cena linda! Não cortem, deixem a câmera rodar!", "Derreti de carinho. Alguém chama o figurinista!"],
-        ["E-eu fiquei todo bobo... posso ganhar mais uma estrelinha?", "Meu coraçãozinho fez uma descoberta: adoro esse carinho."],
+        ["E-eu fiquei todo bobo... mais uma estrelinha? 🥺⭐", "Descoberta do dia: adoro esse carinho. 🤓💖"],
         ["Buff de carinho recebido. Parceiro feliz!", "Conquista desbloqueada: pet derretido de fofura."],
         ["Às vezes, o melhor argumento é um gesto gentil.", "Esse instante pequeno ganhou um significado bonito."],
         ["Arrr... esse carinho vale mais que um baú de ouro.", "O capitão conquistou o coração da tripulação!"],
         ["Tá, pode continuar. Mas não conta que eu gostei.", "Minha bronca tirou uma folga. Esse carinho tá aprovado."],
-        ["A franja escondeu meu sorriso... mas ele tá bem aqui.", "Playlist triste, coração quentinho. Culpa do seu carinho."]
+        ["A franja escondeu meu sorriso... mas ele tá bem aqui.", "Playlist triste, coração quentinho. Culpa do seu carinho. 🖤"],
+        ["Experimento de carinho aprovado por revisão do próprio pet. 🧪", "Resultado curioso: meu sorriso aumentou com essa interação. 🤓"]
     ];
     public string Next(int personality, bool pet)
     {

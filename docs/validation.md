@@ -1,4 +1,4 @@
-# Validação
+﻿# Validação
 
 ## Rotina reproduzível
 
@@ -31,11 +31,11 @@ Ambiente local de referência: Windows, SDK .NET 10.0.403. A solução usa `Trea
 | Seleção visual | Borda efetiva do template ao marcar e desmarcar repetidamente; foco separado da seleção |
 | Acessórios | Três itens simultâneos, bloqueio do quarto, remoção e limpeza |
 | Expressões | Seis faixas e seus limites exatos ao longo do esvaziamento |
-| Desenho | 5.940 renderizações: 90 acessórios × 33 modelos × poses cheia e vazia, sem corte nas bordas; cintura ajustada e barra aberta fora do corpo nas quatro opções com saia; desenhos distintos das 11 roupas em todos os modelos; camadas independentes da ordem de seleção |
+| Desenho | 6.534 renderizações: 99 acessórios × 33 modelos × poses cheia e vazia, sem corte nas bordas; cintura ajustada e barra aberta fora do corpo nas quatro opções com saia; desenhos distintos das 11 roupas em todos os modelos; camadas independentes da ordem de seleção |
 | Compatibilidade visual | Pintura antiga descartada sem alterar cor do recipiente, itens, registros ou prazos; editor sem opções de pintura e substituição entre peças da mesma categoria |
 | Integração do painel | Configuração de ml por gole, salvamento, bloqueio de valores inválidos, registro em um clique e desfazer por eventos reais dos botões |
 | Sons | Cinco recursos WAV válidos, volume aplicado apenas às amostras, silêncio a 0%, preview com o volume do rascunho e persistência da escolha, sem reprodução real durante testes |
-| Animação | Poses determinísticas e limitadas; retorno ao repouso após comemorar; movimento próprio de 31 acessórios; movimento desativado e pausa congelam corpo, água e efeitos; enquadramento estável e sem corte em dezessete combinações × 33 modelos × duas poses × cinco instantes |
+| Animação | Poses determinísticas e limitadas; retorno ao repouso após comemorar; movimento próprio de 31 acessórios; movimento desativado e pausa congelam corpo, água e efeitos; enquadramento estável e sem corte em vinte combinações × 33 modelos × duas poses × cinco instantes |
 | Prévia de animação | Botão de reação sem alterar histórico ou pet real; desativação no rascunho, descarte, salvamento e restauração da escolha |
 | Posicionamento | Cantos e bordas sem limite da janela transparente; posições parciais e área da barra de tarefas; monitores com origem negativa, lacunas, recuperação do monitor removido, pixels escalados, persistência e migração única da janela antiga |
 | Falas flutuantes | Balão separado do viewport, quatro posições candidatas e ausência de deslocamento ou popup aberto nos testes de janelas ocultas |
@@ -78,8 +78,11 @@ Exporta 72 quadros PNG, a 10 amostras por segundo, com seis exemplos. As imagens
 
 A expansão também verifica modelos distintos, visibilidade dos novos acessórios em todos os corpos, substituição de peças com cinco vagas ocupadas e reabertura com Emo e cinco itens. `--render-fitting` inclui `novos-estilos.png`, uma prévia dos oito modelos e seis conjuntos de cinco peças.
 
-Looks e interações: persistência de conjuntos e migração da versão 16, busca combinada com categoria e sem acentos, 300 sugestões compatíveis sem repetição imediata, fluxo do editor (guardar, descartar rascunho, usar, renomear e excluir), gestos das onze personalidades, duração das reações e respeito ao movimento desativado. 131 testes automatizados passam sem mostrar janelas.
+Looks e interações: persistência de conjuntos e migração da versão 16, busca combinada com categoria e sem acentos, 300 sugestões compatíveis sem repetição imediata, fluxo do editor (guardar, descartar rascunho, usar, renomear e excluir), gestos das doze personalidades, duração das reações e respeito ao movimento desativado. 131 testes automatizados passam sem mostrar janelas.
 
 Galeria: fluxo criar/salvar/vestir/editar/excluir, thumbnail correspondente ao look e prévia ampliada; modo noturno salvo e reversível, painel renderizado nos dois temas sem abrir janelas. Falas de toque/carinho nos 11 estilos sem repetição imediata. Catálogo ampliado renderizado nos 33 modelos.
 
 Atualização automática: inicialização sem clique, reinício só após pacote pronto, falha/cancelamento sem bloquear o aplicativo, download lento limitado e nova tentativa automática em um minuto. O ciclo de fundo segue em 15 minutos após sucesso.
+
+A expansão de personalidades e maquiagem verifica 840 mensagens únicas, no mínimo dez por expressão, ID 12 preservado, oito reações distintas ao clique, arrasto bidirecional com repouso e pouso, término do gesto de fala, respeito a movimento desativado e ausência de livro não equipado. `--render-fitting` acrescenta `emo-nerds-maquiagem.png` e `reacoes-clique.png`, sem abrir janelas ou alterar preferências reais.
+`scripts/check.ps1` concluiu com 139 testes aprovados (98 de regras e 41 de desktop), compilação sem avisos e formatação verificada. O teste do editor compartilha a coleção de renderização para evitar acesso concorrente aos caches WPF.

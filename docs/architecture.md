@@ -1,4 +1,4 @@
-# Arquitetura
+﻿# Arquitetura
 
 ## Limites entre projetos
 
@@ -81,7 +81,7 @@ A visão geral lista registros de todos os dias, ordenados do mais recente para 
 
 ### Personalidades e falas
 
-`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam onze estilos; o ID zero mantém o modo aleatório. Cada estilo contém oito frases para cada expressão e oito respostas após beber, totalizando 616 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
+`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam doze estilos; o ID zero mantém o modo aleatório. Cada estilo contém dez frases para cada expressão e dez respostas após beber, totalizando 840 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
 
 `ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
 
@@ -132,3 +132,9 @@ Preferências versão 17 acrescentam `Looks`, com normalização de até 30 snap
 Versão 18 acrescenta NightMode, preservando Looks da versão 17. Cartões renderizam snapshots com Bottle sem animação. Criar e editar usam o rascunho, salvar persiste o conjunto, vestir altera apenas aparência. A prévia mede 280×325 DIPs e o palco 380 DIPs. Theme.Night altera somente superfícies e texto da interface, excluindo Bottle e a paleta. Interações têm cooldown de cinco segundos para fala; 44 frases são locais e independentes dos registros.
 
 Referência de aplicação e reinício: [Velopack](https://docs.velopack.io/integrating/overview). A reaplicação automática na inicialização é habilitada explicitamente; desenvolvimento e smoke tests não passam pelo bootstrap de rede.
+
+### Falas, maquiagem e reações
+
+O ID 6 mantém o Nerd fofo e o ID 12 acrescenta Nerd técnico. Nenhum dos dois desenha um livro como gesto: o item 69 continua optativo. IDs 91–99 acrescentam maquiagem e acessórios; o slot 14 torna batons mutuamente exclusivos. Esfumado e blush são desenhados antes dos olhos. As peças novas usam as transformações de rosto e corpo existentes, sem mudar o schema de preferências.
+
+`SpeakGesture` usa a duração do balão (até 12 segundos), entrada e saída suaves e variação de braços por personalidade. Falas carinhosas recebem expressão suave. Cliques, carinho, arrasto e comemorações têm prioridade. O estado é transitório e o relógio de animação controla o término. O movimento espontâneo alterna três variações por ciclo; `TrackDrag` usa deslocamento horizontal e vertical com amortecimento quando o cursor para. `EndDrag` inicia o pouso. As antigas ações explícitas sobre acessórios foram removidas do editor, do menu e do renderizador.

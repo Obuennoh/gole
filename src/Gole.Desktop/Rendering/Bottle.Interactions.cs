@@ -7,7 +7,7 @@ namespace Gole.Desktop;
 
 public enum PetInteraction
 {
-    None, Wave, Pet, Land, Accessory, Hop, Cheer
+    None, Wave, Pet, Land, Hop, Cheer, Dance, Shy, Bow, Wiggle, Stretch
 }
 
 public partial class Bottle
@@ -17,10 +17,47 @@ public partial class Bottle
     public Vector Gaze;
     public double DragLean;
     int touchCount;
-    public void Touch() => Interact((touchCount++ % 3) switch { 0 => PetInteraction.Wave, 1 => PetInteraction.Hop, _ => PetInteraction.Cheer });
+    public void Touch() => Interact((touchCount++ % 8) switch
+    {
+        0 => PetInteraction.Wave,
+        1 => PetInteraction.Hop,
+        2 => PetInteraction.Cheer,
+        3 => PetInteraction.Dance,
+        4 => PetInteraction.Shy,
+        5 => PetInteraction.Bow,
+        6 => PetInteraction.Wiggle,
+        _ => PetInteraction.Stretch
+    });
     PetInteraction interaction;
     double interactionStart = double.NegativeInfinity;
-    int activeAccessory, accessoryIndex;
+    double dragVertical, dragSpeed, lastDrag = double.NegativeInfinity;
+    double speechUntil, speechStart;
+    int speechCount;
+    bool warmSpeech;
+    internal PetInteraction CurrentInteraction => interaction;
+    public void TrackDrag(double dx, double dy)
+    {
+        IsDragging = true;
+        DragLean = DragLean * .65 + Math.Clamp(-dx * .45, -7, 4) * .35;
+        dragVertical = dragVertical * .65 + Math.Clamp(dy / 30, -1, 1) * .35;
+        dragSpeed = Math.Clamp(Math.Abs(dx) + Math.Abs(dy), 0, 30) / 30;
+        lastDrag = Phase;
+    }
+    public void EndDrag()
+    {
+        IsDragging = false;
+        Interact(PetInteraction.Land);
+    }
+    public void SpeakGesture(string text, int seconds)
+    {
+        speechStart = Phase;
+        speechUntil = Phase + Math.Clamp(seconds, 0, 12);
+        speechCount++;
+        warmSpeech = text.Contains("💗") || text.Contains("💖") || text.Contains("carinho", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("abraço", StringComparison.OrdinalIgnoreCase);
+        // Gestures accompany speech without replacing a click, cuddle or celebration.
+        InvalidateVisual();
+    }
     internal double InteractionAge => Phase - interactionStart;
     internal bool InteractionActive => IsAnimating && InteractionAge is >= 0 and < 2.5;
     public void Interact(PetInteraction kind)
@@ -31,17 +68,7 @@ public partial class Bottle
         interactionStart = Phase;
         InvalidateVisual();
     }
-    public void PlayAccessories(int item = 0)
-    {
-        if (!MotionEnabled || Paused)
-            return;
-        var items = EquippedAccessories.Where(id => id > 0).ToArray();
-        if (item != 0 && !items.Contains(item))
-            return;
-        activeAccessory = item != 0 ? item : items.Length > 0 ? items[accessoryIndex++ % items.Length] : 0;
-        Interact(activeAccessory == 0 ? PetInteraction.Wave : PetInteraction.Accessory);
-    }
-    int ActingPersonality => PersonalityId == 0 ? 1 + (int)(MotionTime / 14) % 11 : PersonalityId;
+    int ActingPersonality => PersonalityId == 0 ? 1 + (int)(MotionTime / 14) % (Gole.Core.PersonalityCatalog.Options.Count - 1) : PersonalityId;
     double Gesture => IsAnimating && Level > 0 && !Celebrate && !IsDragging && !InteractionActive
         && MotionTime % 14 is > 2 and < 5 ? Math.Sin((MotionTime % 14 - 2) / 3 * Math.PI) : 0;
 
@@ -50,6 +77,10 @@ public partial class Bottle
         if (!IsAnimating)
             return pose;
         double g = Gesture, t = MotionTime;
+        bool speaking = Phase >= speechStart && Phase < speechUntil && !IsDragging && !InteractionActive && !Celebrate;
+        if (speaking)
+            g = Math.Sin(Math.Min(1, (Phase - speechStart) / .3) * Math.PI / 2)
+            * Math.Min(1, (speechUntil - Phase) / .4) * (.65 + .35 * Math.Sin((Phase - speechStart) * 4));
         var styled = ActingPersonality switch
         {
             1 => pose with { Lean = pose.Lean + g * 3, RightArm = pose.RightArm - g * 18 },
@@ -57,7 +88,7 @@ public partial class Bottle
             3 => pose with { Lift = pose.Lift - g * 5, RightArm = pose.RightArm - g * 25 },
             4 => pose with { Blink = g > .3, ScaleY = pose.ScaleY + g * .01 },
             5 => pose with { Lean = pose.Lean - g * 5, LeftArm = pose.LeftArm + g * 25 },
-            6 => pose with { Lean = pose.Lean + g, LeftArm = pose.LeftArm - g * 12, RightArm = pose.RightArm - g * 22 },
+            6 or 12 => pose with { Lean = pose.Lean + g, LeftArm = pose.LeftArm - g * 12, RightArm = pose.RightArm - g * 22 },
             7 => pose with { LeftArm = pose.LeftArm + g * Math.Sin(t * 8) * 10, RightArm = pose.RightArm - g * 12 },
             8 => pose with { Lean = pose.Lean + g * 3, RightArm = pose.RightArm - g * 20 },
             9 => pose with { RightArm = pose.RightArm - g * 25, Lean = pose.Lean - g * 3 },
@@ -65,14 +96,30 @@ public partial class Bottle
             11 => pose with { Lean = pose.Lean + g * Math.Sin(t * 3) * 3, RightArm = pose.RightArm - g * 22 },
             _ => pose
         };
+        if (!speaking && g > 0)
+            styled = ((int)(t / 14) % 3) switch
+            {
+                1 => styled with { ScaleY = 1 + .018 * g, LeftArm = -18 * g, RightArm = -18 * g },
+                2 => styled with { Lean = styled.Lean - 3 * g, Blink = g > .8 },
+                _ => styled
+            };
+        if (speaking)
+            styled = styled with
+            {
+                Lean = styled.Lean + Math.Sin(t * 3 + speechCount) * g,
+                Blink = styled.Blink || (warmSpeech && g > .9),
+                Lift = styled.Lift - g,
+                LeftArm = styled.LeftArm - (speechCount % 2) * g * 9
+            };
+        double momentum = Math.Exp(-Math.Max(0, Phase - lastDrag) * 5);
         if (IsDragging)
             return styled with
             {
-                ScaleX = .975 + Math.Sin(t * 5) * .006,
-                ScaleY = 1.025 - Math.Sin(t * 5) * .006,
-                Lean = Math.Clamp(DragLean + Math.Sin(t * 3) * 1.2, -8, 5),
+                ScaleX = .985 - dragVertical * momentum * .018 + Math.Sin(t * 5) * .006,
+                ScaleY = 1.015 + dragVertical * momentum * .018 - Math.Sin(t * 5) * .006,
+                Lean = Math.Clamp(DragLean * momentum + Math.Sin(t * 3) * (1.2 + dragSpeed * momentum * 2), -8, 5),
                 Lift = -3 - Math.Sin(t * 4),
-                LeftArm = -25 + Math.Sin(t * 5) * 7,
+                LeftArm = -20 - dragSpeed * momentum * 8 + Math.Sin(t * 5) * 7,
                 RightArm = -27 - Math.Sin(t * 5) * 7
             };
         if (!InteractionActive)
@@ -80,6 +127,11 @@ public partial class Bottle
         double envelope = Math.Sin(InteractionAge / 2.5 * Math.PI);
         return interaction switch
         {
+            PetInteraction.Dance => pose with { Lean = Math.Sin(InteractionAge * 9) * 5 * envelope, Lift = -Math.Abs(Math.Sin(InteractionAge * 9)) * 5 * envelope, LeftArm = Math.Sin(InteractionAge * 9) * 22 * envelope, RightArm = -Math.Sin(InteractionAge * 9) * 22 * envelope },
+            PetInteraction.Shy => pose with { Lean = -5 * envelope, Blink = envelope > .5, LeftArm = -20 * envelope, RightArm = 18 * envelope, ScaleY = 1 - .025 * envelope },
+            PetInteraction.Bow => pose with { Lean = 4 * envelope, ScaleX = 1 + .025 * envelope, ScaleY = 1 - .045 * envelope, LeftArm = 12 * envelope, RightArm = -12 * envelope, Blink = envelope > .7 },
+            PetInteraction.Wiggle => pose with { Lean = Math.Sin(InteractionAge * 15) * 4 * envelope, ScaleX = 1 + .025 * envelope, ScaleY = 1 - .025 * envelope },
+            PetInteraction.Stretch => pose with { ScaleY = 1 + .035 * envelope, ScaleX = 1 - .025 * envelope, LeftArm = -28 * envelope, RightArm = -28 * envelope, Blink = envelope > .8 },
             PetInteraction.Hop => pose with { Lift = -Math.Abs(Math.Sin(InteractionAge * 6)) * 11 * envelope, LeftArm = -18 * envelope, RightArm = -20 * envelope },
             PetInteraction.Cheer => pose with { Lean = Math.Sin(InteractionAge * 7) * 4 * envelope, LeftArm = -25 * envelope, RightArm = -25 * envelope, Blink = envelope > .8 },
             PetInteraction.Wave => pose with { RightArm = -15 + Math.Sin(InteractionAge * 12) * 18 * envelope },
@@ -89,7 +141,7 @@ public partial class Bottle
         };
     }
 
-    void DrawPersonality(DrawingContext d, BodyFit fit)
+    internal void DrawPersonality(DrawingContext d, BodyFit fit)
     {
         double g = Gesture;
         if (g > 0)
@@ -112,10 +164,6 @@ public partial class Bottle
                     break;
                 case 5:
                     DrawHeart(d, 110, 179, 10, "#C58CAB", "#916D91");
-                    break;
-                case 6:
-                    Path(d, "M 83,170 Q 96,166 110,173 Q 124,166 137,170 L 137,196 Q 124,191 110,198 Q 96,191 83,196 Z", B("#FFF1D7"), P("#78678F", 2));
-                    Path(d, "M 110,173 L 110,196 M 89,178 L 103,180 M 117,180 L 131,178", null, P("#B4A5AD", 1.5));
                     break;
                 case 7:
                     d.DrawRoundedRectangle(B("#777393"), P("#4D5271", 2), new Rect(82, 173, 56, 25), 9, 9);
@@ -147,26 +195,5 @@ public partial class Bottle
             DrawHeart(d, 132 - Math.Sin(InteractionAge * 3) * 3, 99 - InteractionAge * 10, 5, "#E6C09F", "#AE708E");
             d.Pop();
         }
-        if (InteractionActive && interaction == PetInteraction.Accessory && activeAccessory is not (69 or 47 or 48 or 82 or 1 or 24 or 70))
-            Sparkle(d, new Point(110, 80 - InteractionAge * 5), 7, Math.Sin(InteractionAge / 2.5 * Math.PI));
-    }
-
-    void DrawInteractiveAccessory(DrawingContext d, BodyFit fit, int model, int item)
-    {
-        if (!InteractionActive || interaction != PetInteraction.Accessory || item != activeAccessory)
-            return;
-        double p = InteractionAge / 2.5;
-        d.PushOpacity(Math.Sin(p * Math.PI));
-        d.PushTransform(AccessoryTransform(fit, model, item));
-        if (item == 69)
-            Path(d, "M 34,136 Q 34,119 52,133 L 52,160 Q 40,153 34,169 Z", B("#FFF1D7"), P("#B4A5AD", 1.5));
-        else if (item is 47 or 48 or 82)
-            DrawStar(d, 193 - p * 15, 62 - p * 22, 3 + p * 4, "#F0D493", "#B5975B");
-        else if (item is 1 or 24 or 70)
-            Path(d, "M 169,86 L 169,70 L 179,73 M 169,86 Q 160,81 162,89 Q 168,94 169,86", null, P("#8264BC", 2));
-        else
-            Sparkle(d, new Point(110, 95 - p * 15), 4 + p * 3, 1);
-        d.Pop();
-        d.Pop();
     }
 }

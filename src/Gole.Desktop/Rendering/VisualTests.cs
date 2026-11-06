@@ -117,11 +117,12 @@ namespace Gole.Desktop
                 Add(preview, Theme.Text(PetCatalog.Accessories[examples[i]], 14, Theme.Ink), column * 200 + 25, 237 + row * 235);
             }
             Save(preview, Path.Combine(folder, "roupas-corrigidas.png"));
+            RenderStyles(folder);
             RenderCollection(folder);
             RenderWardrobePanel(folder);
             var gestures = new Canvas { Width = 1100, Height = 900, Background = Theme.B("#F1F5F7") };
             Add(gestures, Theme.Text("GOLE · gestos das personalidades", 24, Theme.Ink), 24, 15);
-            for (int id = 1; id <= 11; id++)
+            for (int id = 1; id < PersonalityCatalog.Options.Count; id++)
             {
                 int x = (id - 1) % 4 * 275, y = 65 + (id - 1) / 4 * 270;
                 Add(gestures, new Bottle { Vessel = 0, PersonalityId = id, Phase = 3.5, Level = .7, Width = 250, Height = 220 }, x + 10, y);
@@ -129,6 +130,41 @@ namespace Gole.Desktop
             }
             Save(gestures, Path.Combine(folder, "personalidades-gestos.png"));
             return 0;
+        }
+
+        static void RenderStyles(string folder)
+        {
+            var canvas = new Canvas { Width = 1200, Height = 1030, Background = Theme.B("#F1F5F7") };
+            Add(canvas, Theme.Text("GOLE · Emo, Nerd e Nerd fofo", 26, Theme.Ink), 25, 18);
+            int[][] sets = { new[] { 67, 91, 93, 98, 43 }, new[] { 99, 96, 57, 69, 42 }, new[] { 68, 92, 87, 80, 97 } };
+            string[] labels = { "Emo · franja e maquiagem", "Nerd · óculos, canetas e livro escolhido", "Nerd fofo · blush e broche de átomo" };
+            for (int i = 0; i < 3; i++)
+            {
+                Add(canvas, new Bottle { Vessel = i == 1 ? 22 : 0, EquippedAccessories = sets[i], Width = 360, Height = 290, MotionEnabled = false }, 20 + i * 400, 60);
+                Add(canvas, Theme.Text(labels[i], 15, Theme.Ink), 20 + i * 400, 355);
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                int x = i % 5 * 240, y = 410 + i / 5 * 260;
+                Add(canvas, new Bottle { Vessel = new[] { 0, 8, 4, 31, 28 }[i % 5], Accessory = 91 + i, Width = 225, Height = 215, MotionEnabled = false }, x, y);
+                Add(canvas, Theme.Text(PetCatalog.Accessories[91 + i], 14, Theme.Ink), x + 20, y + 220);
+            }
+            var text = Theme.Text("O-oi! Meu coraçãozinho fez um beep. 🤓💗   |   Evento de gole recebido. 🔬", 18, Theme.Ink);
+            text.FontFamily = new FontFamily("Segoe UI, Segoe UI Emoji");
+            Add(canvas, text, 25, 970);
+            Save(canvas, Path.Combine(folder, "emo-nerds-maquiagem.png"));
+            var reactions = new Canvas { Width = 1200, Height = 600, Background = Theme.B("#F1F5F7") };
+            var pet = new Bottle { PersonalityId = 6 };
+            for (int i = 0; i < 8; i++)
+            {
+                pet = new Bottle { PersonalityId = 6, Width = 280, Height = 235, EquippedAccessories = sets[2] };
+                for (int n = 0; n <= i; n++)
+                    pet.Touch();
+                pet.Phase = .8;
+                Add(reactions, pet, i % 4 * 300, i / 4 * 290);
+                Add(reactions, Theme.Text(pet.CurrentInteraction.ToString(), 16, Theme.Ink), i % 4 * 300 + 110, i / 4 * 290 + 240);
+            }
+            Save(reactions, Path.Combine(folder, "reacoes-clique.png"));
         }
 
         static void RenderCollection(string folder)

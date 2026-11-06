@@ -14,7 +14,7 @@ public sealed class PersonalityTests
             foreach (var mood in Enum.GetValues<HydrationMood>())
             {
                 var pool = PersonalityCatalog.Reminders(option.Id, mood);
-                Assert.True(pool.Count >= 8);
+                Assert.True(pool.Count >= 10);
                 string? previous = null;
                 for (int i = 0; i < 100; i++)
                 {
@@ -43,7 +43,7 @@ public sealed class PersonalityTests
             foreach (string message in PersonalityCatalog.Reactions(option.Id))
                 Assert.True(all.Add(message));
         }
-        Assert.True(all.Count >= 616);
+        Assert.True(all.Count >= 840);
     }
 
     [Fact]
@@ -81,6 +81,11 @@ public sealed class PersonalityTests
         state.Validate(DateTime.UtcNow);
         Assert.Equal(11, state.PersonalityId);
         Assert.Equal("Emo", PersonalityCatalog.Get(state.PersonalityId).Name);
+        state.PersonalityId = 12;
+        state.Validate(DateTime.UtcNow);
+        Assert.Equal("Nerd", PersonalityCatalog.Get(state.PersonalityId).Name);
+        Assert.Equal("Nerd fofo", PersonalityCatalog.Get(6).Name);
+        Assert.All(PersonalityCatalog.Reminders(6, HydrationMood.Happy), phrase => Assert.Contains(phrase, c => char.IsSurrogate(c) || c is '✨' or '⭐'));
         Assert.Contains(ReminderPhrases.Next(new Random(1), HydrationMood.Dead, -1), PersonalityCatalog.Reminders(0, HydrationMood.Dead));
     }
 }

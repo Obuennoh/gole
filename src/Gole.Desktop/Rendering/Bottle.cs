@@ -203,6 +203,8 @@ namespace Gole.Desktop
                     d.DrawLine(P("#A98F6C", 1.5), new Point(69 + i * 16, 57), new Point(69 + i * 16, 68));
             }
             DrawBottleDetails(d, model, line);
+            foreach (int makeup in equipped.Where(id => id is 91 or 92))
+                DrawFittedAccessory(d, model, makeup);
             d.PushTransform(FaceTransform(fit));
             d.PushTransform(new TranslateTransform(IsAnimating ? Math.Clamp(Gaze.X, -3, 3) : 0, IsAnimating ? Math.Clamp(Gaze.Y, -2, 2) : 0));
             DrawFace(d);
@@ -213,7 +215,7 @@ namespace Gole.Desktop
                 Path(d, "M 110,177 C 110,177 101,187 101,192 C 101,203 119,203 119,192 C 119,187 110,177 110,177 Z", B("#AAFFFFFF"), null);
             d.Pop();
             foreach (int item in equipped)
-                if (!IsBackgroundAccessory(item))
+                if (!IsBackgroundAccessory(item) && item is not (91 or 92))
                     DrawFittedAccessory(d, model, item);
             DrawPersonality(d, fit);
         }

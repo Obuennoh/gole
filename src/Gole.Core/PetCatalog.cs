@@ -31,13 +31,13 @@ public static class PetCatalog
         "Cinto", "Broche de coração", "Bolsa transversal", "Chinelo",
         "Franja emo", "Óculos com fita", "Livrinho", "Fone de gatinho", "Choker de lua", "Colar de estrelas",
         "Touca de sapinho", "Chapéu de mago", "Tiara de nuvem", "Presilha de cereja", "Mochila de gatinho",
-        "Bolsa de poções", "Patins", "Pantufas de coelho", "Broche de planeta", "Balão de estrela", "Saia de bolinhas", "Saia xadrez", "Saia longa", "Blusa listrada", "Blusa de coração", "Suéter de estrelas", "Cardigã", "Vestido de bolinhas"
+        "Bolsa de poções", "Patins", "Pantufas de coelho", "Broche de planeta", "Balão de estrela", "Saia de bolinhas", "Saia xadrez", "Saia longa", "Blusa listrada", "Blusa de coração", "Suéter de estrelas", "Cardigã", "Vestido de bolinhas", "Olho esfumado", "Blush", "Batom preto", "Delineado gatinho", "Batom ameixa", "Bolso com canetas", "Broche de átomo", "Corrente de cintura", "Óculos de armação grossa"
     });
 
     static int Slot(int id) => id switch
     {
         5 or 9 or 12 or 25 or 33 or 34 or 59 or 67 or 73 or 74 => 1,
-        2 or 21 or 22 or 37 or 38 or 61 or 68 => 2,
+        2 or 21 or 22 or 37 or 38 or 61 or 68 or 99 => 2,
         27 or 29 or 53 or 55 or 56 or 83 or 84 or 85 or 90 => 3,
         44 or 51 or 52 or 54 or 57 or 58 or 86 or 87 or 88 or 89 => 4,
         28 or 42 or 43 or 66 or 79 or 80 => 5,
@@ -47,8 +47,9 @@ public static class PetCatalog
         26 or 47 or 48 or 78 or 82 => 9,
         19 or 46 or 77 => 10,
         4 or 23 or 76 => 11,
-        64 or 81 => 12,
+        64 or 81 or 96 or 97 => 12,
         15 or 39 => 13,
+        30 or 93 or 95 => 14,
         _ => 0
     };
 

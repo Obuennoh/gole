@@ -20,14 +20,17 @@ public sealed class SavedLook
 public static class Wardrobe
 {
     public const int MaximumLooks = 30;
-    public static readonly string[] Categories = ["Todos", "Vestidos", "Roupas", "Cabeça", "Rosto", "Calçados", "Joias", "Objetos", "Costas"];
+    public static readonly string[] Categories = ["Todos", "Vestidos", "Roupas", "Cabeça", "Rosto", "Calçados", "Joias", "Objetos", "Costas", "Maquiagem"];
     public static string Category(int id) => id switch
     {
         29 or 90 => "Vestidos",
+        30 or >= 91 and <= 95 => "Maquiagem",
+        96 or 97 or 98 => "Joias",
+        99 => "Rosto",
         27 or 44 or >= 51 and <= 58 or 63 or >= 83 and <= 89 => "Roupas",
         28 or 42 or 43 or 66 or 79 or 80 => "Calçados",
         17 or 18 or 19 or 45 or 46 or 77 => "Costas",
-        2 or 7 or 8 or 21 or 22 or 30 or 37 or 38 or 61 or 68 => "Rosto",
+        2 or 7 or 8 or 21 or 22 or 37 or 38 or 61 or 68 => "Rosto",
         6 or 11 or 14 or 15 or 16 or 32 or 39 or 40 or 41 or 62 or 64 or 71 or 72 or 81 => "Joias",
         26 or 47 or 48 or 49 or 65 or 69 or 78 or 82 => "Objetos",
         _ => "Cabeça"
@@ -52,7 +55,9 @@ public static class Wardrobe
         ("#D875B3", [70,68,82,56,80]), ("#7EA8B0", [75,69,51,79,81]),
         ("#EDAA61", [59,62,53,66,26]), ("#E694A7", [60,40,55,57,28]),
         ("#456477", [22,12,14,54,43]), ("#3C82D5", [1,38,51,42,19]),
-        ("#CFB8A3", [25,61,69,54,43]), ("#45A58C", [35,11,29,80,48])
+        ("#CFB8A3", [25,61,69,54,43]), ("#45A58C", [35,11,29,80,48]),
+        ("#9B73CB", [67,91,93,98,43]), ("#26B9C4", [99,96,57,69,42]),
+        ("#D875B3", [68,92,87,80,97])
     ];
     public static SavedLook Suggest(Random random, int vessel, IEnumerable<int>? previous = null)
     {

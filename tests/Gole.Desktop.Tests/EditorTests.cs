@@ -12,6 +12,7 @@ using Gole.Desktop.Audio;
 
 namespace Gole.Desktop.Tests;
 
+[Collection("Rendering")]
 public sealed class EditorTests
 {
     private sealed class SilentSound : IWaterSound
@@ -62,7 +63,7 @@ public sealed class EditorTests
                 AssertAnimationPreviewAndSaving(panel, pet, state, store);
                 AssertWardrobe(panel, state, store);
                 var personality = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade do pet");
-                Assert.Equal(12, personality.Items.Count);
+                Assert.Equal(13, personality.Items.Count);
                 personality.SelectedValue = 11;
                 Assert.Equal(0, state.PersonalityId);
                 var phrase = Descendants(panel).OfType<TextBlock>().Single(t => AutomationProperties.GetName(t) == "Prévia da fala");
@@ -221,6 +222,7 @@ public sealed class EditorTests
                 var delete = Descendants(panel).OfType<Button>().Single(b => ReferenceEquals(b.Tag, old[7]));
                 delete.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                 Assert.DoesNotContain(old[7], state.Sips);
+                Assert.False(store.SaveFailed, store.LastError);
                 Assert.Equal(9, store.Load(DateTime.UtcNow).State.Sips.Count);
                 Click(panel, "Próxima");
                 Assert.Single(Descendants(panel).OfType<Button>(), b => b.Tag is Sip);

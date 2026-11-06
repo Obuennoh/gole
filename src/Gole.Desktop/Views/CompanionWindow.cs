@@ -87,8 +87,8 @@ namespace Gole.Desktop
             speech = Theme.Text("", 13, Theme.Ink);
             speech.Margin = new Thickness(0);
             bubble = new Border { Background = Theme.B("#FFFFF9"), CornerRadius = new CornerRadius(18, 18, 5, 18), Padding = new Thickness(15, 11, 15, 11), MaxWidth = 256, MinHeight = 62, Child = speech, Opacity = 0 };
-            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Vessel = Data.Vessel, EquippedAccessories = Data.Accessories, Tint = Data.Color, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para acenar · passe o mouse para fazer carinho · botão direito para opções" };
-            System.Windows.Automation.AutomationProperties.SetName(Art, "Garrafinha Gole. Clique para acenar, arraste para mover e use o botão direito para registrar água.");
+            Art = new Bottle { Width = Data.Size * 220 / 255, Height = Data.Size, MotionEnabled = Data.Motion, Vessel = Data.Vessel, EquippedAccessories = Data.Accessories, Tint = Data.Color, Cursor = Cursors.Hand, ToolTip = "Arraste para mover · clique para interagir · passe o mouse para fazer carinho · botão direito para opções" };
+            System.Windows.Automation.AutomationProperties.SetName(Art, "Garrafinha Gole. Clique para interagir, arraste para mover e use o botão direito para registrar água.");
             Art.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
             {
                 start = PointToScreen(e.GetPosition(this));
@@ -123,8 +123,7 @@ namespace Gole.Desktop
                 if (dragged || Math.Abs(dx) + Math.Abs(dy) > 4)
                 {
                     dragged = true;
-                    Art.IsDragging = true;
-                    Art.DragLean = Art.DragLean * .65 + Math.Clamp(-dx * .45, -7, 4) * .35;
+                    Art.TrackDrag(dx, dy);
                     Left += dx;
                     Top += dy;
                     start = point;
@@ -136,14 +135,14 @@ namespace Gole.Desktop
                 Art.ReleaseMouseCapture();
                 if (dragged)
                 {
-                    Art.Interact(PetInteraction.Land);
+                    Art.EndDrag();
                     KeepVisible();
                     Save();
                 }
                 else
                     ReactToTouch(false);
             };
-            Art.LostMouseCapture += (_, _) => { if (Art.IsDragging) { Art.IsDragging = false; Art.Interact(PetInteraction.Land); KeepVisible(); Save(); } };
+            Art.LostMouseCapture += (_, _) => { if (Art.IsDragging) { Art.IsDragging = false; Art.EndDrag(); KeepVisible(); Save(); } };
             Art.MouseEnter += (_, e) => { lastPetPoint = e.GetPosition(Art); petDistance = 0; };
             Art.MouseLeave += (_, _) => { petDistance = 0; };
             Art.MouseRightButtonUp += delegate
@@ -151,7 +150,7 @@ namespace Gole.Desktop
                 OpenMenu();
             };
             Content = Art;
-            speech.FontFamily = FontFamily;
+            speech.FontFamily = new FontFamily("Segoe UI, Segoe UI Emoji");
             ApplyNight();
             speechPopup = new Popup
             {
@@ -331,6 +330,8 @@ namespace Gole.Desktop
         }
         public void Speak(string text, int seconds)
         {
+            Art.PersonalityId = Data.PersonalityId;
+            Art.SpeakGesture(text, seconds);
             speech.Text = text;
             bubble.Opacity = 1;
             bubbleUntil = DateTime.UtcNow.AddSeconds(seconds);
@@ -477,11 +478,7 @@ namespace Gole.Desktop
             if (Data.Motion)
             {
                 Item(menu, "Fazer carinho", () => ReactToTouch(true));
-                foreach (int item in Data.Accessories)
-                {
-                    int selected = item;
-                    Item(menu, "Brincar: " + PetCatalog.Accessories[item], () => Art.PlayAccessories(selected));
-                }
+                Item(menu, "Interagir", () => ReactToTouch(false));
             }
             Item(menu, "Abrir painel", delegate
             {

@@ -9,7 +9,7 @@ public sealed class WardrobeTests
     public void Touch_and_pet_phrases_match_every_personality_without_immediate_repeats()
     {
         var phrases = new InteractionPhrases(new Random(42));
-        for (int id = 0; id <= 11; id++)
+        for (int id = 0; id < PersonalityCatalog.Options.Count; id++)
             foreach (bool pet in new[] { false, true })
             {
                 string previous = "";
