@@ -13,7 +13,8 @@ public sealed class AnimationTests
     [Fact]
     public void Reduced_motion_and_pause_stop_all_motion_including_accessories_and_celebrations() => Sta(() =>
     {
-        foreach (var items in new[] { new[] { 17, 35, 47 }, new[] { 44, 32, 48 }, new[] { 29, 46, 50 }, new[] { 1, 27, 15 } })
+        foreach (var items in new[] { new[] { 17, 35, 47 }, new[] { 44, 32, 48 }, new[] { 29, 46, 50 }, new[] { 1, 27, 15 },
+            new[] { 70, 68, 69, 74, 81 }, new[] { 55, 71, 67, 78, 80 }, new[] { 75, 77, 72, 82, 79 } })
             foreach (bool paused in new[] { false, true })
             {
                 var art = new Bottle
@@ -35,7 +36,7 @@ public sealed class AnimationTests
     [Fact]
     public void Accessory_motion_is_independent_of_body_bobbing() => Sta(() =>
     {
-        foreach (int item in new[] { 1, 2, 9, 15, 17, 18, 20, 23, 24, 26, 32, 35, 36, 37, 38, 39, 41, 45, 46, 47, 48, 50, 61, 64 })
+        foreach (int item in new[] { 1, 2, 9, 15, 17, 18, 20, 23, 24, 26, 32, 35, 36, 37, 38, 39, 41, 45, 46, 47, 48, 50, 61, 64, 68, 69, 70, 74, 78, 81, 82 })
         {
             var art = new Bottle { Level = 1 };
             var before = RenderAccessory(art, item);
@@ -53,7 +54,9 @@ public sealed class AnimationTests
     {
         int[][] outfits = { new[] { 17, 35, 29 }, new[] { 18, 50, 47 }, new[] { 44, 32, 48 },
             new[] { 51, 41, 26 }, new[] { 52, 15, 20 }, new[] { 54, 39, 38 }, new[] { 45, 46, 9 }, new[] { 27, 1, 48 }, new[] { 55, 57, 21 },
-            new[] { 56, 41, 20 }, new[] { 53, 35, 26 }, new[] { 58, 40, 66 } };
+            new[] { 56, 41, 20 }, new[] { 53, 35, 26 }, new[] { 58, 40, 66 },
+            new[] { 67, 71, 55, 44, 79 }, new[] { 68, 69, 57, 80, 81 }, new[] { 73, 76, 77, 52, 42 },
+            new[] { 74, 75, 72, 78, 29 }, new[] { 70, 68, 82, 56, 80 } };
         for (int model = 0; model < PetCatalog.Models.Count; model++)
             foreach (var outfit in outfits)
                 foreach (double level in new[] { 1.0, 0.0 })

@@ -5,10 +5,11 @@ namespace Gole.Desktop;
 
 public partial class Bottle
 {
-    private static bool IsBackgroundAccessory(int id) => id is 17 or 18 or 19 or 45 or 46;
+    private static bool IsBackgroundAccessory(int id) => id is 17 or 18 or 19 or 45 or 46 or 77;
 
     private void DrawExtendedBottleBack(DrawingContext d, int model, Pen line)
     {
+        DrawCollectionBottleBack(d, model, line);
         if (model == 15)
             Path(d, "M 83,58 C 21,74 17,194 50,219 M 137,58 C 199,74 203,194 170,219", null, P("#B39873", 8));
         if (model == 17)
@@ -20,6 +21,7 @@ public partial class Bottle
 
     private void DrawExtendedBottleDetails(DrawingContext d, int model, Pen line)
     {
+        DrawCollectionBottleDetails(d, model, line);
         switch (model)
         {
             case 13:

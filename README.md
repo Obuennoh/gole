@@ -26,20 +26,21 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Intervalo inicial de 30 minutos, configurável entre 5 e 180 minutos.
 - Registro em um clique pelo botão **Já bebi um gole**. Configure os ml de cada gole em **Lembretes → Quantidade por gole**; o padrão é 200 ml. Desfaça o último gole ou qualquer registro do histórico, sem limite de tempo, inclusive após reabrir.
 - Meta diária configurável e histórico de todos os dias, com paginação, remoção individual e limpeza completa com confirmação.
-- Vinte e um modelos, incluindo garrafinhas com canudo, dobrável, cantil, long neck, galão fitness, com capa, triangular e em formato de gota.
-- Sessenta e seis acessórios para combinar até três itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
+- 29 modelos, incluindo bojudinha, laboratório, cristal, térmica com xícara, frasco de coração, copo bolha, bambu e xícara de chá.
+- 82 acessórios para combinar até cinco itens: roupas, calçados, bijuterias e fantasia, incluindo capa de herói, jetpack, orelhas de coelho e tiara de unicórnio.
 - Roupas com cortes próprios: saias e vestidos com cintura ajustada e barra aberta, camisetas e moletons com mangas, jardineira com alças e bolsos, casacos e coletes abertos e poncho com ponta.
-- Até três itens compatíveis; vestir outra peça do mesmo tipo substitui a anterior. Roupas e acessórios usam suas cores originais.
-- Novas peças: camiseta, moletom, jardineira, casaco, saias plissada e de tule, colete, poncho, chapéu de pescador, tiara de laço, óculos redondos, lenço, cinto, broche, bolsa transversal e chinelo.
+- Até cinco itens compatíveis; vestir outra peça do mesmo tipo substitui a anterior. Roupas e acessórios usam suas cores originais.
+- Novas peças: franja emo, óculos com fita, livrinho, fone de gatinho, choker de lua, colar de estrelas, touca de sapinho, chapéu de mago, tiara de nuvem, presilha de cereja, mochila de gatinho, bolsa de poções, patins, pantufas de coelho, broche de planeta e balão de estrela.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
-- Dez personalidades: brava, debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica e pirata, além do modo **Aleatória**.
-- 560 frases próprias, distribuídas pelos seis estados do pet e pelas respostas após beber; sem repetição imediata.
+- Onze personalidades: emo, brava, debochada, carinhosa, motivadora, zen, dramática, nerd, gamer, filosófica e pirata, além do modo **Aleatória**.
+- Nerd reescrito como um nerdzinho fofo e tímido; Emo com franja, música e humor melancólico. Todas as demais vozes receberam ajustes nos seis humores e nas reações. A personalidade muda as falas; o visual continua à sua escolha.
+- 616 frases próprias, distribuídas pelos seis estados do pet e pelas respostas após beber; sem repetição imediata.
 - Escolha em **Personalizar → Personalidade**, veja a prévia e clique em **Salvar personalização**.
 - Elogios variados após beber, sem mencionar volume e sem repetição consecutiva.
 - Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
 
-![Modelos e acessórios do Gole](docs/images/characters.png)
+![Novos modelos e combinações do Gole](docs/images/collection.png)
 
 ### Posição na tela
 
@@ -55,7 +56,7 @@ A animação usa tempo decorrido e tem limite de 30 quadros por segundo. O perso
 
 ### Roupas e acessórios
 
-Em **Personalizar → Acessórios**, clique para vestir ou tirar uma peça e confira o resultado antes de **Salvar personalização**. Uma segunda peça do mesmo tipo substitui a anterior, incluindo saias, roupas de cima, óculos, chapéus, tiaras e calçados. Peças de tipos diferentes continuam combináveis, até três itens.
+Em **Personalizar → Acessórios**, clique para vestir ou tirar uma peça e confira o resultado antes de **Salvar personalização**. Uma segunda peça do mesmo tipo substitui a anterior, incluindo saias, roupas de cima, óculos, chapéus, tiaras e calçados. Peças de tipos diferentes continuam combináveis, até cinco itens.
 
 As roupas e acessórios usam cores próprias, sem controles de pintura ou estampa. A escolha de cor do recipiente continua disponível. Personalizações de acessórios feitas em versões anteriores retornam ao desenho original ao atualizar.
 
@@ -88,7 +89,7 @@ Fechar o painel mantém o pet ativo. Use **Sair** no menu do personagem ou no í
 
 O comando restaura dependências, compila com avisos tratados como erros, executa os testes e verifica a formatação. A mesma rotina roda no GitHub Actions.
 
-Os testes cobrem temporização, falas por estado, três acessórios simultâneos, transições das expressões, desfazer, meia-noite local, recuperação de arquivos e migração dos dados. O teste do editor manipula os controles em uma thread STA **sem mostrar janelas**, sem captura de tela e sem interagir com outros aplicativos.
+Os testes cobrem temporização, falas por estado, cinco acessórios simultâneos, transições das expressões, desfazer, meia-noite local, recuperação de arquivos e migração dos dados. O teste do editor manipula os controles em uma thread STA **sem mostrar janelas**, sem captura de tela e sem interagir com outros aplicativos.
 
 ## Estrutura
 

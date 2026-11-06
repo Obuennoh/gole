@@ -65,10 +65,24 @@ public sealed class AccessoryRenderingTests
     });
 
     [Fact]
+    public void New_models_are_distinct_and_new_accessories_are_visible_on_every_body() => Sta(() =>
+    {
+        var models = Enumerable.Range(0, PetCatalog.Models.Count)
+            .Select(model => Render(new Bottle { Vessel = model, MotionEnabled = false })).ToArray();
+        for (int model = 21; model < PetCatalog.Models.Count; model++)
+            for (int other = 0; other < model; other++)
+                Assert.False(models[model].SequenceEqual(models[other]), $"Models {model} and {other} look identical");
+        for (int model = 0; model < PetCatalog.Models.Count; model++)
+            for (int item = 67; item < PetCatalog.Accessories.Count; item++)
+                Assert.False(models[model].SequenceEqual(Render(new Bottle { Vessel = model, Accessory = item, MotionEnabled = false })),
+                    $"Accessory {item} is invisible on model {model}");
+    });
+
+    [Fact]
     public void Compatible_outfit_layers_do_not_depend_on_selection_order() => Sta(() =>
     {
-        var a = Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 27, 44, 11 } });
-        var b = Render(new Bottle { Vessel = 19, EquippedAccessories = new[] { 11, 44, 27 } });
+        var a = Render(new Bottle { Vessel = 25, EquippedAccessories = new[] { 27, 44, 71, 67, 79 } });
+        var b = Render(new Bottle { Vessel = 25, EquippedAccessories = new[] { 79, 67, 71, 44, 27 } });
         Assert.Equal(a, b);
     });
 

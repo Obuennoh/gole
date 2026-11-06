@@ -10,6 +10,28 @@ public sealed class StateStoreTests : IDisposable
     private JsonStateStore Store() => new(directory);
 
     [Fact]
+    public void Expanded_catalog_personality_and_five_accessories_survive_reopening()
+    {
+        var state = HydrationState.Fresh(Now);
+        state.Vessel = 28;
+        state.PersonalityId = 11;
+        state.Accessories = [67, 71, 55, 69, 80];
+        state.X = -36;
+        state.Y = -20;
+        state.Motion = false;
+        Assert.True(Store().Save(state));
+        var loaded = Store().Load(Now).State;
+        Assert.Equal(28, loaded.Vessel);
+        Assert.Equal(11, loaded.PersonalityId);
+        Assert.Equal(state.Accessories, loaded.Accessories);
+        Assert.Equal(-36, loaded.X);
+        Assert.Equal(-20, loaded.Y);
+        Assert.False(loaded.Motion);
+        Assert.Equal(state.NextReminder, loaded.NextReminder);
+        Assert.Empty(loaded.AccessoryStyles);
+    }
+
+    [Fact]
     public void Legacy_window_coordinates_are_converted_once_to_the_avatar_origin()
     {
         var state = HydrationState.Fresh(Now);

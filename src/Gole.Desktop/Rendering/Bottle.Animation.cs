@@ -110,16 +110,16 @@ public partial class Bottle
             if (item == 32)
                 return;
         }
-        bool inHand = item is 26 or 41 or 47 or 48;
+        bool inHand = item is 26 or 41 or 47 or 48 or 69 or 78 or 82;
         if (inHand)
-            d.PushTransform(ArmTransform(fit, item != 41));
+            d.PushTransform(ArmTransform(fit, item is not (41 or 69)));
         Transform secondary = Transform.Identity;
         if (item == 45 && IsAnimating)
         {
             double shear = Math.Sin(t * 1.8) * .032 * energy;
             secondary = new MatrixTransform(1, 0, shear, 1, -103 * shear, 0);
         }
-        if (item == 48 && IsAnimating)
+        if (item is 48 or 82 && IsAnimating)
         {
             var anchor = AccessoryTransform(fit, model, item).Transform(new Point(189, 110));
             secondary = new RotateTransform(Math.Sin(t * 1.5) * 3 * energy, anchor.X, anchor.Y);
@@ -165,7 +165,7 @@ public partial class Bottle
     void DrawAccessoryEffects(DrawingContext d, BodyFit fit, int model, int item)
     {
         double t = MotionTime;
-        if (item is 2 or 21 or 37 or 38 or 61)
+        if (item is 2 or 21 or 37 or 38 or 61 or 68)
         {
             var drawing = AccessoryDrawing(model, item, 0);
             d.PushOpacityMask(SurfaceMask(drawing));
@@ -175,7 +175,7 @@ public partial class Bottle
             d.Pop();
             d.Pop();
         }
-        if (item is 9 or 20 or 23 or 36 or 47 or 50 or 64)
+        if (item is 9 or 20 or 23 or 36 or 47 or 50 or 64 or 74 or 81)
         {
             var point = item switch
             {
@@ -185,11 +185,12 @@ public partial class Bottle
                 36 => new Point(110, 63),
                 47 => new Point(204, 54),
                 50 => new Point(110, 35),
+                74 => new Point(104, 48),
                 _ => new Point(141, 174)
             };
             Sparkle(d, AccessoryTransform(fit, model, item).Transform(point), 5, .3 + .55 * (.5 + .5 * Math.Sin(t * 1.8)));
         }
-        if (item is 1 or 24 && Level > .6)
+        if (item is 1 or 24 or 70 && Level > .6)
         {
             for (int i = 0; i < 2; i++)
             {

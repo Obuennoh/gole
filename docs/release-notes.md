@@ -1,9 +1,11 @@
 Gole para Windows x64.
 
-- **Posicionamento livre nos cantos e bordas da tela**. A posição escolhida não é mais limitada pela janela transparente nem reservada para o balão.
-- **Balão de fala separado do personagem**, com opções de abertura acima, abaixo e nas laterais. Falas longas não deslocam o pet.
-- A posição é salva ao soltar e restaurada ao reabrir, incluindo coordenadas negativas e monitores à esquerda ou acima do principal.
-- Recuperação apenas quando o corpo fica inacessível, por exemplo após desconectar um monitor.
-- Posições das versões anteriores migradas para a nova janela compacta; histórico, roupas e configurações preservados.
+- **Nova personalidade Emo** e **Nerd reescrito como um nerdzinho fofo**, curioso e tímido.
+- Falas e descrições ajustadas em todas as personalidades, nos seis humores e após beber: 11 vozes e 616 frases.
+- **Até 5 acessórios simultâneos**, com troca automática entre peças equivalentes, inclusive com todas as vagas ocupadas.
+- **16 acessórios novos**, incluindo franja emo, óculos com fita, livrinho, fone de gatinho, choker de lua, touca de sapinho, patins e pantufas.
+- **8 modelos novos**, incluindo laboratório, cristal, coração, bambu e xícara de chá. Catálogo total: 29 modelos e 82 acessórios.
+- Novos acessórios acompanham os gestos e respeitam a opção de desativar animações. Roupas mantêm cortes próprios e cores originais.
+- Histórico, posição livre na tela e preferências preservados.
 
 Disponível pelo atualizador automático ou pelo instalador **Gole-Setup.exe**.

@@ -43,7 +43,7 @@ public sealed class PersonalityTests
             foreach (string message in PersonalityCatalog.Reactions(option.Id))
                 Assert.True(all.Add(message));
         }
-        Assert.True(all.Count >= 560);
+        Assert.True(all.Count >= 616);
     }
 
     [Fact]
@@ -77,6 +77,10 @@ public sealed class PersonalityTests
         state.Validate(DateTime.UtcNow);
         Assert.Equal(10, state.PersonalityId);
         Assert.Equal("Brava", PersonalityCatalog.Get(state.PersonalityId).Name);
+        state.PersonalityId = 11;
+        state.Validate(DateTime.UtcNow);
+        Assert.Equal(11, state.PersonalityId);
+        Assert.Equal("Emo", PersonalityCatalog.Get(state.PersonalityId).Name);
         Assert.Contains(ReminderPhrases.Next(new Random(1), HydrationMood.Dead, -1), PersonalityCatalog.Reminders(0, HydrationMood.Dead));
     }
 }

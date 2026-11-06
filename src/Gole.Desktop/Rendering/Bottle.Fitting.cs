@@ -56,11 +56,11 @@ public partial class Bottle
 
     internal static int AccessoryLayer(int id) => id switch
     {
-        17 or 18 or 19 or 45 or 46 => 0,
+        17 or 18 or 19 or 45 or 46 or 77 => 0,
         27 or 29 or 55 or 56 => 10,
         44 or 51 or 52 or 53 or 54 or 57 or 58 => 20,
         8 => 30,
-        11 or 14 or 16 or 40 or 62 or 63 or 65 => 40,
+        11 or 14 or 16 or 40 or 62 or 63 or 65 or 71 or 72 => 40,
         _ => 50
     };
 
@@ -172,28 +172,35 @@ public partial class Bottle
 
     Transform AccessoryTransform(BodyFit fit, int model, int item)
     {
-        if (item is 2 or 7 or 8 or 21 or 30 or 37 or 38 or 61)
+        if (item is 2 or 7 or 8 or 21 or 30 or 37 or 38 or 61 or 68)
             return FaceTransform(fit);
-        if (item is 28 or 42 or 43 or 66)
+        if (item is 28 or 42 or 43 or 66 or 79 or 80)
             return Transform.Identity;
         // Small side pieces retain their shape and follow the actual body edge.
-        if (item is 4 or 23)
+        if (item is 4 or 23 or 76)
             return new TranslateTransform(fit.Right(88) - 162, 0);
+        if (item == 67)
+            return new ScaleTransform(Math.Clamp(fit.Width(103) / 116, .65, 1.25), 1, 110, 103);
         if (item is 26 or 65)
             return new TranslateTransform(fit.Right(165) - 165, item == 26 ? Level < .15 ? 30 : -28 : 0);
         if (item == 41)
             return new TranslateTransform(fit.Left(129) - 54, Level < .15 ? 18 : 0);
-        if (item is 47 or 48)
+        if (item == 69)
+            return new TranslateTransform(fit.Left(129) - 54, Level < .15 ? 17 : 0);
+        if (item == 78)
             return new TranslateTransform(fit.Right(129) - 166, Level < .15 ? 58 : 0);
-        if (item is 5 or 9 or 12 or 25 or 33 or 34 or 59)
+        if (item is 47 or 48 or 82)
+            return new TranslateTransform(fit.Right(129) - 166, Level < .15 ? 58 : 0);
+        if (item is 5 or 9 or 12 or 25 or 33 or 34 or 59 or 73 or 74)
         {
-            double[] seats = { 52, 60, 63, 70, 77, 87, 74, 54, 47, 43, 53, 55, 59, 66, 58, 58, 44, 62, 55, 57, 54 };
+            double[] seats = { 52, 60, 63, 70, 77, 87, 74, 54, 47, 43, 53, 55, 59, 66, 58, 58, 44, 62, 55, 57, 54,
+                60, 53, 58, 65, 58, 84, 59, 94 };
             double seat = seats[model];
             double baseline = item == 9 ? 70 : item == 25 ? 85 : 87;
             double width = Math.Clamp(fit.Width(100) / 106, .82, 1.15);
             return new MatrixTransform(width, 0, 0, 1, 110 * (1 - width), seat - baseline);
         }
-        double y = item == 46 ? 193 : item is 1 or 24 ? 126 : item is 15 or 39 ? 143 : item is 6 or 11 or 14 or 16 or 40 or 62 or 63 or 64 ? 169 : item is 17 or 18 or 19 or 45 or 46 ? 135 : item == 20 ? 60 : 100;
+        double y = item == 46 ? 193 : item is 1 or 24 or 70 ? 126 : item is 15 or 39 ? 143 : item is 6 or 11 or 14 or 16 or 40 or 62 or 63 or 64 or 71 or 72 or 81 ? 169 : item is 17 or 18 or 19 or 45 or 46 or 77 ? 135 : item == 20 ? 60 : 100;
         double ratio = Math.Clamp(fit.Width(y) / 116, .65, 1.25);
         return new ScaleTransform(ratio, 1, 110, y);
     }
@@ -251,6 +258,11 @@ public partial class Bottle
 
     void DrawNewAccessory(DrawingContext d, int item)
     {
+        if (item >= 67)
+        {
+            DrawCollectionAccessory(d, item);
+            return;
+        }
         switch (item)
         {
             case 59:

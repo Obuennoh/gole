@@ -42,7 +42,7 @@ Os controles de pausa e soneca foram removidos. A lógica de pausa continua cobe
 
 ### Editor
 
-As alterações visuais ficam em um rascunho. O preview usa o mesmo componente vetorial do pet, com nível independente dos registros reais. **Salvar personalização** aplica o rascunho; **Descartar alterações** recupera o estado salvo. As cores são escolhidas exclusivamente na paleta. A seleção de acessórios permite até três itens distintos; remover um item libera uma vaga. Itens de fundo são desenhados antes do corpo para permitir combinações com acessórios de rosto e cabeça.
+As alterações visuais ficam em um rascunho. O preview usa o mesmo componente vetorial do pet, com nível independente dos registros reais. **Salvar personalização** aplica o rascunho; **Descartar alterações** recupera o estado salvo. As cores são escolhidas exclusivamente na paleta. A seleção de acessórios permite até cinco itens distintos; remover um item libera uma vaga. Itens de fundo são desenhados antes do corpo para permitir combinações com acessórios de rosto e cabeça.
 
 `PetCatalog` centraliza os modelos, os acessórios e o limite da seleção. O schema 3 migra o acessório único das versões anteriores para uma lista sem reiniciar o intervalo nem alterar os registros. `HydrationExpression` define as faixas de expressão: feliz acima de 80%, de boa até 60%, sério até 40%, triste até 20%, chorando até esvaziar e morto em zero. Pausa mantém a expressão de sono; um novo registro recupera o personagem.
 
@@ -81,7 +81,7 @@ A visão geral lista registros de todos os dias, ordenados do mais recente para 
 
 ### Personalidades e falas
 
-`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam dez estilos; o ID zero mantém o modo aleatório. Cada estilo contém oito frases para cada expressão e oito respostas após beber, totalizando 560 mensagens distintas. Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
+`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam onze estilos; o ID zero mantém o modo aleatório. Cada estilo contém oito frases para cada expressão e oito respostas após beber, totalizando 616 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
 
 `ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
 
@@ -89,7 +89,7 @@ A personalidade integra o rascunho do editor. A prévia usa o humor selecionado,
 
 ### Catálogo visual
 
-O catálogo mantém IDs anteriores e acrescenta oito silhuetas de garrafinha e dezoito acessórios. `Bottle.ExtendedStyles.cs` concentra os novos detalhes e usa as mesmas geometrias, pincéis e canetas compartilhadas. Capa de herói e jetpack são desenhados antes do corpo; os demais itens são desenhados à frente. Todos os modelos usam o mesmo nível de água e as seis expressões. As combinações continuam limitadas a três itens distintos.
+O catálogo mantém IDs anteriores e acrescenta oito silhuetas de garrafinha e dezoito acessórios. `Bottle.ExtendedStyles.cs` concentra os novos detalhes e usa as mesmas geometrias, pincéis e canetas compartilhadas. Capa de herói e jetpack são desenhados antes do corpo; os demais itens são desenhados à frente. Todos os modelos usam o mesmo nível de água e as seis expressões. As combinações continuam limitadas a cinco itens distintos.
 
 ### Roupas e acessórios
 
@@ -97,11 +97,11 @@ O catálogo mantém IDs anteriores e acrescenta oito silhuetas de garrafinha e d
 
 Brincos são desenhados individualmente, sem escala horizontal, com âncora na borda do recipiente; sua rotação usa a mesma âncora. Mangas, braços e acessórios de mão compartilham as transformações da animação. Camadas têm ordem estável por categoria e ID.
 
-`PetCatalog` define as categorias exclusivas de chapéu, óculos, parte inferior, parte superior, calçado e tiara. Escolher uma peça substitui outra da mesma categoria, inclusive quando as três vagas estão ocupadas. A normalização aplica a mesma regra a preferências anteriores. Acessórios de categorias distintas continuam combináveis.
+`PetCatalog` define as categorias exclusivas de chapéu, óculos, parte inferior, parte superior, calçado e tiara. Escolher uma peça substitui outra da mesma categoria, inclusive quando as cinco vagas estão ocupadas. A normalização aplica a mesma regra a preferências anteriores. Acessórios de categorias distintas continuam combináveis.
 
 O schema 15 remove os estilos customizados dos acessórios ao carregar. `AccessoryStyle` e o campo legado `AccessoryStyles` existem apenas para ler preferências das versões 0.2.14–0.2.15; não são usados pelo desenho nem pelo editor. Cores e estampas de acessórios voltam ao original, preservando cor do recipiente, itens vestidos, registros, posições e prazos. O renderizador de pintura foi removido.
 
-Desenhos são congelados em cache limitado por modelo, peça, parte, pose e combinação. O catálogo mantém todos os 66 IDs e o limite de três itens compatíveis.
+Desenhos são congelados em cache limitado por modelo, peça, parte, pose e combinação. O catálogo mantém todos os 82 IDs e o limite de cinco itens compatíveis.
 
 ### Animação do personagem
 
@@ -118,3 +118,7 @@ A janela do personagem contém apenas `Bottle`, com largura e altura iguais ao v
 `Bottle.DragBounds` mapeia uma região central do corpo para coordenadas locais do viewport. `KeepVisible` converte essa região com `PointToScreen` e compara com `Screen.Bounds` em pixels. `DesktopPlacement.RecoveryOffset` preserva a posição sempre que uma pequena área do corpo continua alcançável em algum monitor. O tamanho total da janela, a área de trabalho e o balão não são usados como limites de arraste. Apenas posições inacessíveis são recuperadas ao soltar, reabrir ou mudar a disposição dos monitores. O deslocamento de recuperação é convertido de volta para DIPs.
 
 O schema 16 converte uma vez as posições salvas pela janela antiga de 276 DIPs de largura e reserva superior de 68 DIPs para a origem do viewport. Valores padrão permanecem padrão; coordenadas negativas continuam válidas e persistidas. A validação automatizada cobre cantos, bordas, área da barra de tarefas, monitores com origem negativa, lacunas, desconexão, coordenadas em pixels escalados, migração e falas que não deslocam o personagem.
+
+### Coleção ampliada
+
+Os IDs 21–28 acrescentam oito recipientes e os IDs 67–82 acrescentam dezesseis acessórios, desenhados em `Bottle.Collection.cs`. As peças usam os mesmos pontos de encaixe e gestos das anteriores. O limite é de cinco peças; fones, colares, brincos, broches, presilhas, mochilas e objetos da mesma mão também substituem seus equivalentes. A personalidade controla as falas sem alterar o visual escolhido. O formato de preferências permanece na versão 16.

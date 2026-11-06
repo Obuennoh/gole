@@ -36,17 +36,19 @@ public sealed class AppearanceTests
     }
 
     [Fact]
-    public void Accessory_selection_caps_at_three_and_allows_replacing_an_item()
+    public void Accessory_selection_caps_at_five_and_allows_replacing_an_item()
     {
         var items = new List<int>();
         Assert.True(PetCatalog.Toggle(items, 3));
         Assert.True(PetCatalog.Toggle(items, 15));
         Assert.True(PetCatalog.Toggle(items, 21));
+        Assert.True(PetCatalog.Toggle(items, 69));
+        Assert.True(PetCatalog.Toggle(items, 80));
         Assert.False(PetCatalog.Toggle(items, 20));
-        Assert.Equal(new[] { 3, 15, 21 }, items);
+        Assert.Equal(new[] { 3, 15, 21, 69, 80 }, items);
         Assert.True(PetCatalog.Toggle(items, 15));
         Assert.True(PetCatalog.Toggle(items, 20));
-        Assert.Equal(new[] { 3, 21, 20 }, items);
+        Assert.Equal(new[] { 3, 21, 69, 80, 20 }, items);
         Assert.True(PetCatalog.Toggle(items, 0));
         Assert.Empty(items);
     }
@@ -59,21 +61,36 @@ public sealed class AppearanceTests
     [InlineData(5, 33)]
     [InlineData(42, 43)]
     [InlineData(35, 50)]
+    [InlineData(5, 67)]
+    [InlineData(61, 68)]
+    [InlineData(1, 70)]
+    [InlineData(40, 71)]
+    [InlineData(71, 72)]
+    [InlineData(59, 73)]
+    [InlineData(73, 74)]
+    [InlineData(35, 75)]
+    [InlineData(23, 76)]
+    [InlineData(19, 77)]
+    [InlineData(48, 78)]
+    [InlineData(42, 79)]
+    [InlineData(79, 80)]
+    [InlineData(64, 81)]
+    [InlineData(47, 82)]
     public void Clothing_and_accessories_in_the_same_slot_replace_each_other_even_when_full(int oldItem, int newItem)
     {
-        var items = new List<int> { oldItem, 11, 48 };
+        var items = new List<int> { oldItem, 3, 7, 20, 32 };
         Assert.True(PetCatalog.CanEquip(items, newItem));
         Assert.True(PetCatalog.Toggle(items, newItem));
-        Assert.Equal(3, items.Count);
+        Assert.Equal(5, items.Count);
         Assert.DoesNotContain(oldItem, items);
         Assert.Contains(newItem, items);
-        Assert.Equal(new[] { 11, 48, newItem }, PetCatalog.Normalize(new[] { oldItem, 11, 48, newItem }));
+        Assert.Equal(new[] { 3, 7, 20, 32, newItem }, PetCatalog.Normalize(new[] { oldItem, 3, 7, 20, 32, newItem }));
     }
 
     [Fact]
     public void Invalid_or_duplicate_items_cannot_bypass_the_limit()
     {
-        Assert.Equal(new[] { 3, 14, 21 }, PetCatalog.Normalize([0, -1, 999, 3, 3, 14, 21, 15]));
+        Assert.Equal(new[] { 3, 14, 21, 69, 80 }, PetCatalog.Normalize([0, -1, 999, 3, 3, 14, 21, 69, 80, 15]));
     }
 
     [Fact]
