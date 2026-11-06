@@ -111,6 +111,7 @@ public partial class Bottle
             11 => pose with { Lean = pose.Lean + g * Math.Sin(t * 3) * 3, RightArm = pose.RightArm - g * 22 },
             13 => pose with { Lean = pose.Lean - g * 3, ScaleX = 1 - g * .01, ScaleY = 1 + g * .01, Blink = g > .85 },
             14 => pose with { Lean = pose.Lean + g * 3, RightArm = pose.RightArm - g * 20 },
+            16 => pose with { Lean = pose.Lean + g * 3, LeftArm = pose.LeftArm - g * 8, RightArm = pose.RightArm - g * 18, Blink = g > .9 },
             15 => pose with { Lean = pose.Lean + Math.Sin(t * 6) * g * 4, Lift = pose.Lift - g * 3, LeftArm = Math.Sin(t * 7) * g * 20 },
             _ => pose
         };

@@ -35,9 +35,9 @@ Quem usa a versão antiga com a tela **Conectar GitHub** precisa instalar esta v
 - Novas peças: franja emo, óculos com fita, livrinho, fone de gatinho, choker de lua, colar de estrelas, touca de sapinho, chapéu de mago, tiara de nuvem, presilha de cereja, mochila de gatinho, bolsa de poções, patins, pantufas de coelho, broche de planeta e balão de estrela.
 - Seis expressões progressivas: feliz, de boa, sério, triste, chorando e morto ao zerar.
 - Editor com rascunho, preview de cada expressão, simulação e salvamento explícito.
-- Quinze personalidades: emo, brava, debochada, carinhosa, motivadora, zen, dramática, nerd, nerd fofo, gamer, filosófica, pirata, dorameiro, detetive e caótico, além do modo **Aleatória**.
+- Dezesseis personalidades: emo, brava, debochada, carinhosa, motivadora, zen, dramática, nerd, nerd fofo, gamer, filosófica, pirata, dorameiro, detetive, caótico e pick-me girl, além do modo **Aleatória**.
 - Nerd técnico separado do Nerd fofo e tímido; Emo com franja, música e humor melancólico. Todas as demais vozes receberam ajustes nos seis humores e nas reações. A personalidade muda as falas; o visual continua à sua escolha.
-- 1.050 frases próprias, distribuídas pelos seis estados do pet e pelas respostas após beber; sem repetição imediata.
+- 1.120 frases próprias, distribuídas pelos seis estados do pet e pelas respostas após beber; sem repetição imediata.
 - Escolha em **Personalizar → Personalidade**, veja a prévia e clique em **Salvar personalização**.
 - Elogios variados após beber, sem mencionar volume e sem repetição consecutiva.
 - Cinco sons para falas e lembretes: água no copo, bolhas, água correndo, gota única e sino suave. Escolha e teste com **Ouvir** em **Lembretes**, ajuste o volume de 0% a 100% ou desligue o áudio; avisos na bandeja sem soneca ou pausa.
@@ -137,7 +137,7 @@ Novidades do catálogo: saias de bolinhas, xadrez e longa; blusa listrada, blusa
 
 Clique no personagem para alternar entre oito reações: aceno, pulinho, comemoração, dancinha, timidez, reverência, reboladinha e alongamento. Passe o mouse para fazer carinho. O arrasto responde à direção e à intensidade, desacelera quando o cursor para e termina com um pouso. O botão direito mantém as ações de água, carinho e interação com o personagem; não há ações diretas nos acessórios.
 
-São quinze personalidades, além do modo Aleatória. **Nerd** usa ciência, programação e humor técnico; **Nerd fofo** é tímido e carinhoso. Cada personalidade tem 70 falas de hidratação e reações ao beber, totalizando 1.050 mensagens, com emojis conforme o tom. As falas recebem gestos e o pet alterna movimentos espontâneos sem sair do lugar. Cliques e carinho têm prioridade sobre os gestos da fala.
+São dezesseis personalidades, além do modo Aleatória. **Nerd** usa ciência, programação e humor técnico; **Nerd fofo** é tímido e carinhoso. Cada personalidade tem 70 falas de hidratação e reações ao beber, totalizando 1.120 mensagens, com emojis conforme o tom. As falas recebem gestos e o pet alterna movimentos espontâneos sem sair do lugar. Cliques e carinho têm prioridade sobre os gestos da fala.
 
 O livro só aparece quando você equipa **Livrinho**. A franja emo é lateral, com uma única mecha roxa. A categoria **Maquiagem** reúne olho esfumado, blush, delineado e batons. Há também bolso com canetas, broche de átomo, corrente de cintura e óculos de armação grossa. São 99 acessórios, combináveis até o limite de cinco; batons substituem outros batons.
 
@@ -145,8 +145,10 @@ Em Personalizar, use **Testar carinho**, **Testar reação ao clique** e **Outra
 
 ### Mistura de personalidades e emojis coloridos
 
-Escolha a personalidade principal em **Personalizar → Personalidade**. Logo abaixo, marque até mais duas em **Misture com** e clique em **Salvar personalização**. O contador mostra até três selecionadas. As falas de hidratação, respostas ao beber e reações ao toque alternam entre esses estilos sem repetir o mesmo estilo seguido. Os gestos acompanham quem está falando. Para usar todas as vozes, escolha **Aleatória**, que limpa a mistura. **Descartar alterações** recupera sua seleção salva.
+Em **Personalizar → Personalidade**, marque diretamente de uma a três caixas e clique em **Salvar personalização**. Não há select nem escolha principal obrigatória. Qualquer caixa marcada pode ser desmarcada, inclusive a primeira. Ao atingir três, as demais ficam desabilitadas até liberar uma vaga. **Aleatória** limpa a seleção e usa todas as vozes; desmarcar todas também ativa esse modo. **Descartar alterações** recupera as escolhas salvas. As falas e os gestos alternam entre os estilos selecionados.
 
-**Dorameiro** usa expressões de anime e dorama, como “Onii-chan”, “senpai”, “doki-doki” e “yatta”, com dedinhos tímidos apontando um para o outro. **Detetive** segue pistas e investiga o gole esquecido; **Caótico** brinca com humor absurdo e festas imaginárias. As quinze personalidades têm 70 falas principais cada, além de falas de toque e carinho.
+**Dorameiro** usa expressões de anime e dorama, como “Onii-chan”, “senpai”, “doki-doki” e “yatta”, com dedinhos tímidos apontando um para o outro. **Detetive** segue pistas e investiga o gole esquecido; **Caótico** brinca com humor absurdo e festas imaginárias. As dezesseis personalidades têm 70 falas principais cada, além de falas de toque e carinho.
 
 Os emojis são imagens coloridas incorporadas ao aplicativo: funcionam offline, em ambos os temas, sem depender da fonte monocromática do Windows. [Créditos do Twemoji e licença](docs/emoji-credits.md).
+
+**Pick-me girl** quer ser sua favorita, diz que não quer elogio e acaba entregando o quanto queria ser notada. As doze personalidades mais antigas tiveram 336 falas principais reescritas e suas reações ao clique e carinho revistas e ampliadas para quatro por situação. O humor mantém o contexto da garrafinha, do copo e da rotina de cada estilo.

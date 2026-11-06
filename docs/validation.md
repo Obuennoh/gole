@@ -90,3 +90,5 @@ A expansão de personalidades e maquiagem verifica 840 mensagens únicas, no mí
 Mistura e emojis: migração da versão 18 preserva a personalidade e a posição; limite de três estilos, limpeza de IDs inválidos e duplicados, persistência e retorno ao modo Aleatória. O teste do editor verifica seleção, limite, prévia, salvamento e descarte. O catálogo cobre 1.050 mensagens distintas. O teste de emojis verifica que todos os grafemas do catálogo possuem imagem incorporada e que o sorriso contém pixels amarelos nos dois temas. `personalidades-mistura-emojis.png` mostra os dedinhos e os emojis nos temas claro e escuro.
 
 Validação da versão de mistura: 143 testes aprovados (101 de regras e persistência, 42 de desktop).
+
+Seleção por checkboxes e revisão de humor: 143 testes aprovados. O teste do editor verifica ausência do select, escolha direta a partir do modo aleatório, limite de três, remoção do primeiro estilo selecionado, salvamento e descarte, retorno a Aleatória e prévia da Pick-me girl. O catálogo valida 1.120 falas únicas e os respectivos emojis coloridos. `personalidades-claro.png` e `personalidades-noturno.png` mostram a seleção real renderizada em memória.

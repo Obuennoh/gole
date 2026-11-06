@@ -247,6 +247,34 @@ namespace Gole.Desktop
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
                 using (var stream = File.Create(Path.Combine(folder, dark ? "looks-noturno.png" : "looks-claro.png")))
                     encoder.Save(stream);
+                var queue = new System.Collections.Generic.Queue<DependencyObject>();
+                queue.Enqueue(content);
+                CheckBox selection = null;
+                while (queue.Count > 0)
+                {
+                    var node = queue.Dequeue();
+                    if (node is CheckBox check && System.Windows.Automation.AutomationProperties.GetName(check) == "Personalidade Pick-me girl")
+                    {
+                        selection = check;
+                        break;
+                    }
+                    for (int child = 0; child < VisualTreeHelper.GetChildrenCount(node); child++)
+                        queue.Enqueue(VisualTreeHelper.GetChild(node, child));
+                }
+                DependencyObject parent = selection;
+                while (parent != null && parent is not ScrollViewer)
+                    parent = VisualTreeHelper.GetParent(parent);
+                if (parent is ScrollViewer scroll)
+                {
+                    scroll.ScrollToVerticalOffset(430);
+                    content.UpdateLayout();
+                    var selectionBitmap = new RenderTargetBitmap(1090, 800, 96, 96, PixelFormats.Pbgra32);
+                    selectionBitmap.Render(content);
+                    var selectionEncoder = new PngBitmapEncoder();
+                    selectionEncoder.Frames.Add(BitmapFrame.Create(selectionBitmap));
+                    using var selectionFile = File.Create(Path.Combine(folder, dark ? "personalidades-noturno.png" : "personalidades-claro.png"));
+                    selectionEncoder.Save(selectionFile);
+                }
                 panel.Close();
             }
             pet.Close();

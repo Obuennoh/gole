@@ -81,7 +81,7 @@ A visão geral lista registros de todos os dias, ordenados do mais recente para 
 
 ### Personalidades e falas
 
-`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam quinze estilos; o ID zero mantém o modo aleatório. Cada estilo contém dez frases para cada expressão e dez respostas após beber, totalizando 1.050 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
+`PersonalityCatalog` carrega uma vez o JSON incorporado `Content/personalities.json`, sem acesso à rede. IDs estáveis identificam dezesseis estilos; o ID zero mantém o modo aleatório. Cada estilo contém dez frases para cada expressão e dez respostas após beber, totalizando 1.120 mensagens distintas. Emo usa o ID 11 e Brava usa o ID 10 e participa também do modo aleatório, sem alterar as escolhas anteriores. Não há personalidades regionais.
 
 `ReminderPhrases` e `DrinkReactions` usam o catálogo e excluem a última mensagem da próxima escolha. A fala de abertura, as falas de cinco minutos, as notificações e os elogios após beber respeitam a escolha salva. Mensagens de configuração e de edição do histórico continuam funcionais.
 
@@ -145,4 +145,10 @@ Preferências versão 19 acrescentam `PersonalityIds`. O ID principal legado é 
 
 As falas de lembrete, gole e toque usam o mesmo seletor por pet; `activePersonality` preserva o estilo sorteado durante o gesto. IDs 13–15 são Dorameiro, Detetive e Caótico. O Dorameiro desenha mãos à frente do corpo durante falas e gestos tímidos, preservando a pose habitual quando há um objeto ocupado na mão.
 
-`EmojiTextBlock` segmenta Unicode por grafemas e intercala texto e imagens Twemoji em `InlineUIContainer`. As 74 imagens PNG são recursos incorporados e congelados em cache. O texto Unicode original continua disponível no componente e na descrição de acessibilidade. Nenhuma imagem é buscada em rede em execução. A licença e os créditos acompanham o pacote na pasta Emoji.
+`EmojiTextBlock` segmenta Unicode por grafemas e intercala texto e imagens Twemoji em `InlineUIContainer`. As imagens PNG são recursos incorporados e congelados em cache. O texto Unicode original continua disponível no componente e na descrição de acessibilidade. Nenhuma imagem é buscada em rede em execução. A licença e os créditos acompanham o pacote na pasta Emoji.
+
+### Seleção direta e revisão de conteúdo
+
+O editor usa somente checkboxes, sem personalidade principal na interface. Cada clique atualiza a lista do rascunho; o primeiro ID da lista alimenta o campo legado `PersonalityId` apenas para manter compatibilidade. Marcar Aleatória ou esvaziar a lista atribui zero ao campo legado. As caixas não selecionadas ficam desabilitadas ao atingir três, mas todas as selecionadas continuam removíveis. O schema permanece na versão 19 e as misturas anteriores são preservadas.
+
+O ID 16 é Pick-me girl. Os estilos 1–12 receberam quatro frases novas por grupo de humor/reação, além da revisão e expansão das falas de toque e carinho. `InteractionPhrases` sorteia pela quantidade real de frases de cada grupo, sem repetir a última imediatamente. O catálogo mantém 70 falas principais por estilo, totalizando 1.120, e os emojis novos permanecem incorporados offline.

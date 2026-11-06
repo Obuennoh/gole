@@ -1,9 +1,10 @@
 Gole para Windows x64.
 
-- Dorameiro: falas inspiradas em anime e dorama, com dedinhos tímidos e gestos carinhosos.
-- Novas personalidades Detetive e Caótico. Agora são quinze estilos e 1.050 falas principais.
-- Misture até três personalidades; lembretes, respostas ao beber e interações alternam os estilos escolhidos.
-- Emojis realmente coloridos nos balões e na prévia, disponíveis offline nos temas claro e noturno.
-- Seleção anterior, looks, posição e histórico de água preservados.
+- Personalidades escolhidas diretamente por checkboxes: marque de uma a três, sem select ou escolha principal obrigatória.
+- Qualquer personalidade pode ser desmarcada. Aleatória usa todas as vozes e também é ativada ao esvaziar a seleção.
+- Nova personalidade Pick-me girl, com humor de quem quer ser a favorita mas finge não buscar elogios.
+- Revisão de 336 falas principais das doze personalidades antigas, com piadas mais claras e ligadas ao estilo de cada uma.
+- Falas de toque e carinho revisadas e ampliadas nos estilos antigos; agora são dezesseis personalidades e 1.120 falas principais.
+- Emojis coloridos offline, misturas existentes, looks e histórico preservados.
 
-Em Personalizar, escolha uma personalidade principal, marque até outras duas e salve. Disponível pelo atualizador automático ou pelo instalador Gole-Setup.exe.
+Em Personalizar, marque as caixas desejadas e use Salvar personalização. Disponível pelo atualizador automático ou pelo instalador Gole-Setup.exe.

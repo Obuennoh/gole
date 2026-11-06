@@ -42,7 +42,6 @@ namespace Gole.Desktop
         CheckBox motionBox;
         string draftName, draftColor;
         int draftModel, draftPersonality;
-        ComboBox personalityChoice;
         TextBlock personalityDescription;
         EmojiTextBlock personalityMessage;
         List<int> draftPersonalities = new();
@@ -342,36 +341,42 @@ namespace Gole.Desktop
             controls.Children.Add(nameBox);
             AddWardrobe(controls);
             Label(controls, "Personalidade");
-            personalityChoice = new ComboBox { ItemsSource = PersonalityCatalog.Options, DisplayMemberPath = "Name", SelectedValuePath = "Id", SelectedValue = draftPersonality, Height = 40, VerticalContentAlignment = VerticalAlignment.Center };
-            System.Windows.Automation.AutomationProperties.SetName(personalityChoice, "Personalidade do pet");
-            personalityChoice.SelectionChanged += delegate
-            {
-                if (syncing || personalityChoice.SelectedValue is not int id)
-                    return;
-                var extras = draftPersonalities.Where(other => other != draftPersonality).ToList();
-                draftPersonality = id;
-                draftPersonalities = PersonalityMix.Normalize(extras, id);
-                lastPreviewPersonality = -1;
-                UpdateEditor();
-            };
-            controls.Children.Add(personalityChoice);
             personalityDescription = Theme.Text("", 12, Theme.Muted);
             personalityDescription.Margin = new Thickness(0, 8, 0, 0);
             controls.Children.Add(personalityDescription);
-            controls.Children.Add(Theme.Text("Misture com até mais duas personalidades. As falas e os gestos alternam entre as escolhidas.", 12, Theme.Muted));
+            controls.Children.Add(Theme.Text("Marque de uma a três personalidades. Para usar todos os estilos, marque Aleatória. Desmarcar todas também ativa Aleatória.", 12, Theme.Muted));
             var mixPanel = new WrapPanel();
-            foreach (var option in PersonalityCatalog.Options.Where(p => p.Id > 0))
+            var checkTemplate = (ControlTemplate)XamlReader.Parse(@"
+<ControlTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' TargetType='CheckBox'>
+ <Grid Background='Transparent'><Grid.ColumnDefinitions><ColumnDefinition Width='20'/><ColumnDefinition Width='*'/></Grid.ColumnDefinitions>
+  <Border x:Name='Box' Width='15' Height='15' CornerRadius='3' BorderThickness='1' BorderBrush='#6A8086' VerticalAlignment='Center'>
+   <TextBlock x:Name='Mark' Text='✓' Foreground='White' FontSize='12' FontWeight='Bold' HorizontalAlignment='Center' VerticalAlignment='Center' Visibility='Collapsed'/>
+  </Border>
+  <ContentPresenter Grid.Column='1' Margin='2,0,0,0' VerticalAlignment='Center' RecognizesAccessKey='True'/>
+ </Grid>
+ <ControlTemplate.Triggers>
+  <Trigger Property='IsChecked' Value='True'><Setter TargetName='Box' Property='Background' Value='#087F83'/><Setter TargetName='Box' Property='BorderBrush' Value='#087F83'/><Setter TargetName='Mark' Property='Visibility' Value='Visible'/></Trigger>
+  <Trigger Property='IsEnabled' Value='False'><Setter Property='Opacity' Value='0.45'/></Trigger>
+  <Trigger Property='IsKeyboardFocused' Value='True'><Setter TargetName='Box' Property='BorderBrush' Value='#26B9C4'/><Setter TargetName='Box' Property='BorderThickness' Value='2'/></Trigger>
+ </ControlTemplate.Triggers>
+</ControlTemplate>");
+            foreach (var option in PersonalityCatalog.Options)
             {
                 int choice = option.Id;
-                var check = new CheckBox { Content = option.Name, Tag = choice, Width = 140, Margin = new Thickness(0, 4, 8, 4) };
-                System.Windows.Automation.AutomationProperties.SetName(check, "Misturar " + option.Name);
+                var check = new CheckBox { Content = option.Name, Tag = choice, Template = checkTemplate, Width = 140, Margin = new Thickness(0, 4, 8, 4) };
+                System.Windows.Automation.AutomationProperties.SetName(check, "Personalidade " + option.Name);
                 check.Click += (_, _) =>
                 {
-                    if (check.IsChecked == true && draftPersonalities.Count < PersonalityMix.Maximum)
-                        draftPersonalities.Add(choice);
-                    else if (choice != draftPersonality)
+                    if (choice == 0)
+                        draftPersonalities.Clear();
+                    else if (check.IsChecked == true)
+                    {
+                        if (draftPersonalities.Count < PersonalityMix.Maximum && !draftPersonalities.Contains(choice))
+                            draftPersonalities.Add(choice);
+                    }
+                    else
                         draftPersonalities.Remove(choice);
-                    draftPersonalities = PersonalityMix.Normalize(draftPersonalities, draftPersonality);
+                    draftPersonality = draftPersonalities.FirstOrDefault();
                     lastPreviewPersonality = -1;
                     UpdateEditor();
                 };
@@ -561,7 +566,6 @@ namespace Gole.Desktop
         {
             syncing = true;
             nameBox.Text = draftName;
-            personalityChoice.SelectedValue = draftPersonality;
             sizeSlider.Value = draftSize;
             motionBox.IsChecked = draftMotion;
             syncing = false;
@@ -570,13 +574,13 @@ namespace Gole.Desktop
         {
             if (preview == null)
                 return;
-            personalityDescription.Text = draftPersonality == 0 ? "Aleatória: usa todas as personalidades. Escolha uma para montar sua mistura." :
+            personalityDescription.Text = draftPersonality == 0 ? "Aleatória · todas as personalidades" :
                 string.Join(" + ", draftPersonalities.Select(id => PersonalityCatalog.Get(id).Name)) + " · " + draftPersonalities.Count + "/3";
             foreach (var check in mixChoices)
             {
                 int choice = (int)check.Tag;
-                check.IsChecked = draftPersonalities.Contains(choice);
-                check.IsEnabled = draftPersonality != 0 && choice != draftPersonality && (check.IsChecked == true || draftPersonalities.Count < PersonalityMix.Maximum);
+                check.IsChecked = choice == 0 ? draftPersonalities.Count == 0 : draftPersonalities.Contains(choice);
+                check.IsEnabled = choice == 0 || check.IsChecked == true || draftPersonalities.Count < PersonalityMix.Maximum;
             }
             UpdatePreviewMotion();
             preview.Tint = draftColor;

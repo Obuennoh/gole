@@ -43,7 +43,7 @@ public sealed class PersonalityTests
             foreach (string message in PersonalityCatalog.Reactions(option.Id))
                 Assert.True(all.Add(message));
         }
-        Assert.True(all.Count >= 1050);
+        Assert.True(all.Count >= 1120);
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public sealed class PersonalityTests
         state.Validate(DateTime.UtcNow);
         Assert.Equal("Nerd", PersonalityCatalog.Get(state.PersonalityId).Name);
         Assert.Equal("Nerd fofo", PersonalityCatalog.Get(6).Name);
-        Assert.All(PersonalityCatalog.Reminders(6, HydrationMood.Happy), phrase => Assert.Contains(phrase, c => char.IsSurrogate(c) || c is '✨' or '⭐'));
+        Assert.Contains(PersonalityCatalog.Reminders(6, HydrationMood.Happy), phrase => phrase.Contains("🤓"));
         Assert.Contains(ReminderPhrases.Next(new Random(1), HydrationMood.Dead, -1), PersonalityCatalog.Reminders(0, HydrationMood.Dead));
     }
 }

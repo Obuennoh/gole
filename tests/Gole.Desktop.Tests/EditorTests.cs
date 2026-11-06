@@ -62,9 +62,9 @@ public sealed class EditorTests
                 AssertOriginalAccessoriesAndReplacement(panel, state, store);
                 AssertAnimationPreviewAndSaving(panel, pet, state, store);
                 AssertWardrobe(panel, state, store);
-                var personality = Descendants(panel).OfType<ComboBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade do pet");
-                Assert.Equal(16, personality.Items.Count);
-                personality.SelectedValue = 11;
+                Assert.DoesNotContain(Descendants(panel).OfType<ComboBox>(), c => AutomationProperties.GetName(c) == "Personalidade do pet");
+                Assert.Equal(17, Descendants(panel).OfType<CheckBox>().Count(c => AutomationProperties.GetName(c).StartsWith("Personalidade ")));
+                SetPersonality(panel, "Emo", true);
                 Assert.Equal(0, state.PersonalityId);
                 var phrase = Descendants(panel).OfType<EmojiTextBlock>().Single(t => AutomationProperties.GetName(t) == "Prévia da fala");
                 Assert.Contains(phrase.Text, PersonalityCatalog.Reminders(11, HydrationMood.Happy));
@@ -75,22 +75,24 @@ public sealed class EditorTests
                 Click(panel, "Morto");
                 Assert.Contains(phrase.Text, PersonalityCatalog.Reminders(11, HydrationMood.Dead));
                 Click(panel, "Descartar alterações");
-                Assert.Equal(0, (int)personality.SelectedValue);
-                personality.SelectedValue = 11;
+                Assert.True(PersonalityCheck(panel, "Aleatória").IsChecked);
+                SetPersonality(panel, "Emo", true);
                 Click(panel, "Salvar personalização");
                 Assert.Equal(11, state.PersonalityId);
                 Assert.Equal(11, store.Load(DateTime.UtcNow).State.PersonalityId);
-                personality.SelectedValue = 6;
+                SetPersonality(panel, "Emo", false);
+                Assert.True(PersonalityCheck(panel, "Aleatória").IsChecked);
+                SetPersonality(panel, "Nerd fofo", true);
                 Click(panel, "Salvar personalização");
                 Assert.Equal(6, state.PersonalityId);
                 Assert.Equal(6, store.Load(DateTime.UtcNow).State.PersonalityId);
-                var dorama = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Misturar Dorameiro");
-                var emo = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Misturar Emo");
+                var dorama = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade Dorameiro");
+                var emo = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade Emo");
                 dorama.IsChecked = true;
                 dorama.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
                 emo.IsChecked = true;
                 emo.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
-                var detective = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Misturar Detetive");
+                var detective = Descendants(panel).OfType<CheckBox>().Single(c => AutomationProperties.GetName(c) == "Personalidade Detetive");
                 Assert.False(detective.IsEnabled);
                 Assert.Equal(new[] { 6 }, state.SelectedPersonalities);
                 Click(panel, "Salvar personalização");
@@ -108,6 +110,18 @@ public sealed class EditorTests
                 Assert.True(detective.IsEnabled);
                 Click(panel, "Descartar alterações");
                 Assert.True(dorama.IsChecked);
+                // The first-selected voice is removable just like the others.
+                SetPersonality(panel, "Nerd fofo", false);
+                Click(panel, "Salvar personalização");
+                Assert.Equal(new[] { 13, 11 }, store.Load(DateTime.UtcNow).State.SelectedPersonalities);
+                SetPersonality(panel, "Aleatória", true);
+                Click(panel, "Salvar personalização");
+                Assert.Empty(store.Load(DateTime.UtcNow).State.SelectedPersonalities);
+                Assert.True(detective.IsEnabled);
+                SetPersonality(panel, "Pick-me girl", true);
+                Assert.Contains(phrase.Text, PersonalityCatalog.Reminders(16, HydrationMood.Dead));
+                SetPersonality(panel, "Pick-me girl", false);
+                SetPersonality(panel, "Nerd fofo", true);
                 // Restore the single voice for the remaining editor assertions.
                 dorama.IsChecked = false;
                 dorama.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
@@ -291,6 +305,15 @@ public sealed class EditorTests
             ExceptionDispatchInfo.Capture(error).Throw();
     }
 
+    static CheckBox PersonalityCheck(DependencyObject root, string name) => Descendants(root).OfType<CheckBox>()
+        .Single(c => AutomationProperties.GetName(c) == "Personalidade " + name);
+    static void SetPersonality(DependencyObject root, string name, bool selected)
+    {
+        var check = PersonalityCheck(root, name);
+        Assert.True(check.IsEnabled);
+        check.IsChecked = selected;
+        check.RaiseEvent(new RoutedEventArgs(CheckBox.ClickEvent));
+    }
     private static void Click(DependencyObject root, string label)
     {
         var button = FindButton(root, label);
